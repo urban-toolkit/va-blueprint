@@ -8,9 +8,9 @@
 
 ---
 
-**Main Repository:** [https://github.com/urban-toolkit/va-blueprint](https://github.com/urban-toolkit/va-blueprint) 
+**Main page:** [https://urbantk.org/va-blueprint](https://urbantk.org/va-blueprint) 
 
-**Interactive Interface:** [https://leovsferreira.github.io/va-building-blocks/](https://leovsferreira.github.io/va-building-blocks/) 
+**Interactive interface:** [https://leovsferreira.github.io/va-building-blocks/](https://leovsferreira.github.io/va-building-blocks/) 
 
 ---
 
@@ -78,4 +78,4 @@ An interactive web-based interface is available to explore the blueprints visual
 
 *   **Leonardo Ferreira** (UIC) 
 *   **Gustavo Moreira** (UIC) 
-*   **Fabio Miranda** (UIC) 
+*   **[Fabio Miranda](https://fmiranda.me/)** (UIC) 
