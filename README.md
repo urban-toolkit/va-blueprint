@@ -58,6 +58,8 @@ An interactive web-based interface is available to explore the blueprints visual
 
 **Link:** [https://leovsferreira.github.io/va-building-blocks/](https://leovsferreira.github.io/va-building-blocks/) 
 
+![interface](https://raw.githubusercontent.com/urban-toolkit/va-blueprint/refs/heads/main/interface.png)
+
 **How to Use:** 
 
 *   Navigate to the interface link. 
