@@ -1,4 +1,4 @@
-<img src="./assets/va-blueprint-logo.png" alt="VA-Blueprint Logo" width="75" align="left" style="margin-right: 15px; margin-bottom: 5px;">
+<img src="./assets/va-blueprint-logo.png" alt="VA-Blueprint Logo" width="100" align="left" style="margin-right: 15px; margin-bottom: 5px;">
 
 # VA-Blueprint: Uncovering Building Blocks for Visual Analytics System Design
 
