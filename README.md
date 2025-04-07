@@ -1,12 +1,15 @@
-# VA-Blueprint: Uncovering Building Blocks for Visual Analytics System Design 
+<img src="./assets/va-blueprint-logo.png" alt="VA-Blueprint Logo" width="75" align="left" style="margin-right: 15px; margin-bottom: 5px;">
 
-![VA-Blueprint Logo](./assets/va-blueprint-logo.png) 
+# VA-Blueprint: Uncovering Building Blocks for Visual Analytics System Design
+
+<br clear="all" />
 
 *A structured, machine-readable knowledge base of components and dependencies found in Visual Analytics (VA) systems, derived systematically from research literature.*
 
 ---
 
 **Main Repository:** [https://github.com/urban-toolkit/va-blueprint](https://github.com/urban-toolkit/va-blueprint) 
+
 **Interactive Interface:** [https://leovsferreira.github.io/va-building-blocks/](https://leovsferreira.github.io/va-building-blocks/) 
 
 ---
