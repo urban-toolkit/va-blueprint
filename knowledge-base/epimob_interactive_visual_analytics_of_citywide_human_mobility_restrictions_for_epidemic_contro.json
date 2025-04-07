@@ -1,0 +1,263 @@
+{
+  "PaperTitle": "EpiMob: Interactive Visual Analytics of Citywide Human Mobility Restrictions for Epidemic Contro",
+  "Year": 2023,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "POI",
+              "ID": 1,
+              "PaperDescription": "Loads city POI data from the Telepoint Pack DB dataset, which includes coordinates and industry categories of points of interest for the Greater Tokyo Area.",
+              "Inputs": [
+                "Telepoint Pack DB dataset"
+              ],
+              "Outputs": [
+                "Structured POI dataset classified into 39 categories"
+              ],
+              "ReferenceCitation": "Section 3.4 Data Description: City POI Data. The Telepoint Pack DB of POI was collected in February 2011 provided by ZENRIN DataCom Co., Ltd.",
+              "FeedsInto": [
+                3,
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Human Mobility",
+              "ID": 2,
+              "PaperDescription": "Loads human mobility data from the 'Konzatsu-Tokei' dataset consisting of GPS trajectory records from mobile phone users in the Greater Tokyo Area.",
+              "Inputs": [
+                "'Konzatsu-Tokei' mobile phone GPS trajectory data"
+              ],
+              "Outputs": [
+                "Human mobility dataset with trajectories over time and space"
+              ],
+              "ReferenceCitation": "Section 3.4 Data Description: Human Mobility Data. In this work, the human mobility data provided by 'Konzatsu-Tokei (R)' was utilized for epidemic simulation.",
+              "FeedsInto": [
+                3,
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Modeling",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory-Based Epidemic Model",
+              "ID": 3,
+              "PaperDescription": "Simulates the fine-grained spreading of an epidemic based on real-world human trajectory data and city POI data using an extended SEIR model at the grid level.",
+              "Inputs": [
+                "Interpolated human mobility trajectories",
+                "POI data with risk adjustment",
+                "Epidemic parameters (s, g, bglobal)"
+              ],
+              "Outputs": [
+                "Epidemic simulation results showing infection status per grid over time"
+              ],
+              "ReferenceCitation": "Section 4.2 Trajectory-Based Epidemic Model: Given the grid-mapped interpolated human trajectory of one city and a set of disease parameters, the new model can dynamically and continuously perform fine-grained simulations at a fixed frequency at the grid level.",
+              "FeedsInto": [
+                5,
+                8,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Restricted Mobility Generation",
+              "ID": 4,
+              "PaperDescription": "Generates restricted mobility datasets by applying a trajectory replacement strategy that simulates changes in mobility behavior under different control policies.",
+              "Inputs": [
+                "Original human mobility trajectories",
+                "Control policy settings (lockdown areas, telecommuting, screening points)"
+              ],
+              "Outputs": [
+                "Restricted mobility dataset reflecting the effects of policies"
+              ],
+              "ReferenceCitation": "Section 4.3 Replacement-Based Restricted Mobility Model: The trajectory replacement strategy is elaborated for each restriction policy.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 5,
+              "PaperDescription": "Displays spatial views such as regional infection severity, workplace density, and screening point distributions on a 2D map to support policy planning.",
+              "Inputs": [
+                "Epidemic simulation results",
+                "Workplace density data",
+                "POI distributions for screening points"
+              ],
+              "Outputs": [
+                "2D spatial visualizations for hotspot detection and policy targeting"
+              ],
+              "ReferenceCitation": "Section 6.2 Spatiotemporal Restriction Setting View: Three interactive views of the restriction settings are introduced, each including a spatial view displayed on a map.",
+              "FeedsInto": [
+                10,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 6,
+              "PaperDescription": "Displays heatmaps over the 2D map showing workplace density and infection severity to aid in identifying regions for telecommuting and lockdown policies.",
+              "Inputs": [
+                "Workplace density distribution",
+                "Regional infection severity data"
+              ],
+              "Outputs": [
+                "Heatmap overlays on the map visualizations"
+              ],
+              "ReferenceCitation": "Section 6.2.2 Telecommuting View: The spatial view displays all users' workplaces with a heatmap. The darker the color, the more people work there.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Scatter Plot)",
+              "ID": 7,
+              "PaperDescription": "Displays a scatter plot of POI distributions for screening point exploration, allowing users to set up screening locations directly on the map.",
+              "Inputs": [
+                "Selected POI categories (e.g., entertainment, supermarkets, public spaces)"
+              ],
+              "Outputs": [
+                "Scatter plot overlay visualizing POI distributions"
+              ],
+              "ReferenceCitation": "Section 6.2.3 Screening View: A superimposable scatter plot is integrated to display POI information.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 8,
+              "PaperDescription": "Displays infection curves showing the cumulative number of infections over time with confidence intervals to evaluate policy impacts.",
+              "Inputs": [
+                "Epidemic simulation results (infection counts over time)"
+              ],
+              "Outputs": [
+                "Line chart with cumulative infection curves and confidence intervals"
+              ],
+              "ReferenceCitation": "Section 6.3 Simulation Result View: The cumulative number of infections is used as the evaluation indicator; plots of the confidence intervals demonstrate the uncertainty.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Graph",
+              "ID": 9,
+              "PaperDescription": "Displays the spatial transmission network as a graph showing infection flows between regions, with edge widths and colors representing transmission intensity.",
+              "Inputs": [
+                "Infection propagation data (OD pairs of infection events)"
+              ],
+              "Outputs": [
+                "Spatial network visualization of regional propagation flows"
+              ],
+              "ReferenceCitation": "Section 6.3 Spatial Propagation Feature View: This view was designed to analyze the policies' secondary effects from the perspective of spatial propagation.",
+              "FeedsInto": [
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart (Comparative Analysis)",
+              "ID": 13,
+              "PaperDescription": "Displays comparative infection curves for different policy simulations, allowing for side-by-side performance analysis.",
+              "Inputs": [
+                "Multiple policy simulation results"
+              ],
+              "Outputs": [
+                "Comparative line chart with multiple infection curves"
+              ],
+              "ReferenceCitation": "Section 6.3 Simulation Result View: The checkbox in the upper-right corner of the view was designed to enable a comparative analysis.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 10,
+              "PaperDescription": "Allows users to select time intervals for executing and analyzing policies, as well as explore infection data at different time points.",
+              "Inputs": [
+                "User-selected time ranges"
+              ],
+              "Outputs": [
+                "Filtered simulation and visualization results for the selected time period"
+              ],
+              "ReferenceCitation": "Section 6.2.1 Epidemic Parameter Setting View: Selection of simulation periods is also supported. The user has the flexibility to choose the time range of the data they wish to include in the simulation.",
+              "FeedsInto": [
+                3,
+                4,
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 11,
+              "PaperDescription": "Allows users to select spatial regions directly on the map to apply control policies such as regional lockdown and screening point setup.",
+              "Inputs": [
+                "User-drawn regions on map"
+              ],
+              "Outputs": [
+                "Selected areas for policy implementation"
+              ],
+              "ReferenceCitation": "Section 6.2.1 Regional Lockdown View: With the assistance of prior knowledge supplied by this view, the users can use the mouse to select the regions (i.e., polygons) they want to place under lockdown.",
+              "FeedsInto": [
+                4,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Configuration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Policy Configuration",
+              "ID": 12,
+              "PaperDescription": "Enables users to configure control policy parameters including policy type (screening, telecommuting, lockdown), execution period, and reduction rates.",
+              "Inputs": [
+                "User-selected policy types and parameters"
+              ],
+              "Outputs": [
+                "Configured policy settings for simulation"
+              ],
+              "ReferenceCitation": "Section 6.2 Spatiotemporal Restriction Setting View: The view of each setting includes a spatial view displayed on a map and a setting panel.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

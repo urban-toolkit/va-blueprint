@@ -1,0 +1,293 @@
+{
+  "PaperTitle": "Visual Analysis of the Air Pollution Problem in Hong Kong",
+  "Year": 2007,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Weather and Air Quality Time-Series",
+              "ID": 1,
+              "PaperDescription": "Air quality and weather information from many monitoring stations are collected, covering attributes like wind direction, wind speed, temperature, humidity, pollutants, and API across over 10 years.",
+              "Inputs": [
+                "Air quality data from Environmental Protection Department (EPD)",
+                "Weather data from Hong Kong Observatory (HKO)"
+              ],
+              "Outputs": [
+                "Multivariate time-series dataset containing weather and air quality attributes"
+              ],
+              "ReferenceCitation": "Section 3.1: Air quality and weather information from many of these stations are published hourly and in real-time on EPD and HKO websites, and the Environmental Central Facility (ENVF) of the Hong Kong University of Science and Technology collects and archives these data for research.",
+              "FeedsInto": [
+                3,
+                4,
+                5,
+                7,
+                8,
+                15
+              ]
+            },
+            {
+              "GranularBlockName": "2D Features",
+              "ID": 2,
+              "PaperDescription": "Geographic locations of air quality and weather monitoring stations across 18 districts of Hong Kong are collected and visualized on a map.",
+              "Inputs": [
+                "Station metadata from EPD and HKO"
+              ],
+              "Outputs": [
+                "2D geospatial data of monitoring station locations"
+              ],
+              "ReferenceCitation": "Section 3.1 / Fig. 2: Locations of different air quality monitoring stations shown as dots in 18 districts of Hong Kong.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Correlation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Correlation Coefficients Computation",
+              "ID": 3,
+              "PaperDescription": "Computes the correlation between attributes using correlation coefficients to construct the weighted complete graph for dimension relationships.",
+              "Inputs": [
+                "Multivariate weather and air quality data"
+              ],
+              "Outputs": [
+                "Correlation matrix between data attributes"
+              ],
+              "ReferenceCitation": "Section 4.3.1: After testing with various metrics, we finally adopted the standard correlation coefficient in our system.",
+              "FeedsInto": [
+                4,
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Graph Layout Optimization",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Weighted Complete Graph Layout Optimization",
+              "ID": 4,
+              "PaperDescription": "Applies LinLog energy model with Barnes-Hut algorithm to layout the weighted complete graph based on correlation coefficients.",
+              "Inputs": [
+                "Correlation matrix between attributes"
+              ],
+              "Outputs": [
+                "Optimized graph layout representing correlations among dimensions"
+              ],
+              "ReferenceCitation": "Section 4.3.2 / Fig. 9: Layout of weighted complete graph with node size encoding the accumulated correlation coefficients and edge encoding the correlation between two nodes.",
+              "FeedsInto": [
+                5,
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Ordering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Parallel Coordinates Axis Ordering",
+              "ID": 5,
+              "PaperDescription": "Determines the axis order in the parallel coordinates plot based on the layout of the weighted complete graph and correlation strengths.",
+              "Inputs": [
+                "Weighted complete graph layout"
+              ],
+              "Outputs": [
+                "Optimized axis order for parallel coordinates plot"
+              ],
+              "ReferenceCitation": "Section 4.3.3 / Fig. 9: The axis order can be determined manually, semi-automatically, or automatically. Because there are only about 13 dimensions in our data and the layout can be easily grasped by users, our system thus provides a scheme for users to manually choose the axis order of the parallel coordinates.",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 6,
+              "PaperDescription": "Displays the locations of different air quality monitoring stations across 18 districts of Hong Kong.",
+              "Inputs": [
+                "2D geospatial data of monitoring station locations"
+              ],
+              "Outputs": [
+                "2D map showing station locations"
+              ],
+              "ReferenceCitation": "Section 3.1 / Fig. 2: Locations of different air quality monitoring stations shown as dots in 18 districts of Hong Kong.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Polar Plot",
+              "ID": 7,
+              "PaperDescription": "Visualizes wind speed and wind direction on a polar coordinate system with embedded circular pixel bar charts to reveal correlations with pollutants and other attributes.",
+              "Inputs": [
+                "Wind direction and speed data",
+                "Pollutant concentration values",
+                "Time-series weather data"
+              ],
+              "Outputs": [
+                "Polar plot with circular pixel bar charts showing multivariate data correlation by wind sector"
+              ],
+              "ReferenceCitation": "Section 4.1 / Fig. 4: Users are interested in data items lying within a certain range of wind direction and/or wind speed, they can select the respective sector on the polar plane as described in Fig. 4.",
+              "FeedsInto": [
+                10,
+                11,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Parallel Coordinates Plot",
+              "ID": 8,
+              "PaperDescription": "Displays multivariate attribute relationships with enhanced parallel coordinates using S-shape axis for wind direction and scatterplots between neighboring axes.",
+              "Inputs": [
+                "Multivariate weather and air quality data",
+                "Optimized axis order from weighted complete graph"
+              ],
+              "Outputs": [
+                "Parallel coordinates plot with S-shape axis for wind direction and additional scatterplots for pairwise attribute analysis"
+              ],
+              "ReferenceCitation": "Section 4.2 / Fig. 8: Enhanced parallel coordinates with S-shape axis to encode wind direction and scatterplot to reveal bi-variate relationship between neighboring axes.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 15,
+              "PaperDescription": "Scatterplots are embedded above each pair of neighboring axes in the parallel coordinates to reveal detailed bi-variate relationships.",
+              "Inputs": [
+                "Pairwise attribute data from multivariate dataset"
+              ],
+              "Outputs": [
+                "Scatterplots for each pair of neighboring axes in parallel coordinates"
+              ],
+              "ReferenceCitation": "Section 4.2 / Fig. 8: We also draw a scatterplot above every pair of neighboring axes for accurate quantitative analysis.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Graph",
+              "ID": 9,
+              "PaperDescription": "Displays the correlation strength between data attributes as a weighted complete graph to assist in axis ordering and dimension relationship analysis.",
+              "Inputs": [
+                "Optimized graph layout of correlation matrix"
+              ],
+              "Outputs": [
+                "Node-link diagram where nodes represent attributes and edges represent correlation strengths"
+              ],
+              "ReferenceCitation": "Section 4.3.2 / Fig. 9: Layout of weighted complete graph with node size encoding the accumulated correlation coefficients and edge encoding the correlation between two nodes.",
+              "FeedsInto": [
+                13
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Sector Selection",
+              "ID": 10,
+              "PaperDescription": "Allows users to select a sector on the polar plot based on wind direction and speed to focus analysis on specific conditions.",
+              "Inputs": [
+                "User interaction on polar plot sectors"
+              ],
+              "Outputs": [
+                "Subset of data points corresponding to selected wind direction/speed sector"
+              ],
+              "ReferenceCitation": "Section 4.1 / Fig. 4: Users are interested in data items lying within a certain range of wind direction and/or wind speed, they can select the respective sector on the polar plane as described in Fig. 4.",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 11,
+              "PaperDescription": "Enables users to specify time intervals to explore changes and trends over different periods in the polar system and parallel coordinates.",
+              "Inputs": [
+                "User-specified time range selection"
+              ],
+              "Outputs": [
+                "Time-filtered subset of data points for visualization and analysis"
+              ],
+              "ReferenceCitation": "Section 4.1 / Fig. 6: Moreover, users may specify the time interval into which they wish to divide the data and subsequent polar plots will be generated to show the trend over time.",
+              "FeedsInto": [
+                7,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Comparison",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Sector Comparison",
+              "ID": 12,
+              "PaperDescription": "Allows users to compare data within a selected sector to its complementary data set, highlighting exceptional distributions or patterns.",
+              "Inputs": [
+                "Sector-selected data",
+                "Complementary data from remaining sectors"
+              ],
+              "Outputs": [
+                "Visual comparison in polar plot with blended circular pixel bar charts"
+              ],
+              "ReferenceCitation": "Section 4.1 / Fig. 4: A complementary circular pixel bar, which essentially encodes the data falling outside the sector, blended underneath the in-range sector.",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Axis Order Selection",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Parallel Coordinates Axis Reordering",
+              "ID": 13,
+              "PaperDescription": "Allows users to interactively reorder axes in the parallel coordinates plot based on correlation insights from the weighted complete graph.",
+              "Inputs": [
+                "User selection on weighted complete graph nodes",
+                "Correlation strength information"
+              ],
+              "Outputs": [
+                "Updated axis order in parallel coordinates plot"
+              ],
+              "ReferenceCitation": "Section 4.3.3 / Fig. 9: Our system thus provides a scheme for users to manually choose the axis order of the parallel coordinates.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

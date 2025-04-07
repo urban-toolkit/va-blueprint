@@ -1,0 +1,280 @@
+{
+  "PaperTitle": "A Visual Voting Framework for Weather Forecast Calibration",
+  "Year": 2015,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Reforecast",
+              "ID": 1,
+              "PaperDescription": "Loads reforecast data from the US NCEP Global Ensemble Forecast System (GEFS), providing historical ensemble forecasts with grid resolution ∼0.5°.",
+              "Inputs": [
+                "GEFS reforecast files (1985 to present)"
+              ],
+              "Outputs": [
+                "Grid data with ensemble forecasts"
+              ],
+              "ReferenceCitation": "Section 3.2 Dataset Description: The reforecasts are from the US NCEP Global Ensemble Forecast System (GEFS). The GEFS reforecasts are grid data with a resolution of ∼0.5°.",
+              "FeedsInto": [
+                7,
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "NCEP CCPA",
+              "ID": 2,
+              "PaperDescription": "Loads observed precipitation data from the NCEP Climatology-Calibrated Precipitation Analysis (CCPA), used as ground truth.",
+              "Inputs": [
+                "CCPA observation files (2002 to present)"
+              ],
+              "Outputs": [
+                "Observed precipitation grid data"
+              ],
+              "ReferenceCitation": "Section 3.2 Dataset Description: The observed data are the NCEP Climatology-Calibrated Precipitation Analysis (CCPA) data. The CCPA data are grid data with a resolution of 0.125°.",
+              "FeedsInto": [
+                7,
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Analog Method Computation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Analog Retrieval (C1, C2, C3)",
+              "ID": 3,
+              "PaperDescription": "Retrieves past forecasts (analogs) using three methods: RMS differences of aggregated variables in large and small regions, and separate variables in small regions.",
+              "Inputs": [
+                "Reforecast data",
+                "Observed data"
+              ],
+              "Outputs": [
+                "Selected analog dates with similarity metrics"
+              ],
+              "ReferenceCitation": "Section 4.1 Analog Methods: In our system, three widely used variants are selected, including global to local similarity measurements.",
+              "FeedsInto": [
+                4,
+                5,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Voting and Calibration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Iterative Threshold Searching (C1 and C2)",
+              "ID": 4,
+              "PaperDescription": "Performs iterative threshold searching for C1 and C2 to ensure the selected analog dates are similar to the current forecast globally and locally.",
+              "Inputs": [
+                "Analog retrieval results (C1, C2)"
+              ],
+              "Outputs": [
+                "Refined thresholds for analog selection"
+              ],
+              "ReferenceCitation": "Section 4.2.1 Iterative Threshold Searching for C1 and C2: This step aims to determine the proper thresholds for C1 and C2.",
+              "FeedsInto": [
+                6,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Threshold Suggestion and Adjustment (C3)",
+              "ID": 5,
+              "PaperDescription": "Suggests and adjusts thresholds for the C3 analog method based on minimizing bias between C3 and other analog methods.",
+              "Inputs": [
+                "Analog retrieval results (C1, C2, C3)"
+              ],
+              "Outputs": [
+                "Adjusted thresholds for C3"
+              ],
+              "ReferenceCitation": "Section 4.2.2 Suggestion and Adjustment for C3: The next step is to adjust the threshold for C3.",
+              "FeedsInto": [
+                6,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Majority Voting",
+              "ID": 6,
+              "PaperDescription": "Applies majority voting on the selected analog dates from C1, C2, and C3 to produce more reliable probabilistic forecasts.",
+              "Inputs": [
+                "Refined analog selections from C1, C2, and C3"
+              ],
+              "Outputs": [
+                "Final probabilistic forecasts for regions of interest"
+              ],
+              "ReferenceCitation": "Section 4.2 Visual Voting: After thresholds are set for all the three classifiers, majority voting is applied in order to achieve more reliable forecasts.",
+              "FeedsInto": [
+                11,
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 7,
+              "PaperDescription": "Displays geographical regions with overlaid RMS Difference Glyphs to assist in detecting regions of interest for calibration.",
+              "Inputs": [
+                "Reforecast data",
+                "Observed data",
+                "Analog retrieval results"
+              ],
+              "Outputs": [
+                "Interactive map showing regions of interest and analog statistics"
+              ],
+              "ReferenceCitation": "Section 5.2 ROI Detection: This RMS difference glyph view serves the stage of ROI detection (Fig. 3(a)).",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Glyph)",
+              "ID": 8,
+              "PaperDescription": "Overlays RMS Difference Glyphs on the map to visualize the similarity and threshold selections for different analog methods.",
+              "Inputs": [
+                "RMS difference statistics for analogs"
+              ],
+              "Outputs": [
+                "Visual glyphs encoding RMS differences and similarities"
+              ],
+              "ReferenceCitation": "Section 5.3 Visual Calibration: The geographical view is the RMS difference glyph view laid on a geographical map (Fig. 4(a)).",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 9,
+              "PaperDescription": "Visualizes RMS differences and similarities of analog dates in large regions to assist in threshold setting for C1.",
+              "Inputs": [
+                "RMS differences for analog dates"
+              ],
+              "Outputs": [
+                "Line chart showing RMS differences and thresholds"
+              ],
+              "ReferenceCitation": "Section 5.3.1 View Design: The line chart visualizes the sorted RMS differences of the large region (Fig. 4(b1)).",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Pixel Bar Chart",
+              "ID": 10,
+              "PaperDescription": "Displays aggregated RMS differences in small regions to assist in threshold setting and visualize final voting results.",
+              "Inputs": [
+                "RMS differences for small regions"
+              ],
+              "Outputs": [
+                "Pixel bar chart showing analog similarity and thresholds"
+              ],
+              "ReferenceCitation": "Section 5.3.1 View Design: This view is designed to support the threshold setting for C2 (Fig. 4(c)).",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Comparison View",
+              "ID": 11,
+              "PaperDescription": "Displays side-by-side comparisons of initial probabilistic forecasts and calibrated forecasts to show the effect of calibration.",
+              "Inputs": [
+                "Initial probabilistic forecasts",
+                "Calibrated probabilistic forecasts"
+              ],
+              "Outputs": [
+                "Comparison visualizations of forecast differences"
+              ],
+              "ReferenceCitation": "Section 5.1 System Design: Forecast comparison and similar historical event analysis: The adapted forecasts generated after the visual calibration are compared with the initial ones.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Historical Analog Explorer",
+              "ID": 12,
+              "PaperDescription": "Presents similar historical events and past forecasts to support verification of forecast calibration results.",
+              "Inputs": [
+                "Historical analogs",
+                "Observed data"
+              ],
+              "Outputs": [
+                "Interactive display of similar past forecasts and observations"
+              ],
+              "ReferenceCitation": "Section 5.1 System Design: Meanwhile, the most similar historical events are presented to verify the forecast.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 13,
+              "PaperDescription": "Allows users to brush and select geographical regions of interest (ROI) for detailed calibration analysis.",
+              "Inputs": [
+                "User selection on map"
+              ],
+              "Outputs": [
+                "Defined ROIs for further analog analysis"
+              ],
+              "ReferenceCitation": "Section 5.2 ROI Detection: A user can brush a region for the subsequent analysis stages.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Configuration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Threshold Adjustment",
+              "ID": 14,
+              "PaperDescription": "Enables users to interactively adjust thresholds for analog methods C1, C2, and C3 with instant visual feedback.",
+              "Inputs": [
+                "User input (slider/brush)"
+              ],
+              "Outputs": [
+                "Updated analog selections and voting results"
+              ],
+              "ReferenceCitation": "Section 5.3.2 Interactions and View Coordination: Double clicking and brushing are supported to enable the setting of the thresholds for C1 and C2, respectively.",
+              "FeedsInto": [
+                4,
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

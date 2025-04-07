@@ -1,0 +1,240 @@
+{
+  "PaperTitle": "A Visual Analytics Approach to Facilitate Crime Hotspot Analysis",
+  "Year": 2020,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Crime",
+              "ID": 1,
+              "PaperDescription": "Loads historical crime events datasets that contain information such as event types, timestamps, and geospatial coordinates.",
+              "Inputs": [
+                "Crime event records (type, timestamp, geolocation)"
+              ],
+              "Outputs": [
+                "Structured crime events dataset"
+              ],
+              "ReferenceCitation": "Section 4 SHOC: Users can visualize crime events in different ways, such as: point maps, choropleth maps, and density maps (KDE and MSKDE).",
+              "FeedsInto": [
+                2,
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Kernel Density Estimation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Crime Events",
+              "ID": 2,
+              "PaperDescription": "Computes density maps for crime events using Kernel Density Estimation, representing crime intensities over a geographic area.",
+              "Inputs": [
+                "Structured crime events dataset"
+              ],
+              "Outputs": [
+                "Continuous density surfaces for crime events"
+              ],
+              "ReferenceCitation": "Section 4 SHOC: Users can visualize crime events in different ways, such as: point maps, choropleth maps, and density maps (KDE and MSKDE).",
+              "FeedsInto": [
+                3,
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Marching Squares",
+              "ID": 3,
+              "PaperDescription": "Generates contour-based hotspot polygons from KDE surfaces using the marching squares algorithm for hotspot delineation.",
+              "Inputs": [
+                "KDE surfaces",
+                "Cell size",
+                "Bandwidth",
+                "Contour threshold"
+              ],
+              "Outputs": [
+                "Polygon geometries representing crime hotspots"
+              ],
+              "ReferenceCitation": "Section 4.1 SHOC's Overview: SHOC performs the spatial comparison directly by superimposing two MSKDEs (MSKDE stands for Marching Squares Kernel Density Estimation, a technique that generates contour maps based on KDE maps [dQNSV16]), each one representing a hotspot map.",
+              "FeedsInto": [
+                4,
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Comparison",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Set Operations",
+              "ID": 4,
+              "PaperDescription": "Performs set-like operations (intersection and subtraction) on MSKDE hotspot polygons to identify stable, new, or disappearing hotspots.",
+              "Inputs": [
+                "Two MSKDE hotspot polygons"
+              ],
+              "Outputs": [
+                "Polygons of stable regions (intersection), newly emerging hotspots (difference A-B), and disappearing hotspots (difference B-A)"
+              ],
+              "ReferenceCitation": "Section 4.4 Superimposing MSKDEs: At the end of the superimposition, SHOC also applies polygon intersection operations to compute the 3 sets of polygons that are of interest to analysts.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 5,
+              "PaperDescription": "Displays 2D maps showing the spatial distribution of crime data, including base maps and overlays for hotspots.",
+              "Inputs": [
+                "Base map",
+                "Crime event points",
+                "Hotspot polygons"
+              ],
+              "Outputs": [
+                "Rendered 2D map with crime data layers"
+              ],
+              "ReferenceCitation": "Section 4 SHOC: Users can visualize crime events in different ways, such as: point maps, choropleth maps, and density maps (KDE and MSKDE).",
+              "FeedsInto": [
+                6,
+                7,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Contours)",
+              "ID": 6,
+              "PaperDescription": "Overlays contour-based hotspot polygons derived from MSKDE on the base map for visual analysis of crime intensities.",
+              "Inputs": [
+                "MSKDE hotspot polygons"
+              ],
+              "Outputs": [
+                "Visual overlays of hotspots with different colors, transparencies, and intersection highlights"
+              ],
+              "ReferenceCitation": "Section 4.1 SHOC's Overview: Superimposition of MSKDEs with minimal occlusion to enable simultaneous analysis of the hotspots, identification of correlations, and exploration of the base map that is behind the polygons.",
+              "FeedsInto": [
+                5,
+                7,
+                9,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 7,
+              "PaperDescription": "Allows users to apply spatial filters to restrict analyses to selected regions of interest (neighborhoods, districts).",
+              "Inputs": [
+                "User-defined spatial filter (polygon or region selection)"
+              ],
+              "Outputs": [
+                "Filtered subset of crime events and hotspot analyses"
+              ],
+              "ReferenceCitation": "Figure 1: Other visual components: (d) the spatial filter toolbar.",
+              "FeedsInto": [
+                5,
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 8,
+              "PaperDescription": "Enables filtering of crime events by temporal attributes such as date frame, time frame, and day of the week.",
+              "Inputs": [
+                "User-defined temporal filters (date, time, days)"
+              ],
+              "Outputs": [
+                "Filtered subset of crime events for KDE/MSKDE processing"
+              ],
+              "ReferenceCitation": "Figure 3: The *Filtering process is the application of filters regarding Type of Incidents, Date Frame, Time Frame, Days of the Week (a), and Spatial filters (b).",
+              "FeedsInto": [
+                5,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Configuration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Layer Control",
+              "ID": 9,
+              "PaperDescription": "Allows users to manage the visibility and styling of different map layers, including crime events, hotspots, and annotations.",
+              "Inputs": [
+                "User interactions for toggling layers and setting styles"
+              ],
+              "Outputs": [
+                "Updated map views reflecting layer visibility and appearance"
+              ],
+              "ReferenceCitation": "Figure 1: Other visual components: (e) the layers control.",
+              "FeedsInto": [
+                5,
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "MSKDE Parameters Configuration",
+              "ID": 10,
+              "PaperDescription": "Provides user interface controls to set MSKDE parameters such as cell size, bandwidth, and contour threshold, affecting the generation of hotspot polygons.",
+              "Inputs": [
+                "User-defined cell size, bandwidth, and threshold"
+              ],
+              "Outputs": [
+                "Parameterized MSKDE hotspot polygons"
+              ],
+              "ReferenceCitation": "Section 4.2 SHOC's Parameters: SHOC has three parameters: cell size, bandwidth and contour threshold. In this section, we explain those parameters and their default values.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Annotation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Annotation Toolbar",
+              "ID": 11,
+              "PaperDescription": "Provides users with interactive tools for creating graphical and textual annotations directly on the map view.",
+              "Inputs": [
+                "User annotations (text, drawings)"
+              ],
+              "Outputs": [
+                "Annotated maps for sharing and discussion"
+              ],
+              "ReferenceCitation": "Figure 1: Other visual components: (a) the annotation toolbar, (c) a graphical annotation example, and (f) a textual annotation example.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

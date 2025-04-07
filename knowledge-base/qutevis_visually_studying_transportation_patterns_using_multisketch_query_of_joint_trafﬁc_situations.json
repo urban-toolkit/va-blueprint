@@ -1,0 +1,267 @@
+{
+  "PaperTitle": "QuteVis: Visually Studying Transportation Patterns Using Multisketch Query of Joint Trafﬁc Situations",
+  "Year": 2021,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Street Network",
+              "ID": 1,
+              "PaperDescription": "Loads the road network data, including street geometry and segment optimization from OpenStreetMap, used to support accurate sketching and spatial queries.",
+              "Inputs": [
+                "OpenStreetMap road network"
+              ],
+              "Outputs": [
+                "Optimized road network data with street segments for spatial queries"
+              ],
+              "ReferenceCitation": "Section 'SKETCH-BASED VISUAL QUERY ON TRAFFIC DATA': A spatial database is developed which integrates urban structures (e.g., street geometry, POI locations, and their names), traffic information (e.g., volume and speed over time), human mobility information (e.g., taxi pickups/drop-offs and trajectories), and weather conditions.",
+              "FeedsInto": [
+                2,
+                3,
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 2,
+              "PaperDescription": "Loads taxi trajectory datasets including pickup and drop-off locations and timestamps, used for human mobility analysis and traffic pattern identification.",
+              "Inputs": [
+                "Taxi trajectory datasets"
+              ],
+              "Outputs": [
+                "Processed taxi mobility data including pickups and drop-offs"
+              ],
+              "ReferenceCitation": "Section 'SKETCH-BASED VISUAL QUERY ON TRAFFIC DATA': A spatial database is developed which integrates urban structures (e.g., street geometry, POI locations, and their names), traffic information (e.g., volume and speed over time), human mobility information (e.g., taxi pickups/drop-offs and trajectories), and weather conditions.",
+              "FeedsInto": [
+                4,
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Weather Data",
+              "ID": 3,
+              "PaperDescription": "Loads historical weather conditions, including data on temperature, fog, and pollution, to analyze their influence on traffic patterns.",
+              "Inputs": [
+                "Historical weather data"
+              ],
+              "Outputs": [
+                "Structured weather dataset for integrated analysis"
+              ],
+              "ReferenceCitation": "Section 'SKETCH-BASED VISUAL QUERY ON TRAFFIC DATA': A spatial database is developed which integrates urban structures (e.g., street geometry, POI locations, and their names), traffic information (e.g., volume and speed over time), human mobility information (e.g., taxi pickups/drop-offs and trajectories), and weather conditions.",
+              "FeedsInto": [
+                4,
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "POI Data",
+              "ID": 4,
+              "PaperDescription": "Loads points of interest (POI) locations and names, supporting the spatial context for sketch-based queries and traffic analysis.",
+              "Inputs": [
+                "POI data"
+              ],
+              "Outputs": [
+                "Integrated POI dataset with locations and names"
+              ],
+              "ReferenceCitation": "Section 'SKETCH-BASED VISUAL QUERY ON TRAFFIC DATA': A spatial database is developed which integrates urban structures (e.g., street geometry, POI locations, and their names), traffic information (e.g., volume and speed over time), human mobility information (e.g., taxi pickups/drop-offs and trajectories), and weather conditions.",
+              "FeedsInto": [
+                5,
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Recognition",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Street Sketch Recognition",
+              "ID": 2,
+              "PaperDescription": "Maps user-drawn sketches to corresponding street segments by processing sketch points, creating a polyline, and generating a region-based spatial query to retrieve matching streets.",
+              "Inputs": [
+                "User sketch input (freestyle drawing on map)",
+                "Optimized street segments from GIS data"
+              ],
+              "Outputs": [
+                "Mapped street segments selected by the user sketch"
+              ],
+              "ReferenceCitation": "Section 'MULTISKETCH ON GEOSTRUCTURES': The query retrieves all street segments inside the polygon. This spatial query of street segments is the key for accurate sketch recognition since it can automatically match the free drawing to the street segment geometry.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Region Sketch Recognition",
+              "ID": 3,
+              "PaperDescription": "Transforms a closed polyline into a polygon to query and retrieve all street segments within a sketched region on the map.",
+              "Inputs": [
+                "User region sketch input (closed polyline)",
+                "Optimized street segments from GIS data"
+              ],
+              "Outputs": [
+                "Street segments within the user-defined region"
+              ],
+              "ReferenceCitation": "Section 'MULTISKETCH ON GEOSTRUCTURES': Then we turn this polyline to a closed curve by connecting the start and end points. Thus, a polygon is formed to query the road network and all the street segments inside it are selected.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Similarity Computation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Weighted Similarity Computation",
+              "ID": 4,
+              "PaperDescription": "Computes a global weighted similarity score for each data record in the transport database by comparing user-specified query values with historical traffic attribute values at multiple locations.",
+              "Inputs": [
+                "User-defined sketches with attribute values and weights",
+                "Historical traffic records from the integrated database"
+              ],
+              "Outputs": [
+                "Ranked similarity scores for all historical time periods"
+              ],
+              "ReferenceCitation": "Section 'Retrieving Similar Data from Sketch': A global similarity value S is defined for each data record r. It is a value between 0 and 1, which is computed according to the given Q.",
+              "FeedsInto": [
+                6,
+                7,
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 5,
+              "PaperDescription": "Displays a map-centric interface with selectable streets, paths, and regions for sketching and viewing historical traffic patterns, POIs, and weather data.",
+              "Inputs": [
+                "Urban transport database",
+                "User sketches",
+                "Historical traffic data records"
+              ],
+              "Outputs": [
+                "Interactive 2D map with sketches, POIs, and traffic visualizations"
+              ],
+              "ReferenceCitation": "Section 'QuteVis Interface': A canvas over a city map [see Figure 2(a)] to facilitate context-aware operations in the city. In the Sketch Mode, it supports the selection of multiple streets, regions, or paths.",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Trajectories)",
+              "ID": 12,
+              "PaperDescription": "Overlays pickup and drop-off locations, as well as trajectory-derived traffic data, onto the 2D map to support spatial analysis of traffic behavior and human mobility.",
+              "Inputs": [
+                "Taxi mobility data (pickups/drop-offs)",
+                "Traffic data for selected times"
+              ],
+              "Outputs": [
+                "Trajectory overlays showing mobility patterns on the 2D map"
+              ],
+              "ReferenceCitation": "In the Info Mode, the map view visualizes traffic data, POIs, and other urban information. (Section: QuteVis Interface)",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 6,
+              "PaperDescription": "Visualizes temporal distributions of matched historical records, including distributions over times of day, weekdays, and weather conditions, using bars categorized by similarity levels.",
+              "Inputs": [
+                "Ranked similarity scores",
+                "Historical traffic data records"
+              ],
+              "Outputs": [
+                "Bar charts showing distributions over time, day, and weather conditions"
+              ],
+              "ReferenceCitation": "Section 'Study Distribution View': On the top bar chart, the x-axis represents the times (in 2-h time windows) of a day. The y-axis shows the count of records.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Heat Matrix",
+              "ID": 7,
+              "PaperDescription": "Displays a grid heatmap view of similarities over time windows in different days, where size indicates similarity score and color encodes entropy of similarity distribution.",
+              "Inputs": [
+                "Ranked similarity scores",
+                "Sketch-level similarity components"
+              ],
+              "Outputs": [
+                "Grid heatmap showing similarity distribution and entropy"
+              ],
+              "ReferenceCitation": "Section 'Grid Heatmap View With Similarity Entropy': A grid of dots on the right panel shows a heatmap of similarities. Each dot presents a time window in a specific day of a specific month.",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Multimap View",
+              "ID": 8,
+              "PaperDescription": "Displays multiple synchronized maps to compare traffic conditions at different historical times, showing traffic information through color-coded lines for each selected time.",
+              "Inputs": [
+                "Ranked time periods from similarity scores",
+                "Traffic data for selected times",
+                "Interactive 2D map with sketches, POIs, and traffic visualizations",
+                "Grid heatmap filtered time selections"
+              ],
+              "Outputs": [
+                "Multiple coordinated maps displaying traffic conditions over time"
+              ],
+              "ReferenceCitation": "Section 'Multimap View': Each small map shows the traffic information of one specific time in the Top List. The colored lines indicate the traffic information on the roads.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Sketching",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Multisketch Input",
+              "ID": 9,
+              "PaperDescription": "Allows users to draw, edit, and manage multiple sketches on the map to define traffic query conditions over streets, paths, or regions with adjustable weights.",
+              "Inputs": [
+                "User sketch inputs",
+                "Optimized street segments"
+              ],
+              "Outputs": [
+                "User-defined sketches with traffic attribute values and weights"
+              ],
+              "ReferenceCitation": "Section 'Multisketching on a map plays a key role to facilitate easy user selection and editing (for T1)': Users can define their speculated patterns by: 1) selecting multiple spatially diverse locations on a city map.",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

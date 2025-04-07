@@ -1,0 +1,327 @@
+{
+  "PaperTitle": "Visual Analysis of Multiple Route Choices Based on General GPS Trajectories",
+  "Year": 2017,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 1,
+              "PaperDescription": "The system uses taxi GPS datasets, covering 28,519 taxis over 24 days in Beijing, which includes 379,107,927 sampling points.",
+              "Inputs": [
+                "Raw taxi GPS trajectory data"
+              ],
+              "Outputs": [
+                "Structured dataset with spatiotemporal attributes"
+              ],
+              "ReferenceCitation": "Section 6.1: The data is collected from 28,519 taxis in 24 days, from March 2nd to 25th, 2009. The data size is 34.5 GB in total and consists of 379,107,927 sampling points.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Street Network",
+              "ID": 2,
+              "PaperDescription": "Road network data collected from OpenStreetMap's jXAPI is used for map matching and route-related factor derivation.",
+              "Inputs": [
+                "OpenStreetMap road network data"
+              ],
+              "Outputs": [
+                "Road segments with attributes like road levels and traffic light locations"
+              ],
+              "ReferenceCitation": "Section 6.1: Besides the taxi GPS dataset, the road network data is collected from OpenStreetMap's jXAPI.",
+              "FeedsInto": [
+                7,
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Indexing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatial Indexing (Quad-tree)",
+              "ID": 3,
+              "PaperDescription": "Indexes taxi trajectories using a quad-tree spatial index to facilitate filtering in massive datasets.",
+              "Inputs": [
+                "Cleaned taxi trajectory data"
+              ],
+              "Outputs": [
+                "Spatial index structure for efficient trajectory filtering"
+              ],
+              "ReferenceCitation": "Section 6.2: In the preprocessing stage, trajectories are indexed by a spatial quadtree, which divides the 2D spatial region recursively and adaptively based on the distribution of trajectories' sampling points.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Filtering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory Filtering",
+              "ID": 6,
+              "PaperDescription": "Filters trajectories between specified regions of interest (OoI and DoI) using spatial and temporal constraints, including a circular filter interface with six spatial constraints.",
+              "Inputs": [
+                "Taxi trajectory data",
+                "Spatial index structure",
+                "Spatial and temporal query parameters"
+              ],
+              "Outputs": [
+                "Filtered trajectories between OoI and DoI"
+              ],
+              "ReferenceCitation": "Section 4.1: With the filtered trajectories, a grid-based algorithm is proposed to extract all feasible routes automatically.",
+              "FeedsInto": [
+                7,
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Path Generation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Multiple Route Extraction",
+              "ID": 7,
+              "PaperDescription": "Uses a grid-based algorithm to extract multiple feasible routes between OoI and DoI from filtered trajectories. The topology graph of routes is constructed.",
+              "Inputs": [
+                "Filtered trajectories",
+                "Road network data"
+              ],
+              "Outputs": [
+                "Graph of feasible routes with topology information"
+              ],
+              "ReferenceCitation": "Section 4.2: With the filtered trajectories from OoI to DoI, we employ a general grid-based algorithm to extract multiple routes automatically.",
+              "FeedsInto": [
+                8,
+                12,
+                15
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Derivation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Route-Related Factor Derivation",
+              "ID": 8,
+              "PaperDescription": "Derives route-related factors such as route length, traffic light number, route importance (road level), and time cost distribution from the road network and GPS data.",
+              "Inputs": [
+                "Route topology graph",
+                "Road network data",
+                "Taxi trajectory data"
+              ],
+              "Outputs": [
+                "Route-related factors for each route"
+              ],
+              "ReferenceCitation": "Section 3.1 and Table 1: Route importance refers to the average road level of the route. Specifically, the route importance refers to the average road level of the route. The road level is distinguished by what type the road is, like a trunk or residential road, which is implied by the highway tag in OpenStreetMap.",
+              "FeedsInto": [
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Trajectory-Related Factor Derivation",
+              "ID": 9,
+              "PaperDescription": "Derives trajectory-related factors such as departure time, departure day, and trajectory length from the GPS trajectory data.",
+              "Inputs": [
+                "Filtered trajectory data"
+              ],
+              "Outputs": [
+                "Trajectory-related factors for each trajectory"
+              ],
+              "ReferenceCitation": "Section 3.1: On the other hand, each trajectory has individual differences that potentially affect the route choice, e.g., departure time in a day, departure day and trajectory's length.",
+              "FeedsInto": [
+                11,
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Modeling",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Route Choice Model (MNL)",
+              "ID": 11,
+              "PaperDescription": "Applies the Multinomial Logit Model (MNL) to verify hypotheses about the impact of trajectory-related factors on route choices.",
+              "Inputs": [
+                "Trajectory-related factors",
+                "Route choice data"
+              ],
+              "Outputs": [
+                "Coefficients and p-values indicating significance of factors on route choice"
+              ],
+              "ReferenceCitation": "Section 5.3.1: To verify factors' impact on route choices, we adopt the Multinomial Logit (MNL) model.",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 12,
+              "PaperDescription": "Displays a geographical overview of all feasible routes between OoI and DoI on a 2D map, with route width encoding the number of passing trajectories.",
+              "Inputs": [
+                "Route topology graph",
+                "Route-related factors"
+              ],
+              "Outputs": [
+                "Interactive 2D map with multiple route visualizations"
+              ],
+              "ReferenceCitation": "Section 5.1 and Fig. 5a: Each extracted route is visualized as a band, whose width encodes the number of passing trajectories.",
+              "FeedsInto": [
+                18
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Ranking Chart",
+              "ID": 10,
+              "PaperDescription": "Displays route-related factors (e.g., length, traffic lights, time cost distribution) in a ranking-based visualization to compare multiple routes.",
+              "Inputs": [
+                "Route-related factors"
+              ],
+              "Outputs": [
+                "Ranked list of routes by selected factors"
+              ],
+              "ReferenceCitation": "Section 5.2 and Fig. 7a: Inspired by ranking visualizations (e.g., LineUp [36]), we design a ranking-based visualization to support exploration on route-related factors' impact on route choice behaviour.",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Stacked Bar Chart",
+              "ID": 13,
+              "PaperDescription": "Visualizes distributions of route choices over trajectory-related factors, helping users build hypotheses about potential factor impacts.",
+              "Inputs": [
+                "Trajectory-related factors",
+                "Route choice distributions"
+              ],
+              "Outputs": [
+                "Stacked bar chart showing factor distributions across routes"
+              ],
+              "ReferenceCitation": "Section 5.3.2 and Fig. 10: Dividing factor into interval bins, the population of certain route choice within each bin are counted. To visualize the population over bins, we choose bar chart which is widely used to display the distribution over the discrete bins.",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Matrix",
+              "ID": 14,
+              "PaperDescription": "Displays the coefficient matrix and significance (p-values) from the MNL model, showing the impact of trajectory-related factors on route choice.",
+              "Inputs": [
+                "MNL model coefficients and p-values"
+              ],
+              "Outputs": [
+                "Matrix chart showing significance of factors on route choices"
+              ],
+              "ReferenceCitation": "Section 5.3.2 and Fig. 10: To keep the results precise as well as intuitive (CIII), we visualize them right in the matrix.",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Topology Graph",
+              "ID": 15,
+              "PaperDescription": "Displays the topology structure of multiple routes using a graph view, where mainstream and alternative routes are grouped by similarity.",
+              "Inputs": [
+                "Route topology graph"
+              ],
+              "Outputs": [
+                "Interactive topology graph visualization"
+              ],
+              "ReferenceCitation": "Section 5.1 and Fig. 6a: We show the grouping results in a topology graph to help understand the routing.",
+              "FeedsInto": [
+                18
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Circular Spatial Filter",
+              "ID": 16,
+              "PaperDescription": "Supports graphical trajectory filtering using a circular interface with multiple spatial constraints (e.g., origin, destination, passing).",
+              "Inputs": [
+                "User interaction (mouse drag, click)"
+              ],
+              "Outputs": [
+                "Spatial and temporal constraints for trajectory filtering"
+              ],
+              "ReferenceCitation": "Section 4.1 and Fig. 3a: From the spatial aspect, we design the filter similar to TrajectoryLenses [32]. The filter covers a circular area and filters trajectories with 6 spatial constraints.",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Factor Configuration",
+              "ID": 17,
+              "PaperDescription": "Allows users to interactively configure trajectory-related factors (e.g., departure time intervals) for use in hypothesis construction and MNL model verification.",
+              "Inputs": [
+                "User input defining factor categories"
+              ],
+              "Outputs": [
+                "Configured factors for MNL analysis"
+              ],
+              "ReferenceCitation": "Section 5.3.2 and Fig. 11: After factor configuration, the MNL model is used for statistical evaluation. Results are returned as a coefficient matrix.",
+              "FeedsInto": [
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Linking",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Brushing and Linking",
+              "ID": 18,
+              "PaperDescription": "Enables linked interaction between views, so that selection or focus in one visualization updates related views (e.g., map, ranking chart, trajectory factor view).",
+              "Inputs": [
+                "User selection (brushing) in one visualization"
+              ],
+              "Outputs": [
+                "Coordinated updates in all visualizations"
+              ],
+              "ReferenceCitation": "Section 3.3: The three views cooperate in a brushing and linking manner, i.e., entities selected in one view are updated in other views.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

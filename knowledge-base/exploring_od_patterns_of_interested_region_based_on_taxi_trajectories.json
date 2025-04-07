@@ -1,0 +1,272 @@
+{
+  "PaperTitle": "Exploring OD patterns of interested region based on taxi trajectories",
+  "Year": 2016,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 1,
+              "PaperDescription": "We cleaned both GPS dataset and road network dataset, and performed map matching to map the trajectories to the road network.",
+              "Inputs": [
+                "Raw taxi GPS trajectories",
+                "Road network dataset"
+              ],
+              "Outputs": [
+                "Map-matched taxi trajectories with spatial and temporal attributes"
+              ],
+              "ReferenceCitation": "Section 3.3 System overview: Following the preprocessing steps in early studies (Wang et al. 2013, 2015), we cleaned both GPS dataset and road network dataset, and performed map matching to map the trajectories to the road network.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Indexer",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatial Quad-Tree Index",
+              "ID": 2,
+              "PaperDescription": "To facilitate trajectory filtering, a spatial quad-tree index is built on trajectory data set.",
+              "Inputs": [
+                "Map-matched taxi trajectories"
+              ],
+              "Outputs": [
+                "Indexed trajectory dataset using spatial quad-tree"
+              ],
+              "ReferenceCitation": "Section 3.3 System overview: To facilitate trajectory filtering, a spatial quad-tree index is built on trajectory data set.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Querying",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatiotemporal Query",
+              "ID": 3,
+              "PaperDescription": "Trajectories can be filtered interactively from spatial and temporal aspects using a suite of circular graphical filters and a two-layer time filter.",
+              "Inputs": [
+                "Indexed trajectory dataset",
+                "User-defined spatial and temporal filters"
+              ],
+              "Outputs": [
+                "Filtered taxi trajectories"
+              ],
+              "ReferenceCitation": "Section 4.1 Filter model: Our filter model selects trajectories from spatial and temporal aspects. The filter model is built on a series of atomic queries...",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "OD Region Clustering (DBSCAN)",
+              "ID": 4,
+              "PaperDescription": "An adaptive DBSCAN clustering algorithm is used to extract O regions and D regions from the origins and destinations of filtered trajectories.",
+              "Inputs": [
+                "Filtered taxi trajectories"
+              ],
+              "Outputs": [
+                "Clusters of origin regions (O regions) and destination regions (D regions)"
+              ],
+              "ReferenceCitation": "Section 5.1 O/D, OD region extraction: After filtering trajectories of interested region, we adopt the iterative DBSCAN algorithm Pan et al. (2013) on origins and destinations respectively to obtain O clusters and D clusters (T1).",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Convex Hull Extraction",
+              "ID": 5,
+              "PaperDescription": "The convex hull underlying each cluster is detected as O or D region by Graham's scan. Regions within a certain distance are merged into a larger region, which may be classified as an OD region.",
+              "Inputs": [
+                "Clusters of origin regions (O regions) and destination regions (D regions)"
+              ],
+              "Outputs": [
+                "Spatial regions (O, D, OD regions)"
+              ],
+              "ReferenceCitation": "Section 5.1 O/D, OD region extraction: The convex hull underlying each cluster is detected as O or D region by Graham's scan (Graham 1972).",
+              "FeedsInto": [
+                6,
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 6,
+              "PaperDescription": "Two types of spatial overview are provided. Regions are visualized with convex hulls or square glyphs representing O/D, OD regions.",
+              "Inputs": [
+                "Spatial regions (O, D, OD regions)"
+              ],
+              "Outputs": [
+                "2D map view with region boundaries"
+              ],
+              "ReferenceCitation": "Section 5.2 Overview: Overview of regions consists of spatial overview (T2) and statistical overview (T3). As Fig. 4 shows, two types of spatial overview are provided.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Overlay (Glyph)",
+              "ID": 13,
+              "PaperDescription": "Each region is represented by a square glyph on the map showing traffic volume (encoded by size), region type (color-coded), and direction (arrow). Glyphs also display relative flow volumes to other regions using color dithering and include time-series indicators of average daily volume.",
+              "Inputs": [
+                "Spatial regions (O, D, OD regions)",
+                "Traffic volume statistics"
+              ],
+              "Outputs": [
+                "Glyph overlays on the 2D map providing additional statistical and directional data"
+              ],
+              "ReferenceCitation": "Section 5.2 Overview: As Fig. 4b shows, spatial view with glyphs is designed as a trade-off between the abstract and spatial space. As Fig. 4c illustrates, each region is represented by a square glyph.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Overlay (Trajectories)",
+              "ID": 14,
+              "PaperDescription": "The trajectories of interest are overlaid on the map, enabling users to visualize movement patterns and the relationships between OD regions and selected road segments or regions.",
+              "Inputs": [
+                "Filtered taxi trajectories",
+                "Spatial regions (O, D, OD regions)"
+              ],
+              "Outputs": [
+                "Trajectory overlay on 2D map"
+              ],
+              "ReferenceCitation": "Section 7.3 OD pattern dynamics exploration: As Fig. 9b shows, trajectories with small time cost and with large time cost are selected in the linear view and plotted on the map.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 7,
+              "PaperDescription": "Statistical overviews of traffic volume distribution over time and distributions of average travel distance and travel time are provided through bar charts.",
+              "Inputs": [
+                "Traffic flow statistics (travel time, travel distance)"
+              ],
+              "Outputs": [
+                "Bar chart showing traffic distributions"
+              ],
+              "ReferenceCitation": "Section 5.2 Overview: Additionally, the statistical overviews of the traffic volume distribution over time and the distributions of average travel distance and travel time are provided.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "OD-Wheel",
+              "ID": 8,
+              "PaperDescription": "The adapted OD-Wheel visualizes dynamic traffic volume over time. Clusters are ordered by volume, and traffic flow dynamics are displayed along a radial time axis in both circular and linear views.",
+              "Inputs": [
+                "Traffic volume dynamics per O/D, OD region"
+              ],
+              "Outputs": [
+                "OD-Wheel visualization with dynamic traffic volume over time"
+              ],
+              "ReferenceCitation": "Section 6.1 Visual design: The main idea of OD-Wheel is to warp a part of linear view to circular one. O, D clusters are placed in descending traffic volume order from two ends of circle respectively.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Dot Plot",
+              "ID": 9,
+              "PaperDescription": "Travel time costs between OD pairs are visualized as dot plots in the OD-Wheel's linear view for comparison of time-based travel metrics.",
+              "Inputs": [
+                "Travel time cost per OD pair"
+              ],
+              "Outputs": [
+                "Dot plot visualization of travel time cost"
+              ],
+              "ReferenceCitation": "Section 6.1 Visual design: For example, as Fig. 6 shows, analysis on travel time cost or dynamic traffic volume can be performed in the linear view.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 10,
+              "PaperDescription": "A circular filter embedded in spatial view is used to select regions of interest by specifying spatial constraints, including location and direction. Users can manipulate filter parameters directly on the spatial view.",
+              "Inputs": [
+                "User interactions (mouse click, drag)"
+              ],
+              "Outputs": [
+                "Spatial region selection and query"
+              ],
+              "ReferenceCitation": "Section 4.2 Filter design: The circular filter is embedded in spatial view so that it is intuitive to directly manipulate the filter in spatial context.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 11,
+              "PaperDescription": "A two-level temporal filter enables users to select specific date and time ranges, filtering trajectories based on temporal constraints.",
+              "Inputs": [
+                "User selection of date range and time range"
+              ],
+              "Outputs": [
+                "Temporal constraints for trajectory filtering"
+              ],
+              "ReferenceCitation": "Section 4.2 Filter design: A two-level temporal filter is provided: date and time. Users can select any date(s) and time range.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Comparison",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Cluster Comparison",
+              "ID": 12,
+              "PaperDescription": "Interactions on OD-Wheel allow users to compare traffic volume dynamics among clusters by relocating, stacking, and highlighting differences between clusters.",
+              "Inputs": [
+                "User interactions (click, drag, lasso selection)"
+              ],
+              "Outputs": [
+                "Updated comparison views in OD-Wheel and linked spatial view"
+              ],
+              "ReferenceCitation": "Section 6.2 Interactions on OD-Wheel: Several interactions are developed for easy comparison among clusters. A cluster can be relocated by dragging-and-moving the gray annulus around the circle.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

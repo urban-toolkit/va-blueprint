@@ -1,0 +1,243 @@
+{
+  "PaperTitle": "Visual Exploration of Big Spatio-Temporal Urban Data: A Study of New York City Taxi Trips",
+  "Year": 2013,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Taxi Trip",
+              "ID": 1,
+              "PaperDescription": "The data used in our study was provided by Taxi and Limousine Commission of New York City and contains information about all medallion taxi trips in 2009, 2011, and 2012.",
+              "Inputs": [
+                "Raw CSV files from NYC Taxi and Limousine Commission"
+              ],
+              "Outputs": [
+                "Structured dataset of taxi trips with attributes like trip id, taxi id, pickup/dropoff locations and times, distance, fare amount, tip amount, and toll amount"
+              ],
+              "ReferenceCitation": "Data and Design Requirements section: The data used in our study was provided by Taxi and Limousine Commission of New York City and contains information about all medallion taxi trips in 2009, 2011, and 2012.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Indexing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatiotemporal Index",
+              "ID": 2,
+              "PaperDescription": "We have built a specialized index based on k-d trees to support spatio-temporal queries at interactive rates.",
+              "Inputs": [
+                "Structured dataset of taxi trips"
+              ],
+              "Outputs": [
+                "Indexed data structure supporting spatio-temporal constraints"
+              ],
+              "ReferenceCitation": "The TaxiVis System section: We have built a specialized index based on k-d trees to support spatio-temporal queries at interactive rates.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Querying",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Visual Query Engine",
+              "ID": 3,
+              "PaperDescription": "Users formulate queries visually, by interacting with maps and other visual representations. Internally, a textual query is generated which is then evaluated by the storage manager.",
+              "Inputs": [
+                "User-defined visual queries",
+                "Indexed data structure"
+              ],
+              "Outputs": [
+                "Query result set (subset of taxi trips)"
+              ],
+              "ReferenceCitation": "The TaxiVis System section: Users formulate queries visually, by interacting with maps and other visual representations. Internally, a textual query is generated which is then evaluated by the storage manager.",
+              "FeedsInto": [
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 6,
+              "PaperDescription": "Maps serve different purposes in our system. They provide a canvas for displaying query results, for users to specify spatial constraints and compose/refine queries.",
+              "Inputs": [
+                "Query result set"
+              ],
+              "Outputs": [
+                "Interactive 2D map view with pickups, drop-offs, directional constraints"
+              ],
+              "ReferenceCitation": "User Interface Components section: Maps serve different purposes in our system. They provide a canvas for displaying query results, for users to specify spatial constraints and compose/refine queries.",
+              "FeedsInto": [
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 7,
+              "PaperDescription": "Our system supports density summary visualizations or heat maps that can be used to show the distribution of pickups and/or dropoffs in an area.",
+              "Inputs": [
+                "Query result set"
+              ],
+              "Outputs": [
+                "Heatmap overlay on 2D map"
+              ],
+              "ReferenceCitation": "Query Result Visualization section: Our system supports density summary visualizations or heat maps that can be used to show the distribution of pickups and/or dropoffs in an area.",
+              "FeedsInto": [
+                6,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Grid Map",
+              "ID": 8,
+              "PaperDescription": "A grid map is a set of cells where their geometries and visual representations can be customized by the users.",
+              "Inputs": [
+                "Query result set"
+              ],
+              "Outputs": [
+                "Grid-based map visualization by region (e.g., neighborhoods, zip codes)"
+              ],
+              "ReferenceCitation": "Query Result Visualization section: A grid map is a set of cells where their geometries and visual representations can be customized by the users.",
+              "FeedsInto": [
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Time Series",
+              "ID": 9,
+              "PaperDescription": "The information associated with the results of a query can be visualized using different representations within the data summary view, such as time series.",
+              "Inputs": [
+                "Query result set"
+              ],
+              "Outputs": [
+                "Time series plots of taxi trips over time"
+              ],
+              "ReferenceCitation": "User Interface Components section: The information associated with the results of a query can be visualized using different representations within the data summary view, such as time series.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Histogram",
+              "ID": 10,
+              "PaperDescription": "The attribute selection view shows histograms that summarize the attribute values for the trips in the result set of the query.",
+              "Inputs": [
+                "Query result set"
+              ],
+              "Outputs": [
+                "Histograms of attribute distributions (e.g., fare, tip amount)"
+              ],
+              "ReferenceCitation": "Visual Query Specification section: The attribute selection view shows histograms that summarize the attribute values for the trips in the result set of the query.",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 11,
+              "PaperDescription": "Scatter plots are used to examine the duration of trips to the airports at different times of the day.",
+              "Inputs": [
+                "Query result set"
+              ],
+              "Outputs": [
+                "Scatter plots showing relationships between attributes (e.g., trip duration vs. time of day)"
+              ],
+              "ReferenceCitation": "Exploring Query Results section: Scatter plots are used to examine the duration of trips to the airports at different times of the day.",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 12,
+              "PaperDescription": "Spatial constraints are specified by polygons and arrows on the map view. These are created either by brushing or by selecting predefined polygons corresponding to NYC's neighborhoods, zip codes, and boroughs.",
+              "Inputs": [
+                "User selection on map (polygons, arrows)"
+              ],
+              "Outputs": [
+                "Spatial query constraints"
+              ],
+              "ReferenceCitation": "Visual Query Specification section: Spatial constraints are specified by polygons and arrows on the map view. These are created either by brushing or by selecting predefined polygons corresponding to NYC's neighborhoods, zip codes, and boroughs.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 13,
+              "PaperDescription": "Temporal constraints are specified using the time selection widgets. In the Regular Selection widget, the user defines an atomic temporal constraint by assigning the values of the start time and end time fields.",
+              "Inputs": [
+                "User selection on time widget"
+              ],
+              "Outputs": [
+                "Temporal query constraints"
+              ],
+              "ReferenceCitation": "Visual Query Specification section: Temporal constraints are specified using the time selection widgets. In the Regular Selection widget, the user defines an atomic temporal constraint by assigning the values of the start time and end time fields.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Attribute Filter",
+              "ID": 14,
+              "PaperDescription": "Attribute constraints are defined through the attribute selection view, which shows histograms that summarize the attribute values for the trips in the result set of the query.",
+              "Inputs": [
+                "User selection on attribute histograms"
+              ],
+              "Outputs": [
+                "Attribute query constraints"
+              ],
+              "ReferenceCitation": "Visual Query Specification section: Attribute constraints are defined through the attribute selection view, which shows histograms that summarize the attribute values for the trips in the result set of the query.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

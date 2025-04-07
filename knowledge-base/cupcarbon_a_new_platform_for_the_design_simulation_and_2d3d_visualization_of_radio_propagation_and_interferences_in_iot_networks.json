@@ -1,0 +1,320 @@
+{
+  "PaperTitle": "CupCarbon: A New Platform for the Design, Simulation and 2D/3D Visualization of Radio Propagation and Interferences in IoT Networks",
+  "Year": 2018,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Geometries",
+              "ID": 1,
+              "PaperDescription": "The 3D environment of CupCarbon is composed of ground elevation, buildings and various objects like sensor nodes.",
+              "Inputs": [
+                "Ground elevation model (heightmaps or Google Elevation API)",
+                "Building top shapes from Overpass API (OSM)"
+              ],
+              "Outputs": [
+                "Extruded buildings and ground elevation mesh in the 3D environment"
+              ],
+              "ReferenceCitation": "Section II.C: The 3D environment of CupCarbon is composed of ground elevation, buildings and various objects like sensor nodes. The ground elevation model can be imported into a CupCarbon project using heightmaps, which are simple grayscale images and meta data, providing GPS coordinates and bounds (min and max altitude) of the heightmaps.",
+              "FeedsInto": [
+                3,
+                4,
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "2D Features",
+              "ID": 2,
+              "PaperDescription": "Sensor nodes are represented by spheres of various colors and sizes depending on their respective states and types. Links between sensors are shown by lines.",
+              "Inputs": [
+                "Sensor node data including location, status, type"
+              ],
+              "Outputs": [
+                "2D map features including sensor node representations and link lines"
+              ],
+              "ReferenceCitation": "Section II.C: Sensor nodes are simply represented by spheres of various colors and sizes, depending on their respective states and types. Links between sensors are shown by lines.",
+              "FeedsInto": [
+                3,
+                4,
+                7,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Simulation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2.5D Visibility Tree Propagation",
+              "ID": 3,
+              "PaperDescription": "A 2.5D propagation model based on a point to zone acceleration structure called visibility tree that estimates channel attenuation and Impulse Response (IR) quickly.",
+              "Inputs": [
+                "3D environment geometry",
+                "Receiver node locations"
+              ],
+              "Outputs": [
+                "Channel attenuation values and Impulse Response (IR)"
+              ],
+              "ReferenceCitation": "Section II.A: The first one is a 2.5D based on a point to zone acceleration structure called visibility tree. It allows to estimate very quickly the channel attenuation and the channel Impulse Response (IR) according to a large number of receivers.",
+              "FeedsInto": [
+                5,
+                6,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "3D Ray Tracing Propagation",
+              "ID": 4,
+              "PaperDescription": "A full 3D ray-tracing model associated with a Monte-Carlo algorithm that simulates accurate radio propagation considering reflection surfaces.",
+              "Inputs": [
+                "3D environment geometry",
+                "Receiver node locations"
+              ],
+              "Outputs": [
+                "Channel attenuation values and Impulse Response (IR)"
+              ],
+              "ReferenceCitation": "Section II.A: The second one is a full 3D ray-tracing associated with a Monte-Carlo algorithm. It is able to exploit the slight diffuse behavior of the reflection surfaces but not the diffraction yet.",
+              "FeedsInto": [
+                5,
+                6,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Physical Layer Interference Modeling",
+              "ID": 5,
+              "PaperDescription": "Implements the physical layer (PHY) of ZigBee, WiFi, and LoRa protocols to evaluate link quality under interference.",
+              "Inputs": [
+                "Radio channel propagation data",
+                "Data encoding parameters",
+                "Protocol standards (ZigBee, WiFi, LoRa)"
+              ],
+              "Outputs": [
+                "Link quality evaluation metrics under interference"
+              ],
+              "ReferenceCitation": "Section II.B.1: A significant originality in CupCarbon is to be able to implement the true PHYsical layer of the communication. Baseband models for three different standards have been integrated: the ZigBee, WiFi and LoRa protocols.",
+              "FeedsInto": [
+                7,
+                8,
+                9,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "a-stable Interference Statistical Modeling",
+              "ID": 6,
+              "PaperDescription": "Generates interference using a-stable distributions with parameters depending on radio channel statistics and interferer density.",
+              "Inputs": [
+                "Interferer density",
+                "Radio channel statistics"
+              ],
+              "Outputs": [
+                "Simulated interference levels for dense networks"
+              ],
+              "ReferenceCitation": "Section II.B.2: Our proposal is to use a-stable distributions with parameters depending on the radio channel statistics and the interferer density.",
+              "FeedsInto": [
+                7,
+                8,
+                9,
+                10
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Simulation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Mobile Route Planning",
+              "ID": 15,
+              "PaperDescription": "It allows to create the routes of the mobiles. A mobile can be just a device without any communicating system or it can be a sensor node or a device with a sensor node.",
+              "Inputs": [
+                "Predefined routes",
+                "Trigger-based conditions (e.g., detection events)"
+              ],
+              "Outputs": [
+                "Mobility paths for mobile nodes"
+              ],
+              "ReferenceCitation": "Section III: Mobility module: It allows to create the routes of the mobiles. A mobile can be just a device without any communicating system or it can be a sensor node or a device with a sensor node.",
+              "FeedsInto": [
+                9,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Node Script Execution",
+              "ID": 16,
+              "PaperDescription": "This module represents the interpreter of the SenScript language used to program each node of the network.",
+              "Inputs": [
+                "SenScript node programs",
+                "Node data (sensed values, events)"
+              ],
+              "Outputs": [
+                "Executed instructions affecting node communication and behavior"
+              ],
+              "ReferenceCitation": "Section III: Communication Script module: This module represents the interpreter of the SenScript language used to program each node of the network.",
+              "FeedsInto": [
+                5,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 7,
+              "PaperDescription": "The 2D environment is useful for simulation debugging and validation.",
+              "Inputs": [
+                "Sensor nodes (2D features)",
+                "Communication links",
+                "Simulation debugging data"
+              ],
+              "Outputs": [
+                "2D visualization of network layout and communication links"
+              ],
+              "ReferenceCitation": "Section II.C: The 2D environment is useful for simulation debugging and validation.",
+              "FeedsInto": [
+                12,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 8,
+              "PaperDescription": "Displays the 3D environment including terrain elevation, buildings, and sensor nodes to visualize deployment and radio propagation impact.",
+              "Inputs": [
+                "3D geometries (terrain, buildings)",
+                "Sensor nodes",
+                "Radio propagation and interference data"
+              ],
+              "Outputs": [
+                "3D visualization of simulation scenarios"
+              ],
+              "ReferenceCitation": "Section II.C: Fig. 5 shows an example of a city displayed in the 3D environment of the CupCarbon simulator.",
+              "FeedsInto": [
+                12,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Links)",
+              "ID": 9,
+              "PaperDescription": "Links between sensors are shown by lines in both 2D and 3D environments.",
+              "Inputs": [
+                "Communication link data"
+              ],
+              "Outputs": [
+                "Link overlays on 2D and 3D visualizations"
+              ],
+              "ReferenceCitation": "Section II.C: Links between sensors are shown by lines.",
+              "FeedsInto": [
+                7,
+                8,
+                12,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Interference Zones)",
+              "ID": 10,
+              "PaperDescription": "Displays interference regions computed from radio propagation and interference models.",
+              "Inputs": [
+                "Interference region data"
+              ],
+              "Outputs": [
+                "Overlays visualizing interference zones in 2D/3D environments"
+              ],
+              "ReferenceCitation": "Section III: It allows to deploy the different sensor nodes of the network and it is used to calculate the interferences and the signal propagations.",
+              "FeedsInto": [
+                7,
+                8,
+                12,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Mobility Paths)",
+              "ID": 11,
+              "PaperDescription": "Displays mobility paths of mobile nodes in both 2D and 3D environments.",
+              "Inputs": [
+                "Mobility routes of mobile nodes"
+              ],
+              "Outputs": [
+                "Overlay visualizations showing mobility patterns"
+              ],
+              "ReferenceCitation": "Section III: Mobility module: It allows to create the routes of the mobiles.",
+              "FeedsInto": [
+                7,
+                8,
+                12,
+                13
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Navigation",
+              "ID": 12,
+              "PaperDescription": "The 3D environment allows to deploy the different sensor nodes of the network and it is used to calculate the interferences and the signal propagations.",
+              "Inputs": [
+                "User navigation inputs (mouse, keyboard)"
+              ],
+              "Outputs": [
+                "Updated camera perspective in 3D scene"
+              ],
+              "ReferenceCitation": "Section III: It is the main part of the simulator that is first presented to the user. It allows to deploy the different sensor nodes of the network and it is used to calculate the interferences and the signal propagations.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Configuration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Node Deployment",
+              "ID": 13,
+              "PaperDescription": "Allows users to deploy sensor nodes, configure their parameters, and simulate their communication scripts.",
+              "Inputs": [
+                "User input (sensor node type, position, communication scripts)"
+              ],
+              "Outputs": [
+                "Configured sensor nodes in the simulation environment"
+              ],
+              "ReferenceCitation": "Section III: It allows to deploy the different sensor nodes of the network and it is used to calculate the interferences and the signal propagations.",
+              "FeedsInto": [
+                15,
+                16
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

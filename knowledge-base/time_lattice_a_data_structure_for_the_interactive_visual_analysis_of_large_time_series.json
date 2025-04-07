@@ -1,0 +1,191 @@
+{
+  "PaperTitle": "Time Lattice: A Data Structure for the Interactive Visual Analysis of Large Time Series",
+  "Year": 2018,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Noise Sensor",
+              "ID": 1,
+              "PaperDescription": "Loads sound pressure level (SPL) time series data from acoustic sensors deployed in NYC, sampled at 1-second intervals.",
+              "Inputs": [
+                "Raw SPL decibel readings from SONYC sensors"
+              ],
+              "Outputs": [
+                "Time series data for each sensor (1-second intervals)"
+              ],
+              "ReferenceCitation": "Section 5.1 Sound Measurement Data: This data is sampled continuously at 1 second intervals from each sensor.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Querying",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "OLAP Query Engine",
+              "ID": 2,
+              "PaperDescription": "Performs multi-resolution OLAP queries on the time series data using the Time Lattice data structure, supporting group-by, constraints, and aggregation functions at different temporal resolutions.",
+              "Inputs": [
+                "Time series data from acoustic sensors",
+                "User-defined temporal constraints and group-by parameters"
+              ],
+              "Outputs": [
+                "Aggregated SPL data by specified temporal resolution (e.g., hourly, daily, monthly)"
+              ],
+              "ReferenceCitation": "Section 3.2 Querying: Aggregate queries (or OLAP-type queries) are primarily used for a more nuanced analysis on the time series data.",
+              "FeedsInto": [
+                3,
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Aggregation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "LAeq Metric Computation",
+              "ID": 3,
+              "PaperDescription": "Computes the equivalent continuous A-weighted sound pressure level (LAeq) over specified time intervals for comparative and compliance analysis.",
+              "Inputs": [
+                "Aggregated SPL data"
+              ],
+              "Outputs": [
+                "LAeq values for the selected time intervals"
+              ],
+              "ReferenceCitation": "Section 5.1 Sound Measurement Data: As part of the analysis, the researchers are also interested in computing a metric called equivalent continuous A-weighted sound pressure level (LAeq).",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 4,
+              "PaperDescription": "Displays the locations of deployed acoustic sensors in NYC, allowing users to select sensors for analysis.",
+              "Inputs": [
+                "Sensor location data"
+              ],
+              "Outputs": [
+                "2D map with selectable sensor locations"
+              ],
+              "ReferenceCitation": "Section 5.3 Visual Interface: The query panel also has a map widget (Figure 1 (left)) that displays the location of the deployed acoustic sensors from which the user can choose the sensors of interest.",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart (Summary View)",
+              "ID": 5,
+              "PaperDescription": "Displays an overview of SPL or LAeq values over time for the entire time series, supporting time range selection via brushing.",
+              "Inputs": [
+                "Aggregated SPL or LAeq data over time"
+              ],
+              "Outputs": [
+                "Line chart showing overview of noise level trends"
+              ],
+              "ReferenceCitation": "Section 5.3 Visual Interface: Each card is composed of a summary view providing an overview of the entire time series.",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart (Detailed View)",
+              "ID": 6,
+              "PaperDescription": "Displays detailed SPL or LAeq data for a user-selected time range with finer granularity and level-of-detail rendering.",
+              "Inputs": [
+                "Filtered SPL or LAeq data for the selected time range"
+              ],
+              "Outputs": [
+                "Line chart with detailed noise levels for selected time range"
+              ],
+              "ReferenceCitation": "Section 5.3 Visual Interface: When no constraints / group-by's are specified, the query simply corresponds to a range query, and is visualized in the detailed view.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Sensor Selection",
+              "ID": 7,
+              "PaperDescription": "Allows users to select one or more sensors on the map for comparative noise analysis and query specification.",
+              "Inputs": [
+                "User sensor selection on 2D map"
+              ],
+              "Outputs": [
+                "Subset of sensor time series for analysis"
+              ],
+              "ReferenceCitation": "Section 5.3 Visual Interface: The query panel also has a map widget (Figure 1 (left)) that displays the location of the deployed acoustic sensors from which the user can choose the sensors of interest.",
+              "FeedsInto": [
+                2
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 8,
+              "PaperDescription": "Allows users to select a time range on the summary view for detailed analysis, filtering the time series data displayed in the detailed line chart.",
+              "Inputs": [
+                "User time range selection from the summary view"
+              ],
+              "Outputs": [
+                "Filtered time series data for detailed visualization"
+              ],
+              "ReferenceCitation": "Section 5.3 Visual Interface: Users can select the time range of interest by brushing over the summary view.",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Parameter Selection",
+              "ID": 9,
+              "PaperDescription": "Allows users to configure query parameters such as time constraints, group-by resolutions, and aggregation metrics (including LAeq).",
+              "Inputs": [
+                "User-defined constraints and group-by parameters"
+              ],
+              "Outputs": [
+                "Configured query for OLAP execution"
+              ],
+              "ReferenceCitation": "Section 5.3 Visual Interface: While framing a query, the user can set constraints at various resolutions (e.g. analysis over weekends would require a constraint on the dayweek resolution, and night time would require a constraint on the hour of day resolution).",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

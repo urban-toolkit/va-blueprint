@@ -1,0 +1,319 @@
+{
+  "PaperTitle": "Uncertainty-aware visual analytics for exploring human behaviors from heterogeneous spatial temporal data",
+  "Year": 2018,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Features",
+              "ID": 1,
+              "PaperDescription": "Loads raster tourist map and vector road network of Abila from the IEEE VAST Challenge 2014 dataset.",
+              "Inputs": [
+                "Raster tourist map (JPG format)",
+                "Vector road network data"
+              ],
+              "Outputs": [
+                "Georeferenced map and road network layers"
+              ],
+              "ReferenceCitation": "Section 4.1: '...a raster format tourist map of Abila, a vector format road network and a name list of the employees.'",
+              "FeedsInto": [
+                4,
+                8,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "GPS",
+              "ID": 2,
+              "PaperDescription": "Loads GPS logs of employee car trajectories and transaction logs from IEEE VAST Challenge 2014 dataset.",
+              "Inputs": [
+                "GPS logs (685,171 records at one-second resolution)",
+                "Transaction logs (loyalty card and credit card records)"
+              ],
+              "Outputs": [
+                "Time-stamped trajectory data and enriched transactional event data"
+              ],
+              "ReferenceCitation": "Section 4.1: 'The GPS log and transaction datasets cover 54 employees and a time span of two weeks, Jan. 6–19.'",
+              "FeedsInto": [
+                3,
+                4,
+                5,
+                6,
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Data Fusion",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Movement Event Definition",
+              "ID": 3,
+              "PaperDescription": "Defines events from GPS logs as stops above 1 minute, enriched with POI and transaction information.",
+              "Inputs": [
+                "GPS logs",
+                "POI data",
+                "Transaction logs"
+              ],
+              "Outputs": [
+                "Event data structure with time span, location, car, and transaction attributes"
+              ],
+              "ReferenceCitation": "Section 4.2: 'The events are first defined from the GPS logs, as stops above 1 min... enriched with POIs and transaction information.'",
+              "FeedsInto": [
+                8,
+                10,
+                11,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Uncertainty Calculation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "POI Boundary Refinement",
+              "ID": 4,
+              "PaperDescription": "Refines manually extracted POI boundaries using GPS data and transaction logs to improve spatial accuracy.",
+              "Inputs": [
+                "Extracted POI boundaries",
+                "GPS logs",
+                "Transaction logs"
+              ],
+              "Outputs": [
+                "Refined POI boundaries"
+              ],
+              "ReferenceCitation": "Section 5.1.2: 'We use GPS and transaction log information as the reference to refine the boundaries (Fig. 4).' ",
+              "FeedsInto": [
+                3,
+                15
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Resolution Refinement",
+              "ID": 5,
+              "PaperDescription": "Improves temporal resolution of loyalty card data by matching it with high-resolution credit card transactions.",
+              "Inputs": [
+                "Loyalty card data",
+                "Credit card data"
+              ],
+              "Outputs": [
+                "Refined timestamp for loyalty card transactions"
+              ],
+              "ReferenceCitation": "Section 5.2.1: 'We match the transactions in the same day with identical location, price, person.'",
+              "FeedsInto": [
+                3,
+                10,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Location Shift Correction",
+              "ID": 6,
+              "PaperDescription": "Detects and corrects systematic location shifts in GPS trajectories using general visiting patterns.",
+              "Inputs": [
+                "GPS trajectories",
+                "General visiting patterns"
+              ],
+              "Outputs": [
+                "Corrected GPS trajectories"
+              ],
+              "ReferenceCitation": "Section 5.4.2: 'We calculate the shift of frequent visiting places from the regular patterns and shift the uncertain data back (Algorithm 5).' ",
+              "FeedsInto": [
+                3,
+                8,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Identity Assignment",
+              "ID": 7,
+              "PaperDescription": "Matches vehicle GPS movement with transaction data to infer missing driver identities.",
+              "Inputs": [
+                "Car GPS logs",
+                "Transaction logs"
+              ],
+              "Outputs": [
+                "Assigned identities to vehicles without driver info"
+              ],
+              "ReferenceCitation": "Section 5.5: 'We visually map the stop event and transaction events in the event view (Fig. 9)... we successfully find the car assignment for these nine drivers and five cars.' ",
+              "FeedsInto": [
+                3,
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 8,
+              "PaperDescription": "Displays positions of POIs, GPS tracks, and allows spatial filtering in a 2D map view.",
+              "Inputs": [
+                "POI data",
+                "GPS trajectory data",
+                "Transaction data"
+              ],
+              "Outputs": [
+                "Interactive 2D spatial visualization with spatial filtering capabilities"
+              ],
+              "ReferenceCitation": "Section 6.1: 'Map view shows the positions of POIs and GPS tracks (Fig. 9a)... Users can apply spatial filters on the map to select GPS tracks passing single or multiple regions.' ",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (POI Categories)",
+              "ID": 9,
+              "PaperDescription": "Overlays POI categories, GPS routes, and outlier highlights on the 2D map view.",
+              "Inputs": [
+                "POI data",
+                "Clustered GPS trajectories",
+                "Outlier detection results"
+              ],
+              "Outputs": [
+                "Color-coded overlays on the 2D map highlighting POI categories and anomalies"
+              ],
+              "ReferenceCitation": "Section 6.1: 'Each POI is represented by a polygon, with color encoding the POI categories.' ",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Timeline",
+              "ID": 10,
+              "PaperDescription": "Displays temporal distribution of GPS records and supports temporal filtering.",
+              "Inputs": [
+                "GPS logs",
+                "Transaction events"
+              ],
+              "Outputs": [
+                "Interactive timeline view showing temporal data distribution"
+              ],
+              "ReferenceCitation": "Section 6.1: 'Timeline view shows the temporal distribution of GPS records (Fig. 9b)... Users can apply temporal filters on the timeline to select GPS tracks within single or multiple time ranges.' ",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Timeline (Event)",
+              "ID": 11,
+              "PaperDescription": "Visualizes enriched event sequences of multiple employees, supporting behavior comparison and correlation analysis.",
+              "Inputs": [
+                "Enriched movement events",
+                "Transaction events"
+              ],
+              "Outputs": [
+                "Timeline view comparing multiple employees' behaviors"
+              ],
+              "ReferenceCitation": "Section 6.2: 'Event timeline shows the event subsequence in the selected time range for multiple employees (Fig. 9e).' ",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Table",
+              "ID": 12,
+              "PaperDescription": "Displays a tabular list of employee names, car assignments, event counts, and transaction summaries for quick selection and analysis.",
+              "Inputs": [
+                "Employee data",
+                "Event data",
+                "Transaction data"
+              ],
+              "Outputs": [
+                "Interactive table with employee behavior summaries and filtering options"
+              ],
+              "ReferenceCitation": "Section 6.2: 'Entity view shows a name list of the employees (Fig. 9c). Users can directly select people on the list.'",
+              "FeedsInto": [
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 13,
+              "PaperDescription": "Allows users to filter GPS tracks and events by selecting spatial regions on the map view.",
+              "Inputs": [
+                "User-defined spatial selection"
+              ],
+              "Outputs": [
+                "Filtered GPS tracks and event data"
+              ],
+              "ReferenceCitation": "Section 6.1: 'Users can apply spatial filters on the map to select GPS tracks passing single or multiple regions.' ",
+              "FeedsInto": [
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 14,
+              "PaperDescription": "Allows users to filter events and movements by time range using the timeline view.",
+              "Inputs": [
+                "User-defined temporal selection"
+              ],
+              "Outputs": [
+                "Filtered events in timeline and map views"
+              ],
+              "ReferenceCitation": "Section 6.1: 'Users can apply temporal filters on the timeline to select GPS tracks within single or multiple time ranges.' ",
+              "FeedsInto": [
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Configuration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "POI Category Configuration",
+              "ID": 15,
+              "PaperDescription": "Allows users to define, edit, and color-code POI categories and update boundary settings in the visual interface.",
+              "Inputs": [
+                "User-defined POI category settings",
+                "Refined POI boundaries"
+              ],
+              "Outputs": [
+                "Updated POI categories and visual overlays on the map"
+              ],
+              "ReferenceCitation": "Section 5.1.1: 'We summarized the POIs to different function categories. The categories include GAStech (work place), restaurant, shop, home, etc. Then we assign a color for each POI category.",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

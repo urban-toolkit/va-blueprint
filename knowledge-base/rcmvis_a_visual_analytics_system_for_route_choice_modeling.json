@@ -1,0 +1,329 @@
+{
+  "PaperTitle": "RCMVis: A Visual Analytics System for Route Choice Modeling",
+  "Year": 2023,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Bicycle Trip",
+              "ID": 1,
+              "PaperDescription": "Loads a real-world bicycle trip dataset from the Seoul bike-sharing system, including information on 210K trips that took place in March 2018. Each trip consisted of GPS-tracked path records, origin and destination stations, rental and return times, travel distance, and duration.",
+              "Inputs": [
+                "Raw bicycle trip data with GPS path records"
+              ],
+              "Outputs": [
+                "Structured dataset with trip records, including spatial and temporal attributes"
+              ],
+              "ReferenceCitation": "Section 3.2: We used a real-world bicycle trip dataset from the Seoul bike-sharing system. The dataset included information on 210 K trips that took place in March 2018.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Preprocessing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Data Cleaning",
+              "ID": 2,
+              "PaperDescription": "Filters out erroneous trip records using criteria such as missing fields, trips out of Seoul boundaries, identical origin and destination, unrealistic high speed, and long distance from stations to GPS points.",
+              "Inputs": [
+                "Raw bicycle trip dataset"
+              ],
+              "Outputs": [
+                "Cleaned trip dataset without erroneous records"
+              ],
+              "ReferenceCitation": "Section 3.2.2: To clean the data, we referred to Wang et al. [18] and modified their cleaning criteria. We filtered out the trips that met one of the following conditions: Missing Fields, Out of Bounds, Same O/D, High Speed, Long Distance from Origin, Long Distance to Destination.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Map Matching",
+              "ID": 3,
+              "PaperDescription": "Matches cleaned GPS path records with the Seoul road network using the ST-Matching algorithm to reduce noise in GPS data and produce road network-bounded routes.",
+              "Inputs": [
+                "Cleaned bicycle trip dataset",
+                "OpenStreetMap road network dataset"
+              ],
+              "Outputs": [
+                "Map-matched route dataset"
+              ],
+              "ReferenceCitation": "Section 3.2.3: After cleaning the trip dataset, we matched the path records with the street network of Seoul to reduce possible noise in GPS records. We used a well-known map matching algorithm, ST-Matching [34].",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Feature Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Route Attributes Collection",
+              "ID": 4,
+              "PaperDescription": "Collects route-level attributes such as distance, number of intersections, traffic lights, road type ratios, bike lane ratio, slopes, and path size correction term used for modeling route choice behaviors.",
+              "Inputs": [
+                "Map-matched route dataset",
+                "OpenStreetMap road network data"
+              ],
+              "Outputs": [
+                "Enriched route dataset with route-level attributes"
+              ],
+              "ReferenceCitation": "Section 3.2.4: To include routes in RCM analysis, the characteristics of routes must be identified. Table 3 summarizes the route attributes we collected and used in the RCM analysis.",
+              "FeedsInto": [
+                5,
+                8,
+                9,
+                15,
+                16
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "k-Medoids Clustering",
+              "ID": 5,
+              "PaperDescription": "Performs k-medoids clustering on trips having the same origin-destination pair to group similar routes for choice set generation, using either overlap distance or attribute distance as clustering metrics.",
+              "Inputs": [
+                "Enriched route dataset with route-level attributes"
+              ],
+              "Outputs": [
+                "Clustered route datasets representing choice sets"
+              ],
+              "ReferenceCitation": "Section 4.1.1: We decided to use the k-medoids clustering algorithm [36] that they actively use to group similar routes.",
+              "FeedsInto": [
+                6,
+                10,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Estimation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Path-Size Logit Model",
+              "ID": 6,
+              "PaperDescription": "Estimates route choice probabilities and route attribute coefficients by applying the path-size logit (PSL) model on the generated choice sets, using maximum likelihood estimation (MLE).",
+              "Inputs": [
+                "Clustered route datasets (choice sets)",
+                "User-specified route attributes"
+              ],
+              "Outputs": [
+                "Estimated coefficients for route attributes and model goodness-of-fit scores"
+              ],
+              "ReferenceCitation": "Section 4.2: As we adopt PSL model, the probability of choosing the route of ti given the coefficients u is specified as follows [8]:",
+              "FeedsInto": [
+                7,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Estimation Contribution Score",
+              "ID": 7,
+              "PaperDescription": "Calculates the estimation contribution score (ECS) for each trip or OD pair to assess their contribution to the model estimation outcome.",
+              "Inputs": [
+                "Estimated coefficients",
+                "Choice sets"
+              ],
+              "Outputs": [
+                "Estimation contribution scores (ECS) per trip and OD pair"
+              ],
+              "ReferenceCitation": "Section 4.4: To measure how much an arbitrary trip contributes to yielding the estimated coefficients û, we define the estimation contribution score (ECS).",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D (Flow Map + Road Heatmap)",
+              "ID": 8,
+              "PaperDescription": "Displays stations, OD flows, and route distributions on a 2D map with flow maps and road heatmaps for spatial exploration of trip data.",
+              "Inputs": [
+                "Trip sets with OD flows and routes",
+                "Station and road data"
+              ],
+              "Outputs": [
+                "Interactive 2D map view with flows and road heatmaps"
+              ],
+              "ReferenceCitation": "Section 5.1.3: The map view (Fig. 2D) allows users to grasp the geographical distribution of the trips. To this end, the map view shows visual elements of the following targets: station, OD pairs, and road segments.",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Map 2D (Route View)",
+              "ID": 15,
+              "PaperDescription": "Displays individual routes of a selected OD pair on a 2D map in the route view for fine-grained inspection.",
+              "Inputs": [
+                "Route data for selected OD pair"
+              ],
+              "Outputs": [
+                "Interactive route map"
+              ],
+              "ReferenceCitation": "Section 5.1.5: The route map shows all routes of the target OD pair on a map.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "OD Bubble Plot",
+              "ID": 9,
+              "PaperDescription": "Displays OD pairs as bubbles on a scatterplot where axes represent OD attributes, and the bubble size encodes trip volume, allowing brushing and linking for selection.",
+              "Inputs": [
+                "OD pair attributes",
+                "Trip set data"
+              ],
+              "Outputs": [
+                "OD bubble plot visualization"
+              ],
+              "ReferenceCitation": "Section 5.1.2: The OD bubble plot (Fig. 2C) represents each OD pair as a bubble, encoding the number of trips of the OD pair to the area of the bubble.",
+              "FeedsInto": [
+                14,
+                15,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Heat Matrix (Route Attributes)",
+              "ID": 10,
+              "PaperDescription": "Visualizes route attributes as a heatmap where rows represent route attributes and columns represent individual routes within an OD pair.",
+              "Inputs": [
+                "Route attributes of trips in an OD pair"
+              ],
+              "Outputs": [
+                "Heatmap visualization of route attributes"
+              ],
+              "ReferenceCitation": "Section 5.1.5: The route heatmap shows route attributes (Table 3) as a heatmap, where each row represents a route attribute and each column represents a route.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Heat Matrix (Route View)",
+              "ID": 16,
+              "PaperDescription": "Displays route attributes as a heatmap in the route view, where each row is an attribute and each column a route.",
+              "Inputs": [
+                "Route attributes of trips in a selected OD pair"
+              ],
+              "Outputs": [
+                "Heatmap visualization of route attributes"
+              ],
+              "ReferenceCitation": "Section 5.1.5: The route heatmap shows route attributes (Table 3) as a heatmap, where each row represents a route attribute and each column represents a route.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 11,
+              "PaperDescription": "Displays model instances in a scatter plot where the axes represent clustering quality (mean silhouette score) and model goodness-of-fit (rho-squared-bar), supporting brushing for selection.",
+              "Inputs": [
+                "Model instance evaluation scores"
+              ],
+              "Outputs": [
+                "Scatter plot visualization of model instances"
+              ],
+              "ReferenceCitation": "Section 5.2.2: The model scatterplot (Fig. 6C.1) serves as an overview of the model view. It represents each model instance as a single point.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Table",
+              "ID": 12,
+              "PaperDescription": "Displays model instances in a sortable and groupable table, showing hyperparameters, model evaluation scores, and estimated coefficients with significance annotations.",
+              "Inputs": [
+                "Model instance results with estimated coefficients"
+              ],
+              "Outputs": [
+                "Tabular visualization of model instances"
+              ],
+              "ReferenceCitation": "Section 5.2.2: The model instance table (Fig. 6C.2) shows the details of each model instance. This table represents each model instance as a row.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trip Set Filter",
+              "ID": 13,
+              "PaperDescription": "Allows users to filter trip sets based on departure time and attribute conditions, creating subsets for focused analysis.",
+              "Inputs": [
+                "User filtering conditions (temporal, OD attributes, route attributes)"
+              ],
+              "Outputs": [
+                "Filtered active trip set"
+              ],
+              "ReferenceCitation": "Section 5.1.1: The OD-Trip view (Fig. 2B) supports the interactive modification of filtering conditions applied to the active trip set (Task E1).",
+              "FeedsInto": [
+                5,
+                8,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 17,
+              "PaperDescription": "Allows users to brush and select specific stations on the map view for labeling or analysis.",
+              "Inputs": [
+                "User selection on map view (polygon, rectangle, circle)"
+              ],
+              "Outputs": [
+                "Subset of stations assigned to station types or selected for further filtering"
+              ],
+              "ReferenceCitation": "Section 5.1.3: The map view supports brushing on stations, and this is especially useful when understanding the traffic in a specific area.",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Brushing",
+              "ID": 14,
+              "PaperDescription": "Allows users to brush specific OD pairs in the OD bubble plot, dynamically updating linked views such as the map and station views.",
+              "Inputs": [
+                "User brush selection in OD bubble plot"
+              ],
+              "Outputs": [
+                "Subset of OD pairs highlighted in linked views"
+              ],
+              "ReferenceCitation": "Section 5.1.2: The OD bubble plot supports brushing and linking; users can brush on particularly interesting bubbles (Fig. 5 (1)).",
+              "FeedsInto": [
+                8,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

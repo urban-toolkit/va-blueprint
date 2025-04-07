@@ -1,0 +1,229 @@
+{
+  "PaperTitle": "Stacking-Based Visualization of Trajectory Attribute Data",
+  "Year": 2012,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory Attribute",
+              "ID": 1,
+              "PaperDescription": "Loads trajectory datasets with spatial, temporal, and attribute components for visualization and analysis. The datasets include radiation measurements in Japan, taxi trajectories in San Francisco, and vessel movement data in Brest.",
+              "Inputs": [
+                "Trajectory datasets with spatial coordinates, temporal information, and attribute values (e.g., radiation, speed, tortuosity)"
+              ],
+              "Outputs": [
+                "Structured trajectory datasets containing spatial, temporal, and attribute data"
+              ],
+              "ReferenceCitation": "Section 4: To demonstrate the usefulness of the proposed solution, we apply it in Section 4 to visualize several interesting data sets, including the radiation around Fukushima Daiichi nuclear power plant, the taxi traffic at San Francisco airport, and vessel movement in the harbor of Brest.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Grouping",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory Grouping",
+              "ID": 2,
+              "PaperDescription": "Supports grouping and filtering of trajectories based on spatial queries, temporal queries, and attribute-based conditions, enabling focused analysis on subsets of interest.",
+              "Inputs": [
+                "Structured trajectory datasets",
+                "User-defined spatial, temporal, and attribute queries"
+              ],
+              "Outputs": [
+                "Filtered and grouped subsets of trajectories"
+              ],
+              "ReferenceCitation": "Section 3.2: Grouping is useful for dividing a large set of trajectories into manageable portions, which can be analyzed one by one, or for focusing on interesting subsets of trajectories (with respect to the analysis goals) and disregarding uninteresting ones.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Classification",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Class Breaks & Color Mapping",
+              "ID": 3,
+              "PaperDescription": "Classifies attribute values using statistical distribution-based intervals or user-defined class breaks, and maps these classes to color scales for effective visual encoding.",
+              "Inputs": [
+                "Trajectory attribute data",
+                "Statistical distribution analysis",
+                "User-defined class intervals"
+              ],
+              "Outputs": [
+                "Color-coded classes for attribute visualization"
+              ],
+              "ReferenceCitation": "Section 3.2: The cartographic literature recommends choosing class breaks according to the statistical distribution of the values so that similar data values are placed in the same class and dissimilar in different classes [32].",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 4,
+              "PaperDescription": "Displays a 2D map as spatial reference for trajectories, providing context for the spatial layout of trajectory paths in relation to geographic features.",
+              "Inputs": [
+                "Base map data (e.g., OpenStreetMap)",
+                "Trajectory spatial data"
+              ],
+              "Outputs": [
+                "2D map with overlaid trajectory paths"
+              ],
+              "ReferenceCitation": "Section 3.3.1: The spatial context is visualized by a 2D map that resides in a virtual 3D viewing space. The map is constructed in a straightforward way by tiling the bounding box of the trajectories with appropriately scaled bitmaps from the OpenStreetMap project [26].",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 5,
+              "PaperDescription": "Visualizes trajectories as color-coded 3D stacked bands above a 2D map, supporting exploration of spatial attribute behavior and synoptic tasks (S->A and SxT->A).",
+              "Inputs": [
+                "Grouped trajectories",
+                "Color-coded classes for attribute values",
+                "2D map base layer"
+              ],
+              "Outputs": [
+                "3D trajectory bands with color-coded attribute visualization"
+              ],
+              "ReferenceCitation": "Section 3.3.1: The described trajectory paths are used to construct color-coded 3D trajectory bands as illustrated in Fig. 4. The bands are stacked along the z-axis perpendicular to the map.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Lens",
+              "ID": 6,
+              "PaperDescription": "Provides temporally aggregated attribute summaries for trajectories within an interactive spatial query area, supporting spatio-temporal behavior analysis (SxT->A).",
+              "Inputs": [
+                "Trajectory attribute data",
+                "User-defined spatial query area"
+              ],
+              "Outputs": [
+                "Circular time lens display showing temporal aggregation (counts, durations) and attribute distributions"
+              ],
+              "ReferenceCitation": "Section 3.3.1: In order to limit the time-related information to a displayable amount, we developed the time lens (see Fig. 5), which shows temporally aggregated information for an interactively defined spatial query area.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Graph",
+              "ID": 7,
+              "PaperDescription": "Displays attribute values over time for multiple trajectories using stacked 2D horizontal bands, supporting analysis of temporal behaviors (T->A) and comparisons between trajectories.",
+              "Inputs": [
+                "Trajectory attribute data",
+                "Color-coded classes for attribute values"
+              ],
+              "Outputs": [
+                "Stacked time graph showing attribute value changes over time"
+              ],
+              "ReferenceCitation": "Section 3.3.2: To explore the temporal dimension in full detail (T -> A tasks), we propose the complementary time graph display as illustrated in Fig. 6. Following our principal visualization design, this display shows individual trajectories as stacked horizontal bands.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatial and Attribute Selection",
+              "ID": 8,
+              "PaperDescription": "Enables interactive selection of spatial regions and attribute-based filters to construct trajectory subsets for focused analysis.",
+              "Inputs": [
+                "User-defined spatial regions",
+                "User-defined attribute criteria"
+              ],
+              "Outputs": [
+                "Filtered subset of trajectories"
+              ],
+              "ReferenceCitation": "Section 3.2: The analyst can do this by means of spatial queries (e.g., trajectories passing a series of user-selected regions), or by means of clustering trajectories by similar origins, destinations, or route similarity [28].",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Navigation",
+              "ID": 9,
+              "PaperDescription": "Supports 3D navigation within the trajectory wall, including zoom, pan, rotation, and an elevator mechanism for vertical traversal of stacked bands.",
+              "Inputs": [
+                "User interaction (mouse or keyboard inputs)"
+              ],
+              "Outputs": [
+                "Updated viewpoint in the 3D trajectory wall"
+              ],
+              "ReferenceCitation": "Section 3.3.1: Therefore, we give analysts the opportunity to use the so-called elevator, which corresponds to a smooth navigation along the z-axis. User feedback obtained in a small study (see Section 5) indicates that the focused zoom, pan, and orbit and the elevator are practical in our scenario.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Configuration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Color Mapping Configuration",
+              "ID": 10,
+              "PaperDescription": "Allows interactive adjustment of class breaks and color scales via sliders, supporting sensitivity analysis for attribute classification.",
+              "Inputs": [
+                "User-defined color scale selections",
+                "User-defined class interval settings"
+              ],
+              "Outputs": [
+                "Updated color mappings for attribute visualization"
+              ],
+              "ReferenceCitation": "Section 3.2: To do such a testing, the user can move the class breaks interactively by means of sliders, which results in immediate updating of all displays where these classes are represented.",
+              "FeedsInto": [
+                3,
+                4,
+                5,
+                6,
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

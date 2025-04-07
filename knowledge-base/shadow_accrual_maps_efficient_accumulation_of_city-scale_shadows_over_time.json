@@ -1,0 +1,280 @@
+{
+  "PaperTitle": "Shadow Accrual Maps: Efficient Accumulation of City-Scale Shadows over Time",
+  "Year": 2019,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Geometries",
+              "ID": 1,
+              "PaperDescription": "Loads and stores city/building meshes (e.g., from OpenStreetMap) for shadow computation",
+              "Inputs": [
+                "Urban building footprints",
+                "Extruded meshes"
+              ],
+              "Outputs": [
+                "In-memory scene geometry of all buildings"
+              ],
+              "ReferenceCitation": "Sec. 8: We use Manhattan The mesh is composed of 1.5 million triangles.",
+              "FeedsInto": [
+                2,
+                3,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Ray Tracing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Shadow Maps",
+              "ID": 2,
+              "PaperDescription": "Extends standard shadow mapping to store multiple time-step depths in one 3D texture for linear sun movement",
+              "Inputs": [
+                "City geometry",
+                "Short time interval",
+                "Sun directions for t1 and t2"
+              ],
+              "Outputs": [
+                "A single pass that outputs a 3D shadow map capturing all minute-slices"
+              ],
+              "ReferenceCitation": "Sec. 4: Shadow accrual maps we implicitly track the movement of the shadow itself store the depth values for the entire time range in one pass.",
+              "FeedsInto": [
+                5,
+                6,
+                7,
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Inverse Shadow Maps",
+              "ID": 3,
+              "PaperDescription": "Uses a multi-level ray tracing approach from the ground plane to record each source of shadow over time",
+              "Inputs": [
+                "Ground-plane pixel set",
+                "Building geometry",
+                "Up to l=3 intersections"
+              ],
+              "Outputs": [
+                "Bit vectors / lines describing gross or continuous shadow for each point"
+              ],
+              "ReferenceCitation": "Sec. 5: Inverse accrual maps map each ground point p1 to the point p2 by tracing a ray in reverse light direction capturing multiple sources of shadow.",
+              "FeedsInto": [
+                5,
+                6,
+                7,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Direction Graph",
+              "ID": 4,
+              "PaperDescription": "Clusters sun directions to reuse shadow computations for large time intervals (multi-day or multi-month)",
+              "Inputs": [
+                "All possible minute-based sun directions for a time range"
+              ],
+              "Outputs": [
+                "A weighted graph of edges representing distinct direction bins"
+              ],
+              "ReferenceCitation": "Sec. 6: We build a direction graph each node is a bin to significantly reduce the number of accrual maps computed.",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Aggregation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Weighted Shadow Score",
+              "ID": 5,
+              "PaperDescription": "Assigns positive or negative weights per time period (e.g., winter vs. summer) to yield an overall shadow score",
+              "Inputs": [
+                "User-chosen weighting scheme",
+                "Shadow accumulation data"
+              ],
+              "Outputs": [
+                "A single numeric measure of net shade vs. shadow effect"
+              ],
+              "ReferenceCitation": "Sec. 7.2: We define the shadow score the user partitions time range T each portion with weight -1 <= w <= 1.",
+              "FeedsInto": [
+                6,
+                7,
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 6,
+              "PaperDescription": "Renders a 3D map widget showing buildings and color-coded shadow accumulation",
+              "Inputs": [
+                "Camera viewpoint",
+                "Accrued shadow data",
+                "Building meshes"
+              ],
+              "Outputs": [
+                "An interactive 3D scene with color-coded shading or shading difference"
+              ],
+              "ReferenceCitation": "Sec. 7.1: A 3D map widget that provides spatial context user interactions cause on-the-fly shadow updates.",
+              "FeedsInto": [
+                10,
+                11,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 7,
+              "PaperDescription": "Depicts differences in shadow (positive or negative) for new scenarios vs. baseline",
+              "Inputs": [
+                "Baseline and new scenario shadow accumulations"
+              ],
+              "Outputs": [
+                "A color scale with red for more shadow, blue for less shadow"
+              ],
+              "ReferenceCitation": "Sec. 7.1: We allow the user to select a building to replace difference is visualized using a divergent color map (Fig. 8a).",
+              "FeedsInto": [
+                6,
+                9,
+                10
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 8,
+              "PaperDescription": "Shows monthly or hourly distributions of shadow area or shadow score",
+              "Inputs": [
+                "Aggregated shadow stats (area, score) across months/hours"
+              ],
+              "Outputs": [
+                "A bar or line chart of how shadow measures vary over time"
+              ],
+              "ReferenceCitation": "Sec. 9.2: We also show monthly distribution plots a region's shadow area is smaller in summer than winter.",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 9,
+              "PaperDescription": "Allows user to pick the start date, number of days, and hours per day to accumulate shadows",
+              "Inputs": [
+                "UI fields for day/time intervals"
+              ],
+              "Outputs": [
+                "Updates the shadow accumulation and re-renders the 3D map"
+              ],
+              "ReferenceCitation": "Sec. 7.1: A time period is selected by specifying Dstart, start time tstart, number of days n, hours per day k…",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 10,
+              "PaperDescription": "Enables brushing a polygon on the 3D map to restrict shadow analysis to that region",
+              "Inputs": [
+                "User-drawn polygon region in the map widget"
+              ],
+              "Outputs": [
+                "Shadows displayed or analyzed only within the user-selected polygon"
+              ],
+              "ReferenceCitation": "Sec. 7.1: We also allow users to brush and select polygonal regions of interest to inspect shadows…",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Viewport Change",
+              "ID": 11,
+              "PaperDescription": "Panning or zooming updates the viewport, with new level-of-detail re-computation for shadows",
+              "Inputs": [
+                "Camera transforms from user's mouse/keyboard input"
+              ],
+              "Outputs": [
+                "Recomputed partial shadow data for the new viewpoint, displayed in the 3D scene"
+              ],
+              "ReferenceCitation": "Sec. 7.1: User interactions (pan, zoom) recompute shadows on the fly for the region in the viewport enabling LoD rendering.",
+              "FeedsInto": [
+                2,
+                3,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Manipulation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Geometry Replacement",
+              "ID": 12,
+              "PaperDescription": "User can choose an empty lot or demolish an existing building and place a new building design",
+              "Inputs": [
+                "Geometry of new building",
+                "Chosen location to insert"
+              ],
+              "Outputs": [
+                "Updated city mesh plus a difference shadow map showing new building's impact"
+              ],
+              "ReferenceCitation": "Sec. 7.1: We allow the user to select either an empty building lot or an existing building difference is visualized using a divergent color map…",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

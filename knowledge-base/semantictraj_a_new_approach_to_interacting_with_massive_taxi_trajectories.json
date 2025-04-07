@@ -1,0 +1,361 @@
+{
+  "PaperTitle": "SemanticTraj: A New Approach to Interacting with Massive Taxi Trajectories",
+  "Year": 2017,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Taxi Trajectories",
+              "ID": 1,
+              "PaperDescription": "Loads raw taxi trajectory datasets, each recording consecutive samples with GPS locations, vehicle ID, speed, time, occupancy status, and direction.",
+              "Inputs": [
+                "Raw taxi trajectory data"
+              ],
+              "Outputs": [
+                "Taxi trajectory records with GPS points and metadata"
+              ],
+              "ReferenceCitation": "Section 3.1: A taxi trajectory records consecutive samples at an interval of a few seconds in a given time period. Each sample includes the GPS location (longitude and latitude), vehicle ID, speed, time, occupancy status, direction, and possibly other attributes.",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Textualization",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Road Matching and Street Mapping",
+              "ID": 2,
+              "PaperDescription": "Maps each GPS point in the raw taxi trajectories to a street name through road matching algorithms.",
+              "Inputs": [
+                "GPS points from taxi trajectories",
+                "Street network data"
+              ],
+              "Outputs": [
+                "Sequences of street names traversed by each taxi trajectory"
+              ],
+              "ReferenceCitation": "Section 4: Each geographical location of latitude and longitude is mapped to the street name it resides. Such a transformation process is implemented through road matching to find the closest street of a given position.",
+              "FeedsInto": [
+                4,
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Speed Categorization",
+              "ID": 3,
+              "PaperDescription": "Transforms numeric speed values into descriptive semantic terms like Stop, Slow, Normal, Fast, and Very Fast.",
+              "Inputs": [
+                "Vehicle speed values from taxi trajectories"
+              ],
+              "Outputs": [
+                "Semantic speed descriptions for each trajectory segment"
+              ],
+              "ReferenceCitation": "Section 4: The numeric travel speed is converted to a descriptive term as: speed<0.01Km/h → Stop, 0.01Km/h≤speed<20Km/h → Slow, 20Km/h≤speed<60Km/h → Normal, 60Km/h≤speed<100Km/h → Fast, 100Km/h≤speed → Very Fast.",
+              "FeedsInto": [
+                4,
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Indexing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trip Document Indexing",
+              "ID": 4,
+              "PaperDescription": "Creates an index for each taxi trip document, storing fields like pickup/drop-off streets and times, street sequences, travel distance, fare, and GPS points for text-based querying.",
+              "Inputs": [
+                "Street name sequences",
+                "Speed descriptions",
+                "Taxi trip metadata"
+              ],
+              "Outputs": [
+                "Indexed trip documents"
+              ],
+              "ReferenceCitation": "Section 5.1: The index includes the fields of Pick-up and Drop-off streets and Times, and the attributes associated with this taxi trip such as its Travel distance and Fare. The field of Street Names stores the sequence of streets the taxi traveled.",
+              "FeedsInto": [
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Trajectory Document Indexing",
+              "ID": 5,
+              "PaperDescription": "Creates an index for each trajectory document representing a taxi's movements in a fixed time period, including sequences of streets, speed categories, and occupation status.",
+              "Inputs": [
+                "Street name sequences",
+                "Speed descriptions",
+                "Occupation status"
+              ],
+              "Outputs": [
+                "Indexed trajectory documents segmented by time intervals"
+              ],
+              "ReferenceCitation": "Section 5.2: The field of Street Names includes the sequence of streets the taxi traveled during T. The field of DSpeed stores the description terms (e.g., slow, fast) of textualized numeric speeds. The Occupation Status is represented by Y or N at each point.",
+              "FeedsInto": [
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 6,
+              "PaperDescription": "Displays taxi trips on a 2D map with geographic context, using color density on roads to reflect usage frequency, and supports zooming and panning.",
+              "Inputs": [
+                "Indexed taxi trip and trajectory documents"
+              ],
+              "Outputs": [
+                "Rendered 2D map with taxi trajectory paths"
+              ],
+              "ReferenceCitation": "Section 7.2.2: The paths of these trips are drawn with the same opacity, so that the color density on a road reflects how often it is used by these trips.",
+              "FeedsInto": [
+                15,
+                16,
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Trajectories)",
+              "ID": 7,
+              "PaperDescription": "Adds text labels on streets showing street names, average speed, and taxi counts, and provides interaction to toggle or click labels for additional info.",
+              "Inputs": [
+                "Trip metadata",
+                "Traffic statistics per street"
+              ],
+              "Outputs": [
+                "Labeled map overlays showing semantic trip information"
+              ],
+              "ReferenceCitation": "Section 7.2.2: Text labels are given on a few streets, which show the street names, the speeds of the trips, and the taxi counts on the streets.",
+              "FeedsInto": [
+                6,
+                15,
+                16,
+                17
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 8,
+              "PaperDescription": "Displays each taxi trip as a dot in a scatter plot where axes can be configured with attributes like trip distance, cost, traverse time, and speed metrics.",
+              "Inputs": [
+                "Trip metadata and statistics"
+              ],
+              "Outputs": [
+                "Interactive scatter plot of taxi trip metrics"
+              ],
+              "ReferenceCitation": "Section 7.2.3: Users can choose the attributes mapped to the axes and the color of dots. The attributes are trip distance, cost, traverse time, pick-up time, drop-off time, max speed, min speed, and average speed.",
+              "FeedsInto": [
+                15,
+                16,
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Parallel Coordinates Plot",
+              "ID": 9,
+              "PaperDescription": "Presents taxi trip attributes in a parallel coordinates plot to help identify trends and outliers, enabling brushing and linking to other views.",
+              "Inputs": [
+                "Trip metadata and attributes"
+              ],
+              "Outputs": [
+                "Parallel coordinates plot visualizing trip attributes"
+              ],
+              "ReferenceCitation": "Section 7.2.3: A parallel coordinates plot (PCP) helps users identify trends as well as outliers of the taxi trips.",
+              "FeedsInto": [
+                15,
+                16,
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Parallel Sets",
+              "ID": 10,
+              "PaperDescription": "Shows pick-up and drop-off street relationships using parallel sets, where the width of ribbons indicates the number of trips between locations.",
+              "Inputs": [
+                "Pick-up and drop-off street pairs",
+                "Trip counts"
+              ],
+              "Outputs": [
+                "Parallel sets visualization of origin-destination trip flows"
+              ],
+              "ReferenceCitation": "Section 7.2.3: A parallel sets view shows the relationships of the pick-up and drop-off streets.",
+              "FeedsInto": [
+                15,
+                16,
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Meta-summary (Group)",
+              "ID": 11,
+              "PaperDescription": "Provides an aggregated textual summary of all trips resulting from a query, including the number of trips, speed statistics, and popular streets.",
+              "Inputs": [
+                "Query result metadata",
+                "Trip aggregation data"
+              ],
+              "Outputs": [
+                "Text-based summary of aggregated trip results"
+              ],
+              "ReferenceCitation": "Section 7.2.2: Fig. 3(6) displays the meta-summary of the taxi trips in textual description. It summarizes the total number of trips, the speed information of this group, and the popular streets.",
+              "FeedsInto": [
+                15,
+                16,
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Meta-summary (Trip)",
+              "ID": 12,
+              "PaperDescription": "Shows a detailed summary for a selected individual taxi trip, describing its route, speed, and time characteristics in natural language.",
+              "Inputs": [
+                "Individual trip metadata"
+              ],
+              "Outputs": [
+                "Text-based summary of selected trip details"
+              ],
+              "ReferenceCitation": "Section 7.2.3: Moreover, users can hover over a dot to show its individual meta-summary. The behavior of this trip is displayed in a descriptive sentence (Fig. 3(4)).",
+              "FeedsInto": [
+                15,
+                16,
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Table",
+              "ID": 13,
+              "PaperDescription": "Displays tabular information of all trips resulting from a query, showing attributes like trip ID, distance, cost, travel time, and pickup/drop-off locations.",
+              "Inputs": [
+                "Query result metadata"
+              ],
+              "Outputs": [
+                "Tabular display of trip data with interactive sorting and selection"
+              ],
+              "ReferenceCitation": "Section 7.2.3: Users can study the attributes of all the result trips in a table shown in Fig. 4. It displays the plate number, trip distance, trip cost, travel time, and pick-up and drop-off streets.",
+              "FeedsInto": [
+                15,
+                16,
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Circular Heatmap",
+              "ID": 14,
+              "PaperDescription": "Visualizes time-based statistics such as average speed over 24 hours using a circular heatmap, divided into arcs representing time periods.",
+              "Inputs": [
+                "Hourly statistics (speed, occupancy)"
+              ],
+              "Outputs": [
+                "Circular heatmap showing temporal variation"
+              ],
+              "ReferenceCitation": "Section 7.2.3: Circular heatmaps visualizes the statistical data such as the average speed of streets (see Sec. 8.4). The whole day is divided into 24 hours and each hour is represented by 6 arcs.",
+              "FeedsInto": [
+                15,
+                16,
+                17
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Search",
+              "ID": 15,
+              "PaperDescription": "Allows users to construct and input semantic queries using street names, POIs, speed descriptions, and time ranges via a query box or auto-generated forms.",
+              "Inputs": [
+                "User input (text query)",
+                "Form fields for query building"
+              ],
+              "Outputs": [
+                "Filtered query results from indexed taxi documents"
+              ],
+              "ReferenceCitation": "Section 7.2.1: Fig. 3(1) is the input box of a semantic query. Users can write a textual search sentence with name and time conditions.",
+              "FeedsInto": [
+                4,
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Brushing",
+              "ID": 16,
+              "PaperDescription": "Enables users to select and filter subsets of trips directly on scatter plots or parallel coordinate views, dynamically updating related visualizations.",
+              "Inputs": [
+                "User brush selection in scatter plot or PCP"
+              ],
+              "Outputs": [
+                "Subset of trips highlighted and filtered across views"
+              ],
+              "ReferenceCitation": "Section 7.2.3: Users can brush and choose a subset of trips for further study by selecting a set of dots.",
+              "FeedsInto": [
+                4,
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Map Interaction",
+              "ID": 17,
+              "PaperDescription": "Enables users to interact directly with map labels or streets to refine queries or drill down into specific streets or trips for deeper exploration.",
+              "Inputs": [
+                "User clicks or selections on the map"
+              ],
+              "Outputs": [
+                "Filtered query refinement and updated visualizations"
+              ],
+              "ReferenceCitation": "Section 7.2.2: Users can also click on a street to show its label.",
+              "FeedsInto": [
+                4,
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,364 @@
+{
+  "PaperTitle": "Visual Analysis of Spatio-temporal Phenomena with 1D Projections",
+  "Year": 2021,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Features",
+              "ID": 1,
+              "PaperDescription": "Loads spatio-temporal datasets such as COVID-19 infection rates and Australian wildfire data, including geospatial hierarchies and geopolitical boundaries.",
+              "Inputs": [
+                "Raw spatio-temporal datasets (e.g., COVID-19, Wildfire FRP)"
+              ],
+              "Outputs": [
+                "Geospatial hierarchical structures"
+              ],
+              "ReferenceCitation": "Section 5.1: We generate a hierarchical dataset of confirmed and active cases for each day, starting from January 12, 2020 and spanning about 500 days at the time of publication.",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Time Series",
+              "ID": 2,
+              "PaperDescription": "Loads temporal data associated with each spatial entity, including confirmed cases or fire intensity over time.",
+              "Inputs": [
+                "Raw time series datasets (e.g., COVID-19 case counts, FRP readings)"
+              ],
+              "Outputs": [
+                "Structured time series data"
+              ],
+              "ReferenceCitation": "Section 5.1: We generate a hierarchical dataset of confirmed and active cases for each day, starting from January 12, 2020 and spanning about 500 days at the time of publication.",
+              "FeedsInto": [
+                3,
+                9,
+                10,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Geospatial Hierarchical Aggregation",
+              "ID": 3,
+              "PaperDescription": "Aggregates data hierarchically based on geospatial properties, such as geopolitical entities or spatial clustering, to support scalability and flexible visualization.",
+              "Inputs": [
+                "Geospatial hierarchical structures",
+                "Structured time series data"
+              ],
+              "Outputs": [
+                "Hierarchically aggregated spatio-temporal data"
+              ],
+              "ReferenceCitation": "Section 3.2: Initially, we hierarchize the data based on its spatial properties, for instance by applying spatial clustering.",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                15
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Dimension Reduction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "1D Projection using Space-Filling Curves",
+              "ID": 4,
+              "PaperDescription": "Projects spatial data into a 1D order using space-filling curves such as Hilbert or Morton to preserve neighborhood relationships.",
+              "Inputs": [
+                "Hierarchically aggregated spatio-temporal data"
+              ],
+              "Outputs": [
+                "1D ordered spatial data based on space-filling curves"
+              ],
+              "ReferenceCitation": "Section 3.2: In our prototype, we offer two types of space-filling curves—Hilbert and Morton—as a basis for the projection.",
+              "FeedsInto": [
+                7,
+                8,
+                9,
+                10,
+                12,
+                16,
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "1D Projection using Hierarchical Clustering",
+              "ID": 5,
+              "PaperDescription": "Projects spatial data into a 1D sequence by traversing binary trees resulting from agglomerative hierarchical clustering with various linkage criteria.",
+              "Inputs": [
+                "Hierarchically aggregated spatio-temporal data"
+              ],
+              "Outputs": [
+                "1D ordered spatial data based on hierarchical clustering"
+              ],
+              "ReferenceCitation": "Section 3.2: Besides the space-filling curves, we offer projections based on the traversal of binary trees. These binary trees are the result of agglomerative hierarchical clustering (AHC).",
+              "FeedsInto": [
+                7,
+                8,
+                9,
+                10,
+                12,
+                16,
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Dynamic Time Warping Based Projection",
+              "ID": 6,
+              "PaperDescription": "Projects spatial data into a 1D sequence based on similarity of time series data using dynamic time warping (DTW).",
+              "Inputs": [
+                "Hierarchically aggregated spatio-temporal data"
+              ],
+              "Outputs": [
+                "1D ordered spatial data based on time series similarity"
+              ],
+              "ReferenceCitation": "Section 3.2: We also consider dynamic time warping (DTW) as distance metric between the time series data of two entities.",
+              "FeedsInto": [
+                7,
+                8,
+                9,
+                10,
+                12,
+                16,
+                17
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Metrics Computation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Projection Quality Metrics",
+              "ID": 7,
+              "PaperDescription": "Computes M1 and M2 scores to evaluate the trustworthiness and neighborhood preservation of 1D projections.",
+              "Inputs": [
+                "1D ordered spatial data"
+              ],
+              "Outputs": [
+                "M1 and M2 quality scores"
+              ],
+              "ReferenceCitation": "Section 3.6: Venna and Kaski [VK01] proposed the M1 and M2 scores specifically for the application of dimensionality reduction methods for the visualization of high-dimensional data.",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Projection Stress Metrics",
+              "ID": 8,
+              "PaperDescription": "Computes metric and non-metric stress scores to measure the global quality of the 1D projections.",
+              "Inputs": [
+                "1D ordered spatial data"
+              ],
+              "Outputs": [
+                "Sm and Snm stress scores"
+              ],
+              "ReferenceCitation": "Section 3.6: Metric stress (Sm), which is the loss function of classical MDS [Tor52; GS96], and non-metric stress (Snm), which is the loss function of non-metric MDS [Kru64; GS96].",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 9,
+              "PaperDescription": "Displays geospatial locations of data points with glyphs, including a time control panel for step-wise animation and time navigation.",
+              "Inputs": [
+                "1D ordered spatial data",
+                "Structured time series data"
+              ],
+              "Outputs": [
+                "2D map visualization of geospatial data with temporal controls"
+              ],
+              "ReferenceCitation": "Section 3.3: The map visualizes the geospatial aspect of the data. All data from the same hierarchy level as the currently visualized subtree are shown.",
+              "FeedsInto": [
+                13,
+                16,
+                17
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Matrix",
+              "ID": 10,
+              "PaperDescription": "Displays the projected timeline as a matrix chart, where the horizontal axis is the spatial order and the vertical axis is time, showing temporal progression of each spatial entity.",
+              "Inputs": [
+                "1D ordered spatial data",
+                "Structured time series data"
+              ],
+              "Outputs": [
+                "Matrix-based timeline visualization"
+              ],
+              "ReferenceCitation": "Section 3.3: It visualizes the elements of the current subtree and their time series data as a matrix. In the horizontal direction, the order of elements depends on the applied projection method. The vertical direction displays the temporal extent of the dataset, where time increases downward.",
+              "FeedsInto": [
+                13,
+                15,
+                16,
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 11,
+              "PaperDescription": "Displays detailed temporal progression of selected entities in a line chart for fine-grained temporal analysis.",
+              "Inputs": [
+                "Structured time series data for selected spatial entities"
+              ],
+              "Outputs": [
+                "Detailed line chart visualization of temporal data"
+              ],
+              "ReferenceCitation": "Section 3.3: In the COVID-19 scenario (Section 5), we visualize the temporal data using vertical line charts.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Distance Bar",
+              "ID": 12,
+              "PaperDescription": "Displays a bar above the projected timeline matrix, encoding pairwise great-circle distances of neighboring elements to indicate spatial proximity in the 1D projection.",
+              "Inputs": [
+                "1D ordered spatial data"
+              ],
+              "Outputs": [
+                "Visual indicators of spatial proximity"
+              ],
+              "ReferenceCitation": "Section 3.3: To indicate geospatial distance of neighboring elements in the projected timeline, the distance bar maps pairwise great-circle distance to a gray-scale value, where darker cells indicate larger distances.",
+              "FeedsInto": [
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 13,
+              "PaperDescription": "Enables users to click on elements in the projected timeline or map to select a spatial entity (nexus) for detailed analysis in the map and detail timeline views.",
+              "Inputs": [
+                "User selection in the projected timeline or map"
+              ],
+              "Outputs": [
+                "Selected nexus entity and its neighborhood"
+              ],
+              "ReferenceCitation": "Section 3.3: Clicking on an element in the projected timeline selects it as the nexus, which is visualized together with a neighborhood in the detail timeline.",
+              "FeedsInto": [
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Projection Filter",
+              "ID": 14,
+              "PaperDescription": "Provides a control panel for switching between different projection methods and reordering the data hierarchically in-place based on projection quality metrics.",
+              "Inputs": [
+                "User selection of projection method",
+                "Projection quality metrics"
+              ],
+              "Outputs": [
+                "Reordered projected timeline and updated metrics"
+              ],
+              "ReferenceCitation": "Section 3.3: A control panel provides different projection method options. Selecting a different method re-orders the data hierarchically, in-place.",
+              "FeedsInto": [
+                4,
+                5,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Hierarchy Navigation",
+              "ID": 15,
+              "PaperDescription": "Allows users to navigate through different levels of spatial hierarchy by scrolling through the projected timeline or selecting subtrees in the hierarchy minimap.",
+              "Inputs": [
+                "User scroll input",
+                "Hierarchy structure"
+              ],
+              "Outputs": [
+                "Updated projected timeline for selected hierarchy level"
+              ],
+              "ReferenceCitation": "Section 3.3: Navigation through the hierarchy is realized by scrolling through the projected timeline.",
+              "FeedsInto": [
+                9,
+                10
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Comparison",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Projection Comparison (Tooltip)",
+              "ID": 16,
+              "PaperDescription": "Displays a tooltip comparing the current projection with an alternative, visualizing entity orders and color-coding contiguous blocks.",
+              "Inputs": [
+                "Current and hovered projection orders",
+                "Color mappings of entities"
+              ],
+              "Outputs": [
+                "Visual comparison of projection contiguity"
+              ],
+              "ReferenceCitation": "Section 3.5: When hovering over a projection in the control panel, differences between the current and the hovered projection are shown by applying a consistent color scheme to entities.",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Projection Comparison (PCP)",
+              "ID": 17,
+              "PaperDescription": "Displays parallel coordinate plots comparing the position of selected entities across all projections, emphasizing contiguity and nexus selection.",
+              "Inputs": [
+                "Selections from the projected timeline or map",
+                "Projections of selected entities"
+              ],
+              "Outputs": [
+                "Parallel coordinate visualization for projection comparison"
+              ],
+              "ReferenceCitation": "Section 3.5: When hovering over the selection in the timeline overview or map view, the selection is visualized in all projections as a parallel coordinate plot.",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

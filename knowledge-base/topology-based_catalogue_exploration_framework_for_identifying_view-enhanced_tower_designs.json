@@ -1,0 +1,218 @@
+{
+  "PaperTitle": "Topology-based Catalogue Exploration Framework for Identifying View-Enhanced Tower Designs",
+  "Year": 2015,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Geometries",
+              "ID": 1,
+              "PaperDescription": "Loads 3D context models which closely represent the existing physical conditions of the built environment so that any generated results can be integrated into the design process of actual building projects.",
+              "Inputs": [
+                "3D building models",
+                "City terrain models"
+              ],
+              "Outputs": [
+                "3D context model of the built environment"
+              ],
+              "ReferenceCitation": "Section 1.1 Contributions: Note that this work uses 3D context models which closely represent the existing physical conditions of the built environment so that any generated results can be integrated into the design process of actual building projects.",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Computation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "View Metrics Computation",
+              "ID": 2,
+              "PaperDescription": "Computes different view metrics using a rasterization approach for a given viewpoint and direction, including Unobstructed View, Landmark View, Landscape View, and Building Variation View.",
+              "Inputs": [
+                "3D context model",
+                "Camera viewpoint and direction"
+              ],
+              "Outputs": [
+                "View metrics for each view type"
+              ],
+              "ReferenceCitation": "Section 3.2 View Computation: We compute the different view metrics using a rasterization approach. Given a view point and a look at direction, the camera is placed at that point and positioned along the required direction.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Indexing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Indexing Scheme for View Computation",
+              "ID": 3,
+              "PaperDescription": "Builds an index of view metrics computed from a volumetric grid of sample points and directions inside the building envelope to enable O(1) lookups for fast view metric approximations.",
+              "Inputs": [
+                "Precomputed view metrics from volumetric grid points"
+              ],
+              "Outputs": [
+                "Indexed view metric dataset for efficient retrieval"
+              ],
+              "ReferenceCitation": "Section 3.3 Indexing Strategy for View Computation: In order to speedup this operation, we propose a simple, yet effective indexing scheme (illustrated in Figure 4) that allows for the efficient computation of a good approximation of the view metrics.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Classification",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Topology-based Design Classification",
+              "ID": 4,
+              "PaperDescription": "Uses concepts from computational topology (contour trees and persistence) to efficiently identify high performing building design variations from the design parameter space based on the indexed view scores.",
+              "Inputs": [
+                "Design parameter space",
+                "View metric scores (indexed)"
+              ],
+              "Outputs": [
+                "High performing design variations with topological classification"
+              ],
+              "ReferenceCitation": "Section 4 Topology-based Design Classification: The key idea in our framework is the use of concepts from computational topology to efficiently identify the parameters of different design variations that maximize the view scores.",
+              "FeedsInto": [
+                5,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 5,
+              "PaperDescription": "Displays a 3D map visualization of the selected building design variations and their contextual neighborhood for assessing view opportunities.",
+              "Inputs": [
+                "3D context model",
+                "Selected building designs"
+              ],
+              "Outputs": [
+                "Interactive 3D scene with building designs"
+              ],
+              "ReferenceCitation": "Section 5.3 Catalogue Exploration Interface: Users can view a building design in the context of its neighborhood on the 3D map by selecting the design of interest from either the summary panel or the building cart.",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Parallel Coordinates Plot",
+              "ID": 6,
+              "PaperDescription": "Allows users to compare and filter building design variations based on multiple view metrics, building efficiency, and floor overlap area.",
+              "Inputs": [
+                "View metrics scores",
+                "Building efficiency",
+                "Floor overlap areas"
+              ],
+              "Outputs": [
+                "Filtered design variations"
+              ],
+              "ReferenceCitation": "Section 5.3 Catalogue Exploration Interface: The design exploration chart uses parallel coordinates to allow the user to compare and filter building design variations. Each axis of the chart represents one view metric.",
+              "FeedsInto": [
+                5,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Design Category and View Preference Selection",
+              "ID": 7,
+              "PaperDescription": "Allows users to interactively change both the design categories and the weights of different view preferences to generate required design variations.",
+              "Inputs": [
+                "User input (design category selection)",
+                "User input (view preference weights)"
+              ],
+              "Outputs": [
+                "Updated design variations in parameter space"
+              ],
+              "ReferenceCitation": "Section 5.3 Catalogue Exploration Interface: Interactively change both the design categories, as well as view preferences to generate the required design variations.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Comparison",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Building Cart",
+              "ID": 8,
+              "PaperDescription": "Allows users to save and compare selected designs across different categories and view preferences for detailed evaluation.",
+              "Inputs": [
+                "Selected building designs"
+              ],
+              "Outputs": [
+                "List of saved building designs for comparison"
+              ],
+              "ReferenceCitation": "Section 5.3 Catalogue Exploration Interface: The building cart acts as a shopping cart, allowing users to save designs of interest. The designs in the cart can span across different categories and view preferences.",
+              "FeedsInto": [
+                5,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Inspection",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "View Pane",
+              "ID": 9,
+              "PaperDescription": "Allows users to explicitly verify the views from different parts of the building and explore the view extent over the city.",
+              "Inputs": [
+                "Window view data",
+                "User-selected windows"
+              ],
+              "Outputs": [
+                "View visualizations from selected windows"
+              ],
+              "ReferenceCitation": "Section 5.3 Catalogue Exploration Interface: Ability to explicitly verify the views from different parts of the building, and explore the view extent over the city.",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

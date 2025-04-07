@@ -1,0 +1,344 @@
+{
+  "PaperTitle": "HORA 3D: Personalized Flood Risk Visualization as an Interactive Web Service",
+  "Year": 2024,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Features",
+              "ID": 1,
+              "PaperDescription": "Loads 2D footprints (e.g., building outlines, perimeter polygons) for flood planning.",
+              "Inputs": [
+                "Footprint polygons from city data (e.g., shapefiles, OSM)."
+              ],
+              "Outputs": [
+                "2D feature set for perimeter generation or object protection lines."
+              ],
+              "ReferenceCitation": "Sec. 4.1: We define a perimeter as a closed line around important buildings… uses footprints for geometry.",
+              "FeedsInto": [
+                5,
+                11,
+                13,
+                14,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "3D Geometries",
+              "ID": 2,
+              "PaperDescription": "Loads 3D building models for flood risk visualization.",
+              "Inputs": [
+                "3D building meshes or extruded shapes."
+              ],
+              "Outputs": [
+                "Scene geometry for barrier slope checks or advanced 3D visualization."
+              ],
+              "ReferenceCitation": "Sec. 4.1: We use detailed 3D building models where available and reconstructed ones otherwise.",
+              "FeedsInto": [
+                5,
+                11,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Digital Elevation Model",
+              "ID": 3,
+              "PaperDescription": "Loads multi-resolution DEM data to model terrain for flood simulation.",
+              "Inputs": [
+                "Nested DEMs with resolutions of 2m, 20m, 50m, and 250m."
+              ],
+              "Outputs": [
+                "Hierarchical terrain representation with adaptive resolution."
+              ],
+              "ReferenceCitation": "Sec. 4.1: The terrain consists of four nested digital elevation models (DEM) with increasing cell sizes of 2 m, 20 m, 50 m, and 250 m.",
+              "FeedsInto": [
+                5,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Flood Simulation Data",
+              "ID": 4,
+              "PaperDescription": "Flood scenarios (water depth, velocity)",
+              "Inputs": [
+                "Time-series/temporal data: discrete time steps describing water depth & flow velocity fields (continuous)."
+              ],
+              "Outputs": [
+                "Indexed scenario data for spatiotemporal analysis (flood hazard fields over discrete time steps)."
+              ],
+              "ReferenceCitation": "Sec. 3.1: In the HORA 3.0 project, river floods [...] four river flood scenarios have been simulated, from which we derive individual risk factors and visualize them via HORA 3D.",
+              "FeedsInto": [
+                6,
+                7,
+                8,
+                9,
+                15
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Rasterization",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Coverage",
+              "ID": 5,
+              "PaperDescription": "GPU-based pass or partial rendering for focus+context adaptation.",
+              "Inputs": [
+                "3D geometry",
+                "camera transform",
+                "color/alpha scheme",
+                "user's current viewpoint."
+              ],
+              "Outputs": [
+                "Pixel coverage or occlusion metrics used to fade, highlight, or adapt the displayed scene in real time"
+              ],
+              "ReferenceCitation": "Sec. 3.2/3.3: We propose an interactive 3D application to inform the general public... A new view-dependent focus+context design guides user attention and supports an intuitive interpretation... We do not show all information at once, but adapt it to the current view.",
+              "FeedsInto": [
+                11,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Water Depth",
+              "ID": 6,
+              "PaperDescription": "Air/water boundary, building geometry.",
+              "Inputs": [
+                "Continuous water depth field (time or max depth)",
+                "local 3D building geometry."
+              ],
+              "Outputs": [
+                "Per-building numeric values or per-facade coverage (continuous)."
+              ],
+              "ReferenceCitation": "Sec. 3.3: Local water depths around a building often correlate with possible damage. By rotating around the focus building, the user can see the maximum local water depths for each flood scenario, displayed on the facades.",
+              "FeedsInto": [
+                11,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Water Velocity",
+              "ID": 7,
+              "PaperDescription": "Impact velocity on facades.",
+              "Inputs": [
+                "Flow velocity data (continuous vectors)",
+                "building facade geometry (discrete polygons)."
+              ],
+              "Outputs": [
+                "Numeric velocity vectors"
+              ],
+              "ReferenceCitation": "Sec. 3.3: High water pressure, which correlates with water depth and impact velocity, poses a particular threat to doors. High impact velocities are emphasized by animated arrows moving perpendicular to the facade.",
+              "FeedsInto": [
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Water Flow",
+              "ID": 8,
+              "PaperDescription": "Premises inflow volume.",
+              "Inputs": [
+                "Flow velocity time-series (continuous)",
+                "premises boundary geometry (discrete 2D polygons)."
+              ],
+              "Outputs": [
+                "Summed/accumulated inflow volumes (numeric) at property edges, for arrow-based representation."
+              ],
+              "ReferenceCitation": "Sec. 3.3: The water inflow volume aggregated over the current flood scenario is visualized by arrows placed along the premises border to help identify particularly vulnerable parts.",
+              "FeedsInto": [
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Road Accessibility",
+              "ID": 9,
+              "PaperDescription": "Road accessibility",
+              "Inputs": [
+                "Continuous water depth data",
+                "2D roads geometry (line/polygon)"
+              ],
+              "Outputs": [
+                "Marked or color-coded roads with discrete states: passable vs. flooded (or continuous measure of depth)."
+              ],
+              "ReferenceCitation": "Sec. 3.3: During flooding, the road network can be disrupted [...] We highlight inaccessible roads by coloring them according to their maximum water depth. This is intended to encourage users to early consider possible evacuation routes.",
+              "FeedsInto": [
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Map",
+              "ID": 10,
+              "PaperDescription": "2D map for POI selection (Fig. 3 top)",
+              "Inputs": [
+                "2D geometry (roads, land use)",
+                "user viewpoint"
+              ],
+              "Outputs": [
+                "A top-down orthographic representation (raster) letting users pick or view flooding scenarios in 2D."
+              ],
+              "ReferenceCitation": "Sec. 3 (Fig. 3 top + text): The entry point of the application is the HORA website, where users can select a POI by entering an address or picking a point on a 2D map showing areas affected by flooding.",
+              "FeedsInto": [
+                13,
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 11,
+              "PaperDescription": "3D environment display.",
+              "Inputs": [
+                "3D geometry (terrain, buildings)",
+                "user's camera/view transform",
+                "optional 2D overlays (e.g., texture polygons)"
+              ],
+              "Outputs": [
+                "On-screen 3D environment with interactive visualization."
+              ],
+              "ReferenceCitation": "Sec. 3.2: Our application is centered around an interactive 3D visualization to raise awareness. We provide users a selection of visual presets and guide attention via a focus+context design.",
+              "FeedsInto": [
+                13,
+                14,
+                15,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Arrow fields, roofs)",
+              "ID": 12,
+              "PaperDescription": "View-dependent focus+context design.",
+              "Inputs": [
+                "Risk attributes (continuous data: velocity, depth, inflow)",
+                "user's viewpoint & zoom."
+              ],
+              "Outputs": [
+                "Overlaid arrow fields",
+                "colored roofs",
+                "partial cutaways that adapt to viewpoint changes"
+              ],
+              "ReferenceCitation": "Sec. 3.2-3.3: We provide users with visual presets that adapt based on zoom level, fading details when out of focus.",
+              "FeedsInto": [
+                11,
+                10,
+                13,
+                14,
+                15
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Geometry Selection",
+              "ID": 13,
+              "PaperDescription": "Selecting the premises of interest as focus object.",
+              "Inputs": [
+                "Map of premises polygons",
+                "user's chosen polygon (via click or address search)"
+              ],
+              "Outputs": [
+                "Focus object and viewpoint updated to the selected premises, triggering local computations (e.g., facade velocities, inflow)."
+              ],
+              "ReferenceCitation": "Sect. 3.2: The user selects a premises to explore its flood risk in close-up.",
+              "FeedsInto": [
+                5,
+                6,
+                7,
+                8,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Geometry Search",
+              "ID": 14,
+              "PaperDescription": "Selecting the Premises of Interest as Focus Object",
+              "Inputs": [
+                "Map of premises polygons",
+                "user's chosen polygon"
+              ],
+              "Outputs": [
+                "Focus object and viewpoint updated to the selected premises, triggering local computations (e.g., facade velocities, inflow)."
+              ],
+              "ReferenceCitation": "Sect. 3.2: The user selects a premises to explore its flood risk in close-up.",
+              "FeedsInto": [
+                5,
+                6,
+                7,
+                8,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 15,
+              "PaperDescription": "Temporal navigation within a flood scenario.",
+              "Inputs": [
+                "Time range from the precomputed simulation",
+                "user-chosen time step."
+              ],
+              "Outputs": [
+                "Water depth and flow field for the selected time slice, triggering re-render and re-computations."
+              ],
+              "ReferenceCitation": "Sect. 3.3: Users can explore flood propagation over time by browsing time-dependent fields.",
+              "FeedsInto": [
+                6,
+                7,
+                8,
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Manipulation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Geometry Replacement",
+              "ID": 16,
+              "PaperDescription": "Protection measures such as walls or sandbags.",
+              "Inputs": [
+                "User-chosen geometry representing flood barriers (discrete shapes)",
+                "premises boundary polygons."
+              ],
+              "Outputs": [
+                "Updated 3D environment geometry with newly placed barrier shapes, triggering partial re-analysis."
+              ],
+              "ReferenceCitation": "Sect. 3.3: Users can test protection measures like sandbags or walls to see required barrier heights and their effect in 3D.",
+              "FeedsInto": [
+                5,
+                6,
+                7,
+                8,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

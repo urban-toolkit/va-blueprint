@@ -1,0 +1,205 @@
+{
+  "PaperTitle": "VATLD: A V isual Analytics System to Assess, Understand and Improve T raffic Light Detection",
+  "Year": 2021,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Traffic Light Object Extraction",
+              "ID": 1,
+              "PaperDescription": "Extracts traffic light objects from training, testing, and unseen datasets for performance assessment and robustness analysis.",
+              "Inputs": [
+                "Driving scene images",
+                "Bounding box annotations"
+              ],
+              "Outputs": [
+                "Extracted traffic light object patches",
+                "Associated metadata (size, class, etc.)"
+              ],
+              "ReferenceCitation": "Fig. 4 (a): Traffic light objects are first extracted from acquired data including both 'in distribution' training data (a1) and testing data with possible 'shifted distribution' (a2), and also unseen cases, 'out of distribution' (a3), need to be generated and tested.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Representation Learning",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Disentangled Representation Learning (DRL)",
+              "ID": 2,
+              "PaperDescription": "Learns a semantic latent representation of traffic lights capturing intrinsic attributes like colors, brightness, and background through a β-VAE architecture.",
+              "Inputs": [
+                "Extracted traffic light object patches"
+              ],
+              "Outputs": [
+                "Latent vectors representing semantic attributes",
+                "Reconstructed object images"
+              ],
+              "ReferenceCitation": "Fig. 5 (a): Disentangled representation learning extracts interpretable attributes (e.g. colors, brightness, and background) from training objects (b1); and semantic adversarial learning probes the prediction behaviors (i.e. gradients) of a black-box like detector, and generates meaningful adversarial unseen examples (b2).",
+              "FeedsInto": [
+                3,
+                5,
+                6,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Adversarial Learning",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Semantic Adversarial Learning (SemAdv)",
+              "ID": 3,
+              "PaperDescription": "Generates semantically meaningful adversarial examples to test detector robustness by searching the latent space of object representations.",
+              "Inputs": [
+                "Latent vectors from DRL",
+                "Traffic light object patches",
+                "Black-box detector outputs"
+              ],
+              "Outputs": [
+                "Adversarial object images",
+                "Modified latent vectors",
+                "Semantic robustness scores"
+              ],
+              "ReferenceCitation": "Section 4.3: Built upon DRL, we propose a novel semantic adversarial learning (SemAdv) method to generate meaningful adversarial examples to test and interpret the robustness of a detector (Fig. 5-b).",
+              "FeedsInto": [
+                4,
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Performance",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Semantic Robustness Score Calculation",
+              "ID": 4,
+              "PaperDescription": "Calculates semantic robustness scores by measuring minimal changes in latent space required to fool the detector.",
+              "Inputs": [
+                "Modified latent vectors from SemAdv",
+                "Standard deviations of latent dimensions"
+              ],
+              "Outputs": [
+                "Semantic robustness scores per object",
+                "Aggregated semantic robustness score per detector"
+              ],
+              "ReferenceCitation": "Section 4.3: With SemAdv method, we can define a semantic robustness score of a detector by measuring how much minimal change in the latent space we need to make to fail the detector.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 5,
+              "PaperDescription": "Displays distributions of performance metrics (IoU, confidence score, robustness score) and meta-information (object size) for summary and filtering.",
+              "Inputs": [
+                "Performance metrics",
+                "Meta-information"
+              ],
+              "Outputs": [
+                "Bar charts showing distributions of metrics and object characteristics"
+              ],
+              "ReferenceCitation": "Fig. 1 (a): Bar charts in Fig. 1-a show the distribution of performance metrics (including IoU, confidence score, and robustness for valid detection) and meta-info (object size).",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Tile Map (TileScape)",
+              "ID": 6,
+              "PaperDescription": "Visualizes aggregated bins of traffic light detections based on similarity in latent space to summarize visual characteristics and corresponding performance.",
+              "Inputs": [
+                "Latent vectors of detections",
+                "Performance metrics"
+              ],
+              "Outputs": [
+                "Aggregated tiles representing performance and semantic similarity"
+              ],
+              "ReferenceCitation": "Fig. 1 (b): In TileScape, each cell (tile) is an aggregated bin of many detections which are similar in the semantic latent space learned from DRL (Fig. 6-a).",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Driving Scene View",
+              "ID": 7,
+              "PaperDescription": "Displays individual driving scenes including original images, ground truth boxes, detections, and adversarial examples to explore detection and robustness outcomes.",
+              "Inputs": [
+                "Original driving scene images",
+                "Detection results",
+                "Adversarial examples"
+              ],
+              "Outputs": [
+                "Annotated driving scene images showing detection outcomes"
+              ],
+              "ReferenceCitation": "Fig. 1 (c): A live view to detect a traffic light from either real data or adversarial.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Parallel Coordinates Plot",
+              "ID": 8,
+              "PaperDescription": "Shows ranked latent dimensions with information of semantics, performance, and gradients to support in-depth analysis and debugging.",
+              "Inputs": [
+                "Ranked latent dimensions",
+                "Semantics, performance, gradient information"
+              ],
+              "Outputs": [
+                "Parallel coordinates plot of latent dimension rankings and associated attributes"
+              ],
+              "ReferenceCitation": "Fig. 1 (d): Ranked latent dimensions with information of semantics, performance and gradients.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Multi-faceted Filtering",
+              "ID": 9,
+              "PaperDescription": "Enables users to filter detections by various conditions (e.g., FP, FN-I, FN-II) and metrics (e.g., IoU, confidence score) to explore different failure cases and insights.",
+              "Inputs": [
+                "User-defined filter conditions",
+                "Performance metrics and meta-information"
+              ],
+              "Outputs": [
+                "Filtered subsets of detections for visual analysis"
+              ],
+              "ReferenceCitation": "Section 5.1: Furthermore, the metric charts are coordinated with each other to filter data and support multi-faceted performance analysis for accuracy and robustness in other views.",
+              "FeedsInto": [
+                5,
+                6,
+                7,
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

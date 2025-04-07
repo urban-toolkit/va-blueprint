@@ -1,0 +1,211 @@
+{
+  "PaperTitle": "Visual Analytics for Profiling Land Use Changes",
+  "Year": 2023,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatiotemporal Land Use",
+              "ID": 1,
+              "PaperDescription": "Loads NYC PLUTO dataset for urban land use analysis",
+              "Inputs": [
+                "PLUTO dataset (spatiotemporal land use data)"
+              ],
+              "Outputs": [
+                "Structured dataset for querying and visualization"
+              ],
+              "ReferenceCitation": "Section IV-A: PLUTO is an invaluable and extensive land use and geographic data set, describing almost every piece of land in NYC...",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Indexing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatiotemporal Land Use Data",
+              "ID": 2,
+              "PaperDescription": "Hierarchical index to store land-use geometries at multiple scales",
+              "Inputs": [
+                "Geographical subdivision data"
+              ],
+              "Outputs": [
+                "Hierarchical index for fast retrieval"
+              ],
+              "ReferenceCitation": "Section IV-A: The storage works together with the Query Processor module to handle requests from the Visual Interface module...",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Storage",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatiotemporal Data Retrieval",
+              "ID": 3,
+              "PaperDescription": "Enables on-the-fly attribute queries across time and space",
+              "Inputs": [
+                "User-defined filters (e.g., zoning, tax data)"
+              ],
+              "Outputs": [
+                "Filtered dataset"
+              ],
+              "ReferenceCitation": "Section IV-B: The query processor uses the Data Storage's spatiotemporal index and containers to process the queries the visual interface produces...",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                7,
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Map",
+              "ID": 4,
+              "PaperDescription": "Displays land use and zoning changes using color-coded maps",
+              "Inputs": [
+                "Processed PLUTO data"
+              ],
+              "Outputs": [
+                "2D choropleth maps"
+              ],
+              "ReferenceCitation": "Section IV-C: The Map View shows the set of geographical regions of the current exploration level in one of the years...",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Overlay (Choropleth)",
+              "ID": 5,
+              "PaperDescription": "Highlights zoning and land use modifications over time",
+              "Inputs": [
+                "PLUTO historical data"
+              ],
+              "Outputs": [
+                "Overlaid zoning changes on base map"
+              ],
+              "ReferenceCitation": "Section IV-C: Visualizing geographical regions using the map allows the user to identify spatial patterns that cannot be observed using the heat matrix or the line chart...",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Heat Matrix",
+              "ID": 6,
+              "PaperDescription": "Highlights temporal changes in land attributes using heatmaps",
+              "Inputs": [
+                "Attribute values over time"
+              ],
+              "Outputs": [
+                "Heat matrix visualization"
+              ],
+              "ReferenceCitation": "Section IV-C: The Data History View contains two linked visualizations, a line chart, and a heat matrix...",
+              "FeedsInto": [
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 7,
+              "PaperDescription": "Tracks trends in land use attributes over multiple years",
+              "Inputs": [
+                "Time-series land data"
+              ],
+              "Outputs": [
+                "Line chart visualization"
+              ],
+              "ReferenceCitation": "Section IV-C: The line chart allows users to compare values of regions of interest over the years...",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 8,
+              "PaperDescription": "Displays the distribution of selected attributes for filtering",
+              "Inputs": [
+                "Attribute dataset"
+              ],
+              "Outputs": [
+                "Bar chart visualization for filtering"
+              ],
+              "ReferenceCitation": "Section IV-C: A bar chart with the distribution of the selected attribute values must be brushed to define a filter...",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Lot Selection",
+              "ID": 9,
+              "PaperDescription": "Enables users to filter and explore lots based on zoning, tax, and land use",
+              "Inputs": [
+                "User-defined filters (zoning, tax, etc.)"
+              ],
+              "Outputs": [
+                "Subset of lots matching criteria"
+              ],
+              "ReferenceCitation": "Section IV-C: The Lot Filtering panel allows users to define filters based on attributes...",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Hierarchical Exploration",
+              "ID": 10,
+              "PaperDescription": "Allows users to explore data at different spatial scales (borough → neighborhood → block → lot)",
+              "Inputs": [
+                "Selected geographical region"
+              ],
+              "Outputs": [
+                "Detailed data view at finer granularity"
+              ],
+              "ReferenceCitation": "Section IV-C: The user must click on the label of one of the geographical regions in the vertical axis of the heat matrix...",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

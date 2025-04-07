@@ -1,0 +1,242 @@
+{
+  "PaperTitle": "Visual Evaluation for Autonomous Driving",
+  "Year": 2022,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Autonomous Driving Simulation Data",
+              "ID": 1,
+              "PaperDescription": "Autonomous driving data records obtained from the LGSVL simulator, classified into five modules: perception, planning, prediction, control, and comfort.",
+              "Inputs": [
+                "Autonomous driving simulation data from LGSVL"
+              ],
+              "Outputs": [
+                "Structured data divided into five evaluation modules"
+              ],
+              "ReferenceCitation": "Section 3.2 Data for Evaluation: Due to the limitations of the real testing environment, we use the autonomous driving data records obtained from the LGSVL simulator in this work.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Modeling",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Analytic Hierarchy Process",
+              "ID": 2,
+              "PaperDescription": "Stratifies the evaluation decision problem into different component factors and determines the weights of each factor according to the user-defined priority ranking.",
+              "Inputs": [
+                "Evaluation factors from the five modules",
+                "User-defined factor priorities"
+              ],
+              "Outputs": [
+                "Normalized weights of evaluation factors"
+              ],
+              "ReferenceCitation": "Section 4.1.1 Analytic Hierarchy Process (AHP): Finally, the weights of the factors are obtained by normalizing ω.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "TOPSIS",
+              "ID": 3,
+              "PaperDescription": "Ranks evaluation factors by calculating the distances between them and the positive and negative ideal solutions, generating an evaluation score for each factor over time.",
+              "Inputs": [
+                "Evaluation factors from the five modules",
+                "Normalized weights from AHP"
+              ],
+              "Outputs": [
+                "Time series of weighted evaluation scores for all factors"
+              ],
+              "ReferenceCitation": "Section 4.1.2 Technique for Order Preference by Similarity to an Ideal Solution (TOPSIS): We combine AHP and TOPSIS in calculating the overall evaluation score for autonomous driving.",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                7,
+                8,
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 4,
+              "PaperDescription": "Displays the spatial-temporal simulation scene of the autonomous driving process, including maps, lane lines, traffic signals, obstacles, predicted paths, and planned vehicle paths.",
+              "Inputs": [
+                "Autonomous driving simulation data",
+                "Evaluation scores over time"
+              ],
+              "Outputs": [
+                "Animated 3D simulation scene showing autonomous vehicle state and environment"
+              ],
+              "ReferenceCitation": "Section 4.2.2 State Visualization: The spatial-temporal view (Fig. 1-a) shows the information of the environment and other traffic participants in an autonomous driving process.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Radar Chart",
+              "ID": 5,
+              "PaperDescription": "Visualizes the evaluation scores of five autonomous driving modules (perception, planning, prediction, control, and comfort) and the overall score at a specific time point.",
+              "Inputs": [
+                "Evaluation scores from TOPSIS"
+              ],
+              "Outputs": [
+                "Radar chart showing module-level scores and the total evaluation score"
+              ],
+              "ReferenceCitation": "Section 4.2.1 Score Visualization: From the radar view, the score distributions of five modules, including perception, planning, prediction, control, and comfort are visualized (R3).",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Timeline",
+              "ID": 6,
+              "PaperDescription": "Shows the trend of overall evaluation scores over time, helping users identify low-score periods in the driving process.",
+              "Inputs": [
+                "Evaluation scores from TOPSIS over time"
+              ],
+              "Outputs": [
+                "Time series line chart showing total score dynamics"
+              ],
+              "ReferenceCitation": "Section 4.2.1 Score Visualization: Module developers first read the total score in Fig. 1-b (R1) and examine the timeline visualization (R2, Fig. 1-c) to check the trend of the scores along the time.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Parallel Coordinates Plot",
+              "ID": 7,
+              "PaperDescription": "Displays both the evaluation scores and actual factor values for each factor from the five modules, enabling detailed comparison and factor analysis.",
+              "Inputs": [
+                "Evaluation scores per factor",
+                "Actual factor values per time point"
+              ],
+              "Outputs": [
+                "Parallel coordinates view showing scores and factor values"
+              ],
+              "ReferenceCitation": "Section 4.2.1 Score Visualization: Therefore, a view of parallel coordinates (Fig. 1-d) is used to show the situation of each factor involved in evaluation (R4).",
+              "FeedsInto": [
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Stacked Bar Chart",
+              "ID": 8,
+              "PaperDescription": "Displays the type and priority strategy information of obstacles in the scenario using a stacked histogram.",
+              "Inputs": [
+                "Obstacle data with type and priority attributes"
+              ],
+              "Outputs": [
+                "Stacked bar chart of obstacle types and priorities"
+              ],
+              "ReferenceCitation": "Section 4.2.2 State Visualization: The obstacle attribute view (Fig. 1-e2) displays the information of the obstacles surrounding the vehicle during the autonomous driving process.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 12,
+              "PaperDescription": "Displays the time series data of the autonomous vehicle's standard attributes, including speed, acceleration, and wheel steering angle, to help users understand vehicle behavior.",
+              "Inputs": [
+                "Vehicle state data (speed, acceleration, steering angle)"
+              ],
+              "Outputs": [
+                "Line chart showing time series of vehicle state metrics"
+              ],
+              "ReferenceCitation": "Section 4.2.2 State Visualization: The state component visualizes the standard attributes of the autonomous vehicle and the obstacles during the autonomous driving process (Fig. 1-e.1), including the speed, acceleration, and wheel steering of the autonomous vehicle.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Brushing",
+              "ID": 9,
+              "PaperDescription": "Allows users to interactively filter and explore evaluation factors by brushing segments on the parallel coordinates, highlighting distributions at specific time points.",
+              "Inputs": [
+                "User selection on parallel coordinates"
+              ],
+              "Outputs": [
+                "Filtered and highlighted evaluation factors and corresponding time points"
+              ],
+              "ReferenceCitation": "Section 4.2.3 Interactive Visual Evaluation: Finally, users can do interactive filtering and exploration on the parallel coordinates view, swipe a segment of the evaluation factors of interest to take values, and highlight the distribution of each evaluation factor at the corresponding time.",
+              "FeedsInto": [
+                6,
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Configuration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Interactive Factor Ranking",
+              "ID": 10,
+              "PaperDescription": "Enables users to customize the ranking and relative importance of evaluation factors by dragging bars, which updates AHP weights and recalculates evaluation scores.",
+              "Inputs": [
+                "User-defined factor rankings"
+              ],
+              "Outputs": [
+                "Updated AHP weights and recalculated evaluation scores"
+              ],
+              "ReferenceCitation": "Section 4.2.4 Interactively Customized Ranking: Users can drag the bars on the factor ranking visualization (R5, Fig. 1-d.2) to reorder their own priority. Dragging the factors that users consider important and moving the unimportant factors to the bottom can achieve the priority customization and update the evaluation modelling.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Animation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Timeline Playback",
+              "ID": 11,
+              "PaperDescription": "Enables users to animate and review the autonomous driving process by dragging the timeline or clicking a button to observe time-based changes in scores and states.",
+              "Inputs": [
+                "Time series autonomous driving data",
+                "Evaluation scores"
+              ],
+              "Outputs": [
+                "Animated playback of driving state and evaluation metrics"
+              ],
+              "ReferenceCitation": "Section 4.2.3 Interactive Visual Evaluation: After the system evaluation is completed, users can review an autonomous driving process by clicking a button to animate the process, or by dragging the timeline to watch the animation.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

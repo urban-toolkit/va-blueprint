@@ -1,0 +1,484 @@
+{
+  "PaperTitle": "VAUD: A Visual Analysis Approach for Exploring Spatio-Temporal Urban Data",
+  "Year": 2018,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Street Network",
+              "ID": 1,
+              "PaperDescription": "Loads a road network of the city from OpenStreetMap containing 34,997 nodes and 3,794 segments with a total length of 4,524 km.",
+              "Inputs": [
+                "OpenStreetMap road network data"
+              ],
+              "Outputs": [
+                "Structured road network data with nodes and segments"
+              ],
+              "ReferenceCitation": "Section 3.1 Data Description: 'Geographical data: A road network of the city from OpenStreetMap [19] containing 34,997 nodes and 3,794 segments with a total length of 4,524 km.'",
+              "FeedsInto": [
+                15
+              ]
+            },
+            {
+              "GranularBlockName": "POI",
+              "ID": 2,
+              "PaperDescription": "Loads POI data containing 938,712 POI locations with longitude, latitude, name, and functionality.",
+              "Inputs": [
+                "POI dataset"
+              ],
+              "Outputs": [
+                "Structured POI dataset with attributes (longitude, latitude, name, functionality)"
+              ],
+              "ReferenceCitation": "Section 3.1 Data Description: 'Points of Interests (POIs) data: The information of 938,712 POI locations where each record contains the longitude, latitude, name, and functionality of a structure in the urban environment.'",
+              "FeedsInto": [
+                27,
+                15
+              ]
+            },
+            {
+              "GranularBlockName": "Street View Images",
+              "ID": 3,
+              "PaperDescription": "Loads street view data from Baidu Map service providing linked imagery of locations.",
+              "Inputs": [
+                "Street view images from Baidu Map service"
+              ],
+              "Outputs": [
+                "Linked street view imagery for locations"
+              ],
+              "ReferenceCitation": "Section 3.1 Data Description: 'Street view data has been downloaded from the Baidu map service to provide linked imagery of locations.'",
+              "FeedsInto": [
+                15
+              ]
+            },
+            {
+              "GranularBlockName": "Real Estate",
+              "ID": 4,
+              "PaperDescription": "Loads real estate data containing 5,684 estate records including the name, longitude, latitude, sales price, and construction year.",
+              "Inputs": [
+                "Real estate dataset"
+              ],
+              "Outputs": [
+                "Structured real estate data with location and attributes"
+              ],
+              "ReferenceCitation": "Section 3.1 Data Description: 'Real estate data: 5,684 estate records in residential sub-districts where each record contains the name, longitude, latitude, sales price, and the year that the building was constructed.'",
+              "FeedsInto": [
+                19
+              ]
+            },
+            {
+              "GranularBlockName": "Mobile Phone Location",
+              "ID": 5,
+              "PaperDescription": "Loads mobile phone location data with 308 billion location records of 7 million anonymized users, including User ID, cell tower ID, and timestamp.",
+              "Inputs": [
+                "Mobile phone location dataset"
+              ],
+              "Outputs": [
+                "Spatiotemporal location data with user IDs and timestamps"
+              ],
+              "ReferenceCitation": "Section 3.1 Data Description: 'Mobile phone location data: 308 billion location records of 7 million anonymized mobile phone users (around 50 percent of the population in the city) where each record contains an anonymous User ID, a cell tower ID, and a time stamp.'",
+              "FeedsInto": [
+                10,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Social Network",
+              "ID": 6,
+              "PaperDescription": "Loads 27 million mobile phone call records among 7 million users to extract social network data.",
+              "Inputs": [
+                "Mobile phone call records dataset"
+              ],
+              "Outputs": [
+                "Extracted social network graph from call records"
+              ],
+              "ReferenceCitation": "Section 3.1 Data Description: 'Social network data: 27 million mobile phone call records among 7 million users with each record containing two anonymous user IDs and a time stamp. A social network is also extracted from the call records.'",
+              "FeedsInto": [
+                20
+              ]
+            },
+            {
+              "GranularBlockName": "Microblog",
+              "ID": 7,
+              "PaperDescription": "Loads microblog data with 93,491 posts including textual information, timestamps, and geotags when available.",
+              "Inputs": [
+                "Microblog dataset"
+              ],
+              "Outputs": [
+                "Structured microblog data with geotags and timestamps"
+              ],
+              "ReferenceCitation": "Section 3.1 Data Description: 'Microblog data: 93,491 posts of a popular microblog website whose geotags fall inside the city boundaries. Each record contains textual information, a time stamp, and a geotag (when available).'",
+              "FeedsInto": [
+                17,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 8,
+              "PaperDescription": "Loads 272,470,343 trajectory records for 3,691 taxis recorded every 20 seconds, including taxi ID, GPS location, speed, occupancy status, and timestamp.",
+              "Inputs": [
+                "Taxi GPS trajectory dataset"
+              ],
+              "Outputs": [
+                "Spatiotemporal taxi trajectory data"
+              ],
+              "ReferenceCitation": "Section 3.1 Data Description: 'Taxi GPS trajectory data: 272,470,343 trajectory records for 3,691 taxis recorded every 20 seconds where each record contains a taxi ID, a GPS location, the speed, the occupancy status, and a time stamp.'",
+              "FeedsInto": [
+                10,
+                28,
+                16
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Representation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Object-Based Representation",
+              "ID": 9,
+              "PaperDescription": "Normalizes data objects into four attributes (which, where, when, what) to support cross-domain data reasoning and analysis.",
+              "Inputs": [
+                "Raw heterogeneous urban data"
+              ],
+              "Outputs": [
+                "Unified object-based dataset with normalized attributes"
+              ],
+              "ReferenceCitation": "Section 3.2 Data Representation: 'In our proposed framework, the geographical and time-oriented properties of objects should be normalized into a canonical space so that objects can be related by shared locations and time.'",
+              "FeedsInto": [
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Space-Time Cube",
+              "ID": 10,
+              "PaperDescription": "Constructs a canonical 3D space-time cube for storing spatiotemporal objects indexed by space and time.",
+              "Inputs": [
+                "Spatiotemporal datasets"
+              ],
+              "Outputs": [
+                "STC 3D grid for spatiotemporal analysis"
+              ],
+              "ReferenceCitation": "Section 3.2 Data Representation: 'We leverage the space-time-cube [22] as the canonical space for accommodating spatio-temporal objects.'",
+              "FeedsInto": [
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Querying",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Atomic Query",
+              "ID": 11,
+              "PaperDescription": "Performs atomic queries on a dataset using a combination of conditions (which, when, where, what).",
+              "Inputs": [
+                "User-defined query conditions"
+              ],
+              "Outputs": [
+                "Query results matching atomic conditions"
+              ],
+              "ReferenceCitation": "Section 3.3 The VAUD Query Model: 'An atomic query is composed of three components: a query condition, a query operation, and query results.'",
+              "FeedsInto": [
+                12,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Query Combination",
+              "ID": 12,
+              "PaperDescription": "Combines atomic queries using Boolean operators (Union, Intersection, Complement) to build complex queries.",
+              "Inputs": [
+                "Multiple atomic query operations"
+              ],
+              "Outputs": [
+                "Combined query results"
+              ],
+              "ReferenceCitation": "Section 3.3 The VAUD Query Model: 'A combination can be a union, an intersection, or a complement.'",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Query Sequence",
+              "ID": 13,
+              "PaperDescription": "Assembles multiple atomic queries and extractions into a query sequence for multi-source querying and reasoning.",
+              "Inputs": [
+                "Atomic queries and extraction operations"
+              ],
+              "Outputs": [
+                "Multi-source query results"
+              ],
+              "ReferenceCitation": "Section 3.3 The VAUD Query Model: 'By assembling an atomic query and extraction, comprehensive query operations can be executed to perform complicated tasks.'",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Attribute Extraction",
+              "ID": 14,
+              "PaperDescription": "Extracts specific attributes from query results for use as conditions in subsequent queries.",
+              "Inputs": [
+                "Query result objects"
+              ],
+              "Outputs": [
+                "Extracted attribute sets (which, where, when, what)"
+              ],
+              "ReferenceCitation": "Section 3.3 The VAUD Query Model: 'An extraction is composed of three components, the query results, an extraction operation, and a component of the object.'",
+              "FeedsInto": [
+                15,
+                17,
+                18,
+                19,
+                20
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 15,
+              "PaperDescription": "Displays the geographic spatial distribution of urban data such as road networks and POIs.",
+              "Inputs": [
+                "Geospatial data (road network, POIs, etc.)"
+              ],
+              "Outputs": [
+                "2D map view"
+              ],
+              "ReferenceCitation": "Section 4.2 The Scene View: 'In the scene view, the road network data is displayed as a list of geometric line primitives.'",
+              "FeedsInto": [
+                21,
+                23
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 16,
+              "PaperDescription": "Overlays heatmaps on the map to visualize spatial distributions of taxis, mobile phone users, and microblog posts.",
+              "Inputs": [
+                "Spatiotemporal object data"
+              ],
+              "Outputs": [
+                "Heatmap overlays"
+              ],
+              "ReferenceCitation": "Table 1 Visual Forms Supported in Our Interface: 'Heatmap: Geographic distribution of taxis; Geographic distribution of users; Geographic distribution of posts.'",
+              "FeedsInto": [
+                15,
+                21
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Glyph)",
+              "ID": 27,
+              "PaperDescription": "Displays glyphs to represent Points of Interest (POIs), such as bookstores, schools, and shopping malls.",
+              "Inputs": [
+                "POI dataset with location and category"
+              ],
+              "Outputs": [
+                "Glyph representations of POIs on the map"
+              ],
+              "ReferenceCitation": "Section 4.2 The Scene View: 'A point of interest, such as a bookstore, school or a shopping mall, is shown with a representative glyph.'",
+              "FeedsInto": [
+                15,
+                21
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Trajectories)",
+              "ID": 28,
+              "PaperDescription": "Visualizes movement trajectories of taxis and mobile phone users as polylines on the map.",
+              "Inputs": [
+                "Trajectory datasets (taxi GPS, mobile phone location)"
+              ],
+              "Outputs": [
+                "Polyline trajectories on the 2D map"
+              ],
+              "ReferenceCitation": "Section 4.2 The Scene View: 'The time-varying location information, such as a GPS or mobile phone trajectory, is encoded with polylines.'",
+              "FeedsInto": [
+                15,
+                22,
+                21
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 17,
+              "PaperDescription": "Displays time-series data such as microblog post counts or taxi speed trends over time.",
+              "Inputs": [
+                "Time-series data"
+              ],
+              "Outputs": [
+                "Line chart visualization"
+              ],
+              "ReferenceCitation": "Table 1 Visual Forms Supported in Our Interface: 'Line chart: Number of posts over time.'",
+              "FeedsInto": [
+                25
+              ]
+            },
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 18,
+              "PaperDescription": "Displays statistical summaries of data, such as POI categories or taxi ride occupancy durations.",
+              "Inputs": [
+                "Categorical data summaries"
+              ],
+              "Outputs": [
+                "Bar chart visualization"
+              ],
+              "ReferenceCitation": "Table 1 Visual Forms Supported in Our Interface: 'Bar chart: The statistics of POIs over type; time duration of riding.'",
+              "FeedsInto": [
+                25
+              ]
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 19,
+              "PaperDescription": "Visualizes the relationship between real estate prices and counts using scatter plots.",
+              "Inputs": [
+                "Real estate data (price, count)"
+              ],
+              "Outputs": [
+                "Scatter plot visualization"
+              ],
+              "ReferenceCitation": "Table 1 Visual Forms Supported in Our Interface: 'Scatter plot: Price and count of real estate.'",
+              "FeedsInto": [
+                25
+              ]
+            },
+            {
+              "GranularBlockName": "Graph",
+              "ID": 20,
+              "PaperDescription": "Visualizes the social network graph extracted from mobile phone call records as a force-directed graph.",
+              "Inputs": [
+                "Social network graph data"
+              ],
+              "Outputs": [
+                "Force-directed graph visualization"
+              ],
+              "ReferenceCitation": "Table 1 Visual Forms Supported in Our Interface: 'Graph: force directed graph of calling network.'",
+              "FeedsInto": [
+                25
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 21,
+              "PaperDescription": "Enables users to select a spatial region on the map to define a query condition (where).",
+              "Inputs": [
+                "User-drawn spatial region"
+              ],
+              "Outputs": [
+                "Spatial query condition"
+              ],
+              "ReferenceCitation": "Section 4.3 User Interactions: 'The geographical region selection can be used to define a rectangular region of the map to be the “where” condition.'",
+              "FeedsInto": [
+                26
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 22,
+              "PaperDescription": "Provides a time-picker or time wheel for selecting a time interval as a query condition (when).",
+              "Inputs": [
+                "User-selected time range"
+              ],
+              "Outputs": [
+                "Temporal query condition"
+              ],
+              "ReferenceCitation": "Section 4.3 User Interactions: 'A time-picker selection can be used to specify the “when” type condition.'",
+              "FeedsInto": [
+                26
+              ]
+            },
+            {
+              "GranularBlockName": "Object Selection (Scene View)",
+              "ID": 23,
+              "PaperDescription": "Allows users to select objects in the scene view for exploration or use as query inputs.",
+              "Inputs": [
+                "User selection from scene view"
+              ],
+              "Outputs": [
+                "Selected object details"
+              ],
+              "ReferenceCitation": "Section 4.2 The Scene View: 'When an object is selected from the result nodes, its detailed information is shown in the corresponding visualization scheme on top of the scene view.'",
+              "FeedsInto": [
+                26
+              ]
+            },
+            {
+              "GranularBlockName": "Drag-and-Drop",
+              "ID": 26,
+              "PaperDescription": "Enables the construction of visual queries using drag-and-drop interactions in the query view.",
+              "Inputs": [
+                "User drag-and-drop actions"
+              ],
+              "Outputs": [
+                "Visual query graph"
+              ],
+              "ReferenceCitation": "Section 4.1 The Query View: 'The query view (Fig. 4b) uses a flow metaphor to support the construction of cross-domain query tasks by means of drag-and-drop interactions.'",
+              "FeedsInto": [
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Comparison",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Compare Panel",
+              "ID": 25,
+              "PaperDescription": "Supports side-by-side comparison of selected statistical charts or metrics for deeper analysis.",
+              "Inputs": [
+                "Selected statistical graphs from scene view"
+              ],
+              "Outputs": [
+                "Comparison view of graphs"
+              ],
+              "ReferenceCitation": "Section 4.2 The Scene View: 'The comparison panel supports the comparison of selected statistical graphs from the scene view.'",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,255 @@
+{
+  "PaperTitle": "PDViz: A Visual Analytics Approach for State Policy Data",
+  "Year": 2023,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Policy Diffusion Data",
+              "ID": 1,
+              "PaperDescription": "Loads policy diffusion data from SPID and CSPP databases.",
+              "Inputs": [
+                "CSV files with policy adoption records and topics."
+              ],
+              "Outputs": [
+                "Structured policy diffusion network data."
+              ],
+              "ReferenceCitation": "Section 3.2.1 The policy diffusion is a network dataset, with each record describing which policy is spreading from one US state to another.",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Policy Diffusion Patterns",
+              "ID": 2,
+              "PaperDescription": "Infers policy diffusion patterns using the NetInf algorithm.",
+              "Inputs": [
+                "Policy adoption records as a network graph."
+              ],
+              "Outputs": [
+                "Identified policy diffusion pathways."
+              ],
+              "ReferenceCitation": "Section 3.2.1 We infer underlying policy diffusion patterns in the policy diffusion network... using the NetInf algorithm.",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Regression",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Probability of Policy Adoption",
+              "ID": 3,
+              "PaperDescription": "Uses a Cox proportional hazards model to predict policy adoption likelihood.",
+              "Inputs": [
+                "Policy adoption data with contextual factors."
+              ],
+              "Outputs": [
+                "Probabilities of policy adoption across states."
+              ],
+              "ReferenceCitation": "Section 3.2.4 The Cox model is the widely used method to model the probability of policy adoption following the context factors over time.",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Arc Diagram",
+              "ID": 4,
+              "PaperDescription": "Displays policy diffusion patterns as an arc diagram for comparative analysis.",
+              "Inputs": [
+                "Policy diffusion network graph."
+              ],
+              "Outputs": [
+                "Arc diagram highlighting policy pathways."
+              ],
+              "ReferenceCitation": "Section 3.3.2 PDViz adopts an arc diagram layout to present two different underlying patterns up and down for the user to compare them.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Choropleth Map",
+              "ID": 5,
+              "PaperDescription": "Visualizes policy adoption intensity across states using color.",
+              "Inputs": [
+                "Policy adoption data per state."
+              ],
+              "Outputs": [
+                "A geographic map with intensity-based coloring."
+              ],
+              "ReferenceCitation": "Section 3.3.3 The map view is designed to present measurement information with geographical information.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Hexbin",
+              "ID": 6,
+              "PaperDescription": "Provides a hexbin alternative to traditional maps to reduce distortion.",
+              "Inputs": [
+                "Policy adoption data per state."
+              ],
+              "Outputs": [
+                "Hexbin map highlighting policy diffusion."
+              ],
+              "ReferenceCitation": "Section 3.3.3 The map view provides two styles of maps: the general US state map and hexbin map.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Heat Matrix",
+              "ID": 7,
+              "PaperDescription": "Displays policy adoption counts across states and topics as a matrix.",
+              "Inputs": [
+                "Policy adoption counts."
+              ],
+              "Outputs": [
+                "A heat matrix with state-policy adoption intensities."
+              ],
+              "ReferenceCitation": "Section 3.3.2 The policy matrix chart shows the heatmap style overview representing how many new and existing policies have been created and adopted by states.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Dot Plot",
+              "ID": 8,
+              "PaperDescription": "Highlights state policy adoption frequency across categories.",
+              "Inputs": [
+                "Policy adoption data per state and topic."
+              ],
+              "Outputs": [
+                "Dot plot visualizing adoption distributions."
+              ],
+              "ReferenceCitation": "Section 3.3.4 The By Context tab provides a line-box chart to allow the user to observe policy adoptions along with social factors.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Timeline",
+              "ID": 9,
+              "PaperDescription": "Displays policy adoption trends over time per state and topic.",
+              "Inputs": [
+                "Time-series policy adoption data."
+              ],
+              "Outputs": [
+                "A timeline chart showing policy adoption history."
+              ],
+              "ReferenceCitation": "Section 3.3.4 The By Year tab shows the number of policies that are newly created or adopted over time.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 10,
+              "PaperDescription": "Analyzes social and political factors over time alongside policy adoptions.",
+              "Inputs": [
+                "Contextual factor trends."
+              ],
+              "Outputs": [
+                "Line chart overlaying policy adoption with external factors."
+              ],
+              "ReferenceCitation": "Section 3.3.4 The By Context tab provides a line chart representing social factors.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 11,
+              "PaperDescription": "Shows policy adoption statistics per topic and state.",
+              "Inputs": [
+                "Policy adoption data per category."
+              ],
+              "Outputs": [
+                "A bar chart ranking policy adoption rates."
+              ],
+              "ReferenceCitation": "Section 3.3.4 The By Topic tab is a bar chart showing the number of unique policies by topic.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Policy Selection",
+              "ID": 12,
+              "PaperDescription": "Allows users to select and filter policies for analysis.",
+              "Inputs": [
+                "User selection from dropdown."
+              ],
+              "Outputs": [
+                "Filtered policy adoption visualizations."
+              ],
+              "ReferenceCitation": "Section 3.3.1 The drop-down buttons allow the user to select the topic, year ranges, and sorting options.",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Mouse Hover",
+              "ID": 13,
+              "PaperDescription": "Highlights states and policies with contextual information on hover.",
+              "Inputs": [
+                "User hover action."
+              ],
+              "Outputs": [
+                "Tooltips with detailed policy adoption data."
+              ],
+              "ReferenceCitation": "Section 3.3.2 When the user hovers the mouse over a policy label, a tooltip appears showing contextual factors along with associated Coxs hazard ratios.",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

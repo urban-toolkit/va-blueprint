@@ -1,0 +1,242 @@
+{
+  "PaperTitle": "SenseMap: Urban Performance Visualization and Analytics Via Semantic Textual Similarity",
+  "Year": 2024,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "POI Data",
+              "ID": 1,
+              "PaperDescription": "Loads raw POI data from Baidu Maps for Shanghai",
+              "Inputs": [
+                "Raw POI data"
+              ],
+              "Outputs": [
+                "Structured POI dataset with class info"
+              ],
+              "ReferenceCitation": "Sec. IV-A: We focus on the POI data of Shanghai, China...",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Traffic Analysis Zones",
+              "ID": 2,
+              "PaperDescription": "Loads TAZ derived from OpenStreetMap road networks",
+              "Inputs": [
+                "OpenStreetMap road network data"
+              ],
+              "Outputs": [
+                "Defined TAZ boundaries as polygons"
+              ],
+              "ReferenceCitation": "Sec. IV-A: We delineate the TAZs from road network data...",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filtering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "POI Data",
+              "ID": 3,
+              "PaperDescription": "Removes unnecessary POI categories",
+              "Inputs": [
+                "Raw POI dataset"
+              ],
+              "Outputs": [
+                "Filtered POI dataset"
+              ],
+              "ReferenceCitation": "Sec. IV-A: We exclude POIs with minor influence areas...",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Classification",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "POI Taxonomy",
+              "ID": 4,
+              "PaperDescription": "Organizes POIs into 12 thematic categories",
+              "Inputs": [
+                "Filtered POI dataset"
+              ],
+              "Outputs": [
+                "Categorized POIs"
+              ],
+              "ReferenceCitation": "Sec. IV-A: We establish our taxonomy following the scheme...",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Similarity Calculation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "POI-Measure Relationship",
+              "ID": 5,
+              "PaperDescription": "Computes semantic similarity between POIs and urban performance measures",
+              "Inputs": [
+                "POI dataset",
+                "Predefined urban measures",
+                "Textual corpora"
+              ],
+              "Outputs": [
+                "POI contribution scores"
+              ],
+              "ReferenceCitation": "Sec. IV-B: To quantify the contribution of different POIs...",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "KDE",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "POI + Semantic Scores",
+              "ID": 6,
+              "PaperDescription": "Extends KDE by adjusting kernel bandwidths",
+              "Inputs": [
+                "POI dataset",
+                "Semantic scores"
+              ],
+              "Outputs": [
+                "Semantic density maps"
+              ],
+              "ReferenceCitation": "Sec. IV-D: We propose SAKDE as an improvement of KDE...",
+              "FeedsInto": [
+                7,
+                8,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Map",
+              "ID": 7,
+              "PaperDescription": "Displays the semantic maps overlaid on a base map",
+              "Inputs": [
+                "OpenStreetMap data"
+              ],
+              "Outputs": [
+                "2D map visualization"
+              ],
+              "ReferenceCitation": "Sec. V-C: Map View (Fig. 7(a)) shows the semantic maps overlaid on the base map after users select the measure...",
+              "FeedsInto": [
+                10,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 8,
+              "PaperDescription": "Generates a heatmap overlay of urban performance",
+              "Inputs": [
+                "Semantic density maps",
+                "User-selected measures"
+              ],
+              "Outputs": [
+                "Color-coded heatmap"
+              ],
+              "ReferenceCitation": "Sec. V-C: Map View shows the semantic maps overlaid...",
+              "FeedsInto": [
+                7,
+                10,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Radial Bar Chart",
+              "ID": 9,
+              "PaperDescription": "Displays POI category distributions within a selected region",
+              "Inputs": [
+                "Aggregated POI data",
+                "Measure scores"
+              ],
+              "Outputs": [
+                "Circular bar chart showing category proportions"
+              ],
+              "ReferenceCitation": "Sec. V-C: The score scale from 0 to 100 is displayed at the center of the radial bar chart",
+              "FeedsInto": [
+                10,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "POI Selection",
+              "ID": 10,
+              "PaperDescription": "Allows users to refine displayed POIs",
+              "Inputs": [
+                "User-defined category filters"
+              ],
+              "Outputs": [
+                "Filtered POIs"
+              ],
+              "ReferenceCitation": "Sec. V-C: The system supports interactions such as filtering POIs...",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 11,
+              "PaperDescription": "Allows users to define a region of interest",
+              "Inputs": [
+                "User-defined geographic selection"
+              ],
+              "Outputs": [
+                "Computed urban performance for the region"
+              ],
+              "ReferenceCitation": "Sec. V-C: Circle selection enables radius adjustments...",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,391 @@
+{
+  "PaperTitle": "TPFlow: Progressive Partition and Multidimensional Pattern Extraction for Large-Scale Spatio-Temporal Data Analysis",
+  "Year": 2019,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatiotemporal datasets",
+              "ID": 1,
+              "PaperDescription": "Loads large-scale spatio-temporal datasets, such as taxi trip records, store visitor traffic, and regional sales data",
+              "Inputs": [
+                "Traffic Flow Data (taxi pickup/drop-off locations, timestamps)",
+                "Retail Customer Data (store zones, visitor counts, timestamps)",
+                "Regional Sales Data (sales regions, product sales, monthly records)"
+              ],
+              "Outputs": [
+                "Structured dataset formatted as a multi-dimensional tensor for further analysis"
+              ],
+              "ReferenceCitation": "Section 3.1: Consider a multi-dimensional spatio-temporal (ST) dataset where each entry is a numerical measure defined by corresponding temporal, spatial and other domain-specific dimensions.",
+              "FeedsInto": [
+                2,
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Partitioning",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Piecewise Decomposition",
+              "ID": 2,
+              "PaperDescription": "Performs automatic slicing and partitioning of data for detailed analysis",
+              "Inputs": [
+                "Multidimensional ST dataset"
+              ],
+              "Outputs": [
+                "Partitioned subsets of ST data"
+              ],
+              "ReferenceCitation": "Section 3.2: We propose a novel piecewise rank-one tensor decomposition algorithm which supports automatically slicing the data into homogeneous partitions and extracting the latent patterns.",
+              "FeedsInto": [
+                3,
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "ST Feature Vectors",
+              "ID": 3,
+              "PaperDescription": "Uses clustering algorithms to group similar subsets for improved pattern extraction",
+              "Inputs": [
+                "Feature vectors from tensor decomposition"
+              ],
+              "Outputs": [
+                "Clusters of similar data patterns"
+              ],
+              "ReferenceCitation": "Section 3.2: Given the feature vectors, we can apply a variety of clustering algorithms, including k-means, hierarchical clustering, or OPTICS to cluster the days.",
+              "FeedsInto": [
+                4,
+                6,
+                7,
+                8,
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Approximation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Rank-One Approximation",
+              "ID": 4,
+              "PaperDescription": "Approximates large tensors with rank-one components for easier interpretation",
+              "Inputs": [
+                "High-dimensional ST tensor"
+              ],
+              "Outputs": [
+                "Simplified tensor representation with extracted patterns"
+              ],
+              "ReferenceCitation": "Section 3.1: We apply successive rank-one CP decomposition methods instead of traditional ones to factorize the original tensor.",
+              "FeedsInto": [
+                6,
+                7,
+                8,
+                9,
+                11,
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Tree View",
+              "ID": 5,
+              "PaperDescription": "Visualizes hierarchical partitioning of the data",
+              "Inputs": [
+                "Partitioned subsets of ST data"
+              ],
+              "Outputs": [
+                "Tree-based visualization"
+              ],
+              "ReferenceCitation": "Section 4: The tree starts with a root node... Every other node represents a subset of data. The system supports a steerable and iterative workflow by allowing analysts to interact with every node.",
+              "FeedsInto": [
+                17,
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 6,
+              "PaperDescription": "Displays extracted patterns along temporal dimensions",
+              "Inputs": [
+                "Aggregated temporal data"
+              ],
+              "Outputs": [
+                "Line chart visualization"
+              ],
+              "ReferenceCitation": "Section 4.2.1: We visually summarize each partition with a set of simple charts (e.g., line charts) to display the extracted patterns along different dimensions.",
+              "FeedsInto": [
+                13,
+                14,
+                15,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 7,
+              "PaperDescription": "Represents extracted patterns for categorical or numerical distributions",
+              "Inputs": [
+                "Aggregated categorical/numerical data"
+              ],
+              "Outputs": [
+                "Bar chart visualization"
+              ],
+              "ReferenceCitation": "Section 4.2.1: We visually summarize each partition with a set of simple charts (e.g., bar charts) to display the extracted patterns along different dimensions.",
+              "FeedsInto": [
+                13,
+                14,
+                15,
+                16
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Overlay (Graph)",
+              "ID": 8,
+              "PaperDescription": "Represents origin-destination movements in ST data",
+              "Inputs": [
+                "OD data (e.g., taxi trips)"
+              ],
+              "Outputs": [
+                "Flow map visualization"
+              ],
+              "ReferenceCitation": "Section 4.2.1: The flow map shows OD (origin-destination) data which describe spatial movements such as taxi trips with pickup and dropoff locations.",
+              "FeedsInto": [
+                12,
+                13,
+                14,
+                15,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Bubble Map)",
+              "ID": 9,
+              "PaperDescription": "Encodes spatial distribution using size variations",
+              "Inputs": [
+                "Aggregated spatial data"
+              ],
+              "Outputs": [
+                "Bubble map visualization"
+              ],
+              "ReferenceCitation": "Section 4.2.1: For thematic map, we choose bubble map and use the area of the circles to encode the corresponding values in the 1st loading vectors.",
+              "FeedsInto": [
+                12,
+                13,
+                14,
+                15,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Glyph)",
+              "ID": 10,
+              "PaperDescription": "Encodes multidimensional trends for comparison",
+              "Inputs": [
+                "Partitioned subsets of ST data"
+              ],
+              "Outputs": [
+                "Multivariate glyph representations on a map"
+              ],
+              "ReferenceCitation": "Section 4.2.2: For the bubble map, we introduce a multivariate glyph design which can be embedded on a map (superposition).",
+              "FeedsInto": [
+                12,
+                13,
+                14,
+                15,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 11,
+              "PaperDescription": "Allows superimposing multiple data layers on the same map for comparison.",
+              "Inputs": [
+                "Multiple spatial datasets"
+              ],
+              "Outputs": [
+                "Overlaid visual representation on map"
+              ],
+              "ReferenceCitation": "Section 4.2.2: Since sharing spatial context facilitates comparative analysis, we overlay multiple data partitions on the same map.",
+              "FeedsInto": [
+                12,
+                13,
+                14,
+                15,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 12,
+              "PaperDescription": "Displays spatial data as a 2D base map for overlays and thematic representations.",
+              "Inputs": [
+                "Base map data (e.g., roads, land use, region boundaries)"
+              ],
+              "Outputs": [
+                "A rendered 2D map onto which overlays (bubble maps, glyphs, flow maps) are added"
+              ],
+              "ReferenceCitation": "Section 4.2.1: For thematic map, we choose bubble map (row #3) and use the area of the circles to encode the corresponding values in the 1st loading vectors.",
+              "FeedsInto": [
+                13,
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Brushing",
+              "ID": 13,
+              "PaperDescription": "Allows users to brush on plots and maps to select and highlight specific data",
+              "Inputs": [
+                "User brushing on charts",
+                "User brushing on maps"
+              ],
+              "Outputs": [
+                "Highlighted data subset"
+              ],
+              "ReferenceCitation": "Section 2: With brushing and linking, analysts can directly specify queries on the views, select and highlight a subset of data for detailed examination.",
+              "FeedsInto": [
+                2,
+                4,
+                14,
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Linking",
+              "ID": 14,
+              "PaperDescription": "Allows users to interactively link selections across multiple plots and maps",
+              "Inputs": [
+                "User selection on charts",
+                "User selection on maps"
+              ],
+              "Outputs": [
+                "Linked highlighting across visualizations"
+              ],
+              "ReferenceCitation": "Section 2: With brushing and linking, analysts can directly specify queries on the views, select and highlight a subset of data for detailed examination.",
+              "FeedsInto": [
+                13,
+                15,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Superposition",
+              "ID": 15,
+              "PaperDescription": "Supports overlaying multiple datasets in a single plot or map",
+              "Inputs": [
+                "Partitioned datasets on charts",
+                "Partitioned datasets on maps"
+              ],
+              "Outputs": [
+                "Overlaid visualizations for comparison"
+              ],
+              "ReferenceCitation": "Section 4.2.2: Visual designs for comparison tasks can be categorized into three groups: juxtaposition, superposition, and explicit encoding.",
+              "FeedsInto": [
+                11,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Juxtaposition",
+              "ID": 16,
+              "PaperDescription": "Supports side-by-side comparison of multiple partitions",
+              "Inputs": [
+                "Partitioned datasets on charts",
+                "Partitioned datasets on maps"
+              ],
+              "Outputs": [
+                "Juxtaposed visualizations for comparison"
+              ],
+              "ReferenceCitation": "Section 4.2.2: Visual designs for comparison tasks can be categorized into three groups: juxtaposition, superposition, and explicit encoding.",
+              "FeedsInto": [
+                11,
+                15
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Partition",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Tree Split",
+              "ID": 17,
+              "PaperDescription": "Allows users to manually split data partitions in the Tree View",
+              "Inputs": [
+                "User-defined partition criteria"
+              ],
+              "Outputs": [
+                "New data partitions"
+              ],
+              "ReferenceCitation": "Section 4.2.4: TPFlow supports a steerable and iterative workflow such that analysts can progressively divide the data into smaller subsets along different dimensions.",
+              "FeedsInto": [
+                2,
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Tracking",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Tree History",
+              "ID": 18,
+              "PaperDescription": "Enables users to track and refine past partitioning steps in the Tree View",
+              "Inputs": [
+                "Partitioning history"
+              ],
+              "Outputs": [
+                "Visualization of past partitioning actions"
+              ],
+              "ReferenceCitation": "Section 4.2.4: To support iterative partition refinement and a progressive, top-down analysis workflow, the system should enable analysts to track the steps they have taken to reach the insight.",
+              "FeedsInto": [
+                5,
+                17
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

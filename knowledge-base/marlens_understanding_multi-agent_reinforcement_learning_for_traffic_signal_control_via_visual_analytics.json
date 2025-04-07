@@ -1,0 +1,401 @@
+{
+  "PaperTitle": "MARLens: Understanding Multi-agent Reinforcement Learning for Traffic Signal Control via Visual Analytics",
+  "Year": 2024,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Traffic Simulation",
+              "ID": 1,
+              "PaperDescription": "Simulation Data Loader",
+              "Inputs": [
+                "Time-series snapshots of an environment (e.g. positions, signals)",
+                "environment configuration (2D discrete states, possibly temporal)"
+              ],
+              "Outputs": [
+                "Organized environment data for each time step (ready for analysis/simulation)."
+              ],
+              "ReferenceCitation": "Sec. 6.2: 3) Simulation Data. LibSignal can generate traffic simulation data automatically. [...] The phases of intersections and vehicles' location will be recorded every time step. Simulation data is useful to replay the status of the road network...",
+              "FeedsInto": [
+                4,
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Model Weights",
+              "ID": 2,
+              "PaperDescription": "Model Data Loader",
+              "Inputs": [
+                "ML model parameters (actor/critic networks)",
+                "discrete -> continuous mapping (states to Q-values/actions)"
+              ],
+              "Outputs": [
+                "Structured model representation describing how states map to decisions (for gleaning or explaining)."
+              ],
+              "ReferenceCitation": "Sec. 6.2: 1) Model Data. [...] includes the outputs of both the training and testing models, containing various neural network metrics. We have extracted the input and output data from these networks.",
+              "FeedsInto": [
+                5,
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Model Metrics",
+              "ID": 3,
+              "PaperDescription": "Logger File Parser",
+              "Inputs": [
+                "Logger files storing (temporal) numeric metrics (reward, queue length, speed loss)"
+              ],
+              "Outputs": [
+                "Arrays/tables of continuous metrics for each iteration/time step (for distribution & time-series charts)"
+              ],
+              "ReferenceCitation": "Sec. 6.2: 2) Logger Files [...] contain various metrics such as mean reward, queue length, delay, and travel time, for each episode. [...] for each episode, we also obtain all the observations [...] current/last action, and current/last phase.",
+              "FeedsInto": [
+                9,
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Training",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Policy",
+              "ID": 4,
+              "PaperDescription": "MADDPG Training",
+              "Inputs": [
+                "Multi-step environment data (temporal states/transitions)",
+                "hyperparameters (discrete or continuous)"
+              ],
+              "Outputs": [
+                "Learned model parameters that transform environment states -> decisions i.e. a trained policy function."
+              ],
+              "ReferenceCitation": "Sec. 3.2: We adopt MADDPG as the primary algorithm for our study. [...] We input the road network, traffic flow, [...] fine-tuning the hyperparameters until the selected model effectively controls the traffic lights and attains a satisfactory performance.",
+              "FeedsInto": [
+                5,
+                6,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Ranking",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Feature Weights",
+              "ID": 5,
+              "PaperDescription": "SHAP (Feature Extraction)",
+              "Inputs": [
+                "ML model I/O logs (continuous/discrete states)",
+                "dimensional feature vectors (categorical or numeric)"
+              ],
+              "Outputs": [
+                "Per-feature importance scores (continuous weights) showing how each feature influences predictions."
+              ],
+              "ReferenceCitation": "Sec. 6.3: Similarly, we employ SHAP [42] to analyze the neural networks of each agent and illustrate feature importance. [...] Another model-agnostic approach we employ is SHAP to glean insights into the model training process.",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Model Input/Output Sets",
+              "ID": 6,
+              "PaperDescription": "Decision Tree for Critic/Actor",
+              "Inputs": [
+                "Model I/O pairs (possibly discrete or continuous states)",
+                "environment transitions"
+              ],
+              "Outputs": [
+                "A hierarchical structure (tree) approximating the ML model's logic (feature checks -> final output)."
+              ],
+              "ReferenceCitation": "Sec. 6.3: ...we independently train decision trees for both the critic and actor networks to gain a deeper understanding of how neural networks make decisions. Specifically, we employ all [...] to train a regression tree.",
+              "FeedsInto": [
+                15
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Dimension Reduction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "High-dimensional State Feature Vectors",
+              "ID": 7,
+              "PaperDescription": "t-SNE Projection of States",
+              "Inputs": [
+                "High-dimensional vectors (continuous or categorical state attributes, actions, time)"
+              ],
+              "Outputs": [
+                "2D (or 3D) continuous coordinates for scatter-based arrangement, grouping similar states."
+              ],
+              "ReferenceCitation": "Sec. 7.4: ...we utilize the t-SNE algorithm to project the state information, which includes the current decision action, rewards, current time step, [...] into the 2D plane. [...] ensures that similar states are situated closer to each other.",
+              "FeedsInto": [
+                12,
+                16
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Mapping",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Weighted Graph",
+              "ID": 8,
+              "PaperDescription": "Chord Diagram Generation (relationships)",
+              "Inputs": [
+                "Cross-entity synergy info (discrete nodes, numeric edge weights from feature influence)"
+              ],
+              "Outputs": [
+                "Weighted adjacency structure (discrete nodes + continuous edge weights) describing how entities influence each other."
+              ],
+              "ReferenceCitation": "Sec. 7.4: We use a chord diagram to display an overview of the influence among agents. [...] A chord from agent A to agent B indicates some features of A affect B's decision-making. The width of the chord encodes the number of features.",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Distribution Chart",
+              "ID": 9,
+              "PaperDescription": "Training Distribution",
+              "Inputs": [
+                "Arrays of numeric metrics (continuous time-series or aggregated stats)",
+                "user filters"
+              ],
+              "Outputs": [
+                "A chart (e.g., boxplot, histogram, lineup) for distribution or ranking of numeric metrics."
+              ],
+              "ReferenceCitation": "Sec. 7.2: We devise the Training Distribution, implementing the lineup design [61]. This design choice enables users to rapidly visualize the distribution of the four metrics and swiftly locate their desired episode.",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 10,
+              "PaperDescription": "Traffic Signal Phases & Metrics",
+              "Inputs": [
+                "Time-series data (continuous metric vs. discrete time)",
+                "user zoom or selection"
+              ],
+              "Outputs": [
+                "Pixel-based 2D line chart or multi-line chart"
+              ],
+              "ReferenceCitation": "Sec. 7.4: On the right side, [...] we have four sets of lines and bands corresponding to each of the four agents. The line chart effectively illustrates the fluctuations in selected metrics, while bands along the time axis represent traffic signal phases.",
+              "FeedsInto": [
+                17,
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 11,
+              "PaperDescription": "(Paper references discrete actions/states)",
+              "Inputs": [
+                "Discrete categories or labeled data (phase codes, directions, or action indexes)",
+                "user selection"
+              ],
+              "Outputs": [
+                "A bar chart or discrete chart showing category counts, frequencies, or comparisons."
+              ],
+              "ReferenceCitation": "Not named explicitly in the text, but implied by references to discrete actions or action probabilities. E.g. in Sec. 7.3, each intersection has four discrete directions. In principle, a bar chart might be used to compare these categorical probabilities.",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 12,
+              "PaperDescription": "Traffic Condition part of Episode Overview",
+              "Inputs": [
+                "2D embedding from Compute Embedding",
+                "optional color/size encoding (continuous or categorical)"
+              ],
+              "Outputs": [
+                "On-screen 2D scatter of states/time slices"
+              ],
+              "ReferenceCitation": "Sec. 7.3: Traffic Condition. We count the number of vehicles [...] employ the t-SNE algorithm to project traffic conditions onto a 2D plane. Each time step's traffic condition is represented as a point. The color of each point corresponds to its respective time step.",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Chord Diagram",
+              "ID": 14,
+              "PaperDescription": "Chord diagram in Episode Detail",
+              "Inputs": [
+                "Weighted adjacency structure from Compute Weighted Influence Graph (discrete nodes, numeric edge weights)"
+              ],
+              "Outputs": [
+                "Circular chord plot where arcs connect discrete entities, widths or color representing continuous synergy/influence."
+              ],
+              "ReferenceCitation": "Sec. 7.4: We use a chord diagram to display an overview of the influence among agents. A chord from agent A to agent B indicates some features of A affect B's decision-making. The width of the chord encodes the number of features.",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Tree Chart",
+              "ID": 15,
+              "PaperDescription": "Policy Explainer",
+              "Inputs": [
+                "Hierarchical data from Create Surrogate Model",
+                "user selection (which entity/time or condition)"
+              ],
+              "Outputs": [
+                "Node-link or radial tree showing how features (discrete or continuous) lead to a final decision (leaf node)."
+              ],
+              "ReferenceCitation": "Sec. 7.5: We have adopted a tree-based design to present the policies governing the relationship between actions and states. The root node of the tree [...] four subtrees are used to encode rules for four agents, each designated with its respective color.",
+              "FeedsInto": [
+                17,
+                19
+              ]
+            },
+            {
+              "GranularBlockName": "Glyph",
+              "ID": 16,
+              "PaperDescription": "Episode Detail: State Projection & Feature Importance",
+              "Inputs": [
+                "2D embedding",
+                "ring-based or radial glyph data (discrete actions, continuous reward, time-step)"
+              ],
+              "Outputs": [
+                "Overlaid glyph for each point in the scatter, showing multi-attribute data in rings, arcs, or color-coded segments"
+              ],
+              "ReferenceCitation": "Sec. 7.4: A circular segment design is adopted to present information about the four agents. We utilize the t-SNE algorithm to project the state info. We also have bar charts for feature importance. Notably, after zooming in, we adopt a glyph design to show more state information, using rings to encode action, traffic flow, reward, and time step.",
+              "FeedsInto": [
+                17
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Map",
+              "ID": 13,
+              "PaperDescription": "Displays the selected stops name, routes crossing it, route-level stats or arrival-time uncertainties. Also can display arrival time distribution as small charts.",
+              "Inputs": [
+                "2D layer"
+              ],
+              "Outputs": [
+                "A table-based info panel for that stops bus routes, uncertainties, or distribution charts."
+              ],
+              "ReferenceCitation": "Sec. VI-E: Stop View displays the relevant route IDs, arrival times for the chosen stop",
+              "FeedsInto": [
+                17,
+                18
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 17,
+              "PaperDescription": "Filter & Select (Lasso & Episode Selection)",
+              "Inputs": [
+                "Data arrays or embedded sets (discrete, continuous, or time-based)",
+                "user bounding box/threshold"
+              ],
+              "Outputs": [
+                "A subset of data or states is selected, triggering re-filtered visuals."
+              ],
+              "ReferenceCitation": "Sec. 7.3: Users can select a group of points of interest with a lasso in Fig. 2C1. We also have sorting episodes by certain metrics in the Training Distribution. The user can select a time step to jump the Simulation Replay.",
+              "FeedsInto": [
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 18,
+              "PaperDescription": "Replay Control",
+              "Inputs": [
+                "Frames from Simulate Environment",
+                "user commands (pause/play/jump/adjust time scale)"
+              ],
+              "Outputs": [
+                "Real-time stepping or continuous playback of environment frames (temporal control)."
+              ],
+              "ReferenceCitation": "Sec. 7.6: We have incorporated the Simulation Replay module. [...] allows users to control the simulation, e.g. pausing, adjusting speed, or jumping to a specific time step.",
+              "FeedsInto": [
+                10,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Save Interface State",
+              "ID": 19,
+              "PaperDescription": "Snapshot Log",
+              "Inputs": [
+                "Current visual composition (charts, diagrams, etc.)",
+                "user command to save"
+              ],
+              "Outputs": [
+                "Snapshots of the current visual arrangement stored for cross-time or cross-run comparisons."
+              ],
+              "ReferenceCitation": "Sec. 7.5: Users can save a snapshot to the Snapshot Log by clicking the 'Save snapshot' button. [...]",
+              "FeedsInto": [
+                20
+              ]
+            },
+            {
+              "GranularBlockName": "Load Interface State",
+              "ID": 20,
+              "PaperDescription": "Snapshot Log",
+              "Inputs": [
+                "Saved visual composition (charts, diagrams, etc.)",
+                "user command to load"
+              ],
+              "Outputs": [
+                "Previously saved snapshots reloaded for comparison or further analysis."
+              ],
+              "ReferenceCitation": "Sec. 7.5: [...] They can easily reload a snapshot by clicking it.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

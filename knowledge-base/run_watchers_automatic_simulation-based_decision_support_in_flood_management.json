@@ -1,0 +1,321 @@
+{
+  "PaperTitle": "Run Watchers: Automatic Simulation-Based Decision Support in Flood Management",
+  "Year": 2014,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Features",
+              "ID": 1,
+              "PaperDescription": "Loads 2D footprints (e.g., building outlines, perimeter polygons) for flood planning",
+              "Inputs": [
+                "Footprint polygons from city data (e.g., shapefiles, OSM)"
+              ],
+              "Outputs": [
+                "2D feature set for perimeter generation or object protection lines"
+              ],
+              "ReferenceCitation": "Sec. 5: We define a perimeter as a closed line around important buildings uses footprints for geometry.",
+              "FeedsInto": [
+                4,
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "3D Geometries",
+              "ID": 2,
+              "PaperDescription": "Loads building extrusions / 3D shapes for deeper modeling (e.g., barrier placement, slopes)",
+              "Inputs": [
+                "3D building meshes",
+                "Extruded shapes"
+              ],
+              "Outputs": [
+                "Scene geometry for precise barrier slope checks",
+                "Advanced 3D visualization"
+              ],
+              "ReferenceCitation": "Sec. 5: We use a GPU-based flood simulation... building footprints extruded to 3D for barrier endpoints.",
+              "FeedsInto": [
+                4,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Digital Elevation Model",
+              "ID": 3,
+              "PaperDescription": "Imports the terrain DEM to compute water flow and slope constraints",
+              "Inputs": [
+                "Raster DEM (heights)",
+                "Triangular mesh of ground surface"
+              ],
+              "Outputs": [
+                "In-memory DEM for shallow-water PDE",
+                "Slope-based barrier feasibility"
+              ],
+              "ReferenceCitation": "Sec. 3.5: Barrier feasibility depends on maximum terrain slope so we rely on DEM.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Simulation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Flood Scenario",
+              "ID": 4,
+              "PaperDescription": "Runs shallow-water PDE flood model for breach incidents, given initial geometry and barrier states",
+              "Inputs": [
+                "DEM",
+                "Building geometry",
+                "Breach scenario",
+                "Any placed barriers"
+              ],
+              "Outputs": [
+                "Time-stepped outputs of water depth for each scenario/run",
+                "Time-stepped outputs of inundation wavefront for each scenario/run"
+              ],
+              "ReferenceCitation": "Sec. 3.1: Every simulation run is a sequence of time steps for the breach scenario uses GPU-based PDE solution.",
+              "FeedsInto": [
+                5,
+                6,
+                7,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Simulation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Domain Rules",
+              "ID": 5,
+              "PaperDescription": "Implements watchers that spawn/terminate runs based on triggers (water detection, barrier fail, perimeter shrink)",
+              "Inputs": [
+                "Streaming PDE states",
+                "Domain rules (time constraints, barrier constraints)"
+              ],
+              "Outputs": [
+                "Updated branching structure of runs (decision tree)",
+                "Reusing states"
+              ],
+              "ReferenceCitation": "Sec. 3: Run Watchers program agents that manage multiple parallel simulation runs domain-specific rules for new or terminated runs.",
+              "FeedsInto": [
+                4,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Tree Construction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Decisions",
+              "ID": 6,
+              "PaperDescription": "Builds a cause-and-decision tree from watchers' time-step logs (water detection, barrier needed, etc.)",
+              "Inputs": [
+                "Logged events from watchers (time step, cause, decision)"
+              ],
+              "Outputs": [
+                "A cause-effect tree linking all run branches into a single structure"
+              ],
+              "ReferenceCitation": "Sec. 4: Run Watchers produce large decision trees we automatically extract them for explanation and visualization.",
+              "FeedsInto": [
+                9,
+                10,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Calculation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Perimeter",
+              "ID": 7,
+              "PaperDescription": "Computes initial perimeter from wavefronts + important buildings, then shrinks or splits as barrier failures occur",
+              "Inputs": [
+                "Guaranteed response time wavefront",
+                "Final wavefront",
+                "Building footprints"
+              ],
+              "Outputs": [
+                "A polygon perimeter (or multiple) that encloses the selected buildings, updated on segment removal"
+              ],
+              "ReferenceCitation": "Sec. 3.4-3.6: We define perimeter as closed line, shrink it if segments fail segment removal leads to smaller polygon or object protection.",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Evaluation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Geometry Positioning",
+              "ID": 8,
+              "PaperDescription": "Determines if a perimeter segment can be protected by a barrier or must be removed",
+              "Inputs": [
+                "Segment's water depth/slope",
+                "Watchers' barrier data (time, resource constraints)"
+              ],
+              "Outputs": [
+                "Updated run configuration with chosen barrier type",
+                "Perimeter-segment removal"
+              ],
+              "ReferenceCitation": "Sec. 3.5: If newly created barrier is overtopped next barrier type is tried. If none apply, remove segment.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Assessment",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Protection Coverage",
+              "ID": 9,
+              "PaperDescription": "Shows why a certain building was left unprotected by enumerating perimeter attempts that failed",
+              "Inputs": [
+                "Building ID",
+                "Final decision tree results from watchers"
+              ],
+              "Outputs": [
+                "Explanatory examples of perimeters that could have enclosed the building, plus cause logs"
+              ],
+              "ReferenceCitation": "Sec. 4: Explaining unprotected building watchers provide reasons that this building was not included due to overshadowing more critical needs.",
+              "FeedsInto": [
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Timeline",
+              "ID": 10,
+              "PaperDescription": "Groups watchers' decisions (barrier, perimeter, line-disable) into clusters along a horizontally oriented timeline",
+              "Inputs": [
+                "Decision tree logs: cause, time step, outcome, runs"
+              ],
+              "Outputs": [
+                "Cluster-based timeline chart with color-coded partial or final survivors"
+              ],
+              "ReferenceCitation": "Sec. 4.1: We propose a cluster-based timeline each cluster for a decision type re-scaling partial runs for clarity.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Storyboard",
+              "ID": 11,
+              "PaperDescription": "Generates storyboards: either final action plan, or entire chain of watchers' decisions, or hard decisions scenario",
+              "Inputs": [
+                "A chosen run/scenario",
+                "Bubset of runs relevant to an unprotected building"
+              ],
+              "Outputs": [
+                "A horizontally oriented sequence of story blocks referencing each cause/decision, plus 3D snapshots"
+              ],
+              "ReferenceCitation": "Sec. 4.2: Run Watchers automatically generate storyboards to present the chain of causes/decisions and final plan.",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 12,
+              "PaperDescription": "Displays water surface, building geometry, and any placed barriers at a chosen time step in 3D",
+              "Inputs": [
+                "Selected scenario/time from watchers",
+                "PDE water fields",
+                "Barrier lines"
+              ],
+              "Outputs": [
+                "An interactive 3D environment with highlight on barrier or perimeter changes"
+              ],
+              "ReferenceCitation": "Sec. 4.2: The thumbnail image is linked to main 3D view user can see barrier placement or perimeter updates in 3D.",
+              "FeedsInto": [
+                13,
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Scenario Selection",
+              "ID": 13,
+              "PaperDescription": "Clicking a time step or scenario in the cluster timeline picks that watchers' cause/decision for detail views",
+              "Inputs": [
+                "Mouse click on cluster timeline (run watchers' node)"
+              ],
+              "Outputs": [
+                "Storyboard updates to that scenario chain, main 3D navigates to corresponding time"
+              ],
+              "ReferenceCitation": "Sec. 4.3: Selecting a cause or decision in the cluster triggers an update of the storyboard & main 3D view facilitating full decision-tree navigation.",
+              "FeedsInto": [
+                11,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Manipulation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Geometry Replacement",
+              "ID": 14,
+              "PaperDescription": "Lets user spawn new PDE run from a given time step, overriding watchers (barrier or perimeter modifications)",
+              "Inputs": [
+                "Ongoing PDE state",
+                "user-chosen barrier",
+                "perimeter adjustments"
+              ],
+              "Outputs": [
+                "A newly created run integrated into watchers' pipeline, possibly overshadowing watchers' default approach"
+              ],
+              "ReferenceCitation": "Sec. 3.1: Users can manually spawn new scenario from any time step bridging what-if' questions with watchers' automation",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

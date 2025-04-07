@@ -1,0 +1,268 @@
+{
+  "PaperTitle": "A Visual Analytics Approach to Scheduling Customized Shuttle Buses via Perceiving Passengers' Travel Demands",
+  "Year": 2020,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Street Network",
+              "ID": 1,
+              "PaperDescription": "The local urban road network data comprises a directed graph of the city of Shenzhen, of which the vertices represent road intersections and the edges represent roads.",
+              "Inputs": [
+                "Urban road network dataset"
+              ],
+              "Outputs": [
+                "Directed graph of road intersections and roads"
+              ],
+              "ReferenceCitation": "Section 4: The local urban road network data comprises a directed graph of the city of Shenzhen, of which the vertices represent road intersections and the edges represent roads.",
+              "FeedsInto": [
+                6,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Car-hailing Reimbursement",
+              "ID": 2,
+              "PaperDescription": "Records of employees' car-hailing reimbursement for overtime with de-identification, including departure time, arrival time, place of origin, place of destination, and payment amount.",
+              "Inputs": [
+                "Car-hailing reimbursement records"
+              ],
+              "Outputs": [
+                "Structured car-hailing reimbursement dataset"
+              ],
+              "ReferenceCitation": "Section 4: We collected 93,050 employees' car-hailing reimbursement records for overtime with de-identification, which ranges from April 1st to August 1st, 2019.",
+              "FeedsInto": [
+                4,
+                13,
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Daytime Shuttle Routes and Timetables",
+              "ID": 3,
+              "PaperDescription": "Provides daytime shuttle routes picking up passengers with fixed timetables and traveling times between stops.",
+              "Inputs": [
+                "Daytime shuttle route schedules"
+              ],
+              "Outputs": [
+                "Dataset of shuttle routes and timetables"
+              ],
+              "ReferenceCitation": "Section 4: As mentioned, there are 18 shuttle routes in the daytime picking up passengers with fixed timetables.",
+              "FeedsInto": [
+                8,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Traffic Conditions and Recommended Routes",
+              "ID": 12,
+              "PaperDescription": "Traffic conditions and recommended routes between stops collected dynamically starting at 21:30 with time intervals to calibrate traveling routes and durations.",
+              "Inputs": [
+                "Crawled traffic condition data"
+              ],
+              "Outputs": [
+                "Calibrated routes and travel time data for shuttle route recommendations"
+              ],
+              "ReferenceCitation": "Section 4: To obtain the traveling time and route from one bus stop to another starting at different departure timestamps, we obtain a dataset (D21:30) by dynamically crawling traffic conditions and the recommended routes between two stops.",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Directional Clustering",
+              "ID": 4,
+              "PaperDescription": "Clusters reimbursement records by travel directions using K-means to determine travel directions for shuttle routes.",
+              "Inputs": [
+                "Structured car-hailing reimbursement dataset"
+              ],
+              "Outputs": [
+                "Clusters of travel directions with directional cluster IDs"
+              ],
+              "ReferenceCitation": "Section 4: We use K-means to obtain the initial number of travel directions. We determine the value of K by finding the peak point in the relationship between the cluster number and the Silhouette Coefficient [26] among the generated clusters.",
+              "FeedsInto": [
+                5,
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Regional Clustering",
+              "ID": 5,
+              "PaperDescription": "Clusters drop-off spots within each travel direction into regional clusters based on walking distance (1000 meters).",
+              "Inputs": [
+                "Clusters of travel directions with directional cluster IDs"
+              ],
+              "Outputs": [
+                "Regional clusters with regional cluster IDs for shuttle stop initialization"
+              ],
+              "ReferenceCitation": "Section 4: For each travel direction, we use regional clustering to initialize the candidate shuttle bus stop that can cover nearby drop-off spots within one cluster for each travel direction.",
+              "FeedsInto": [
+                6,
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 6,
+              "PaperDescription": "Displays a Voronoi grid-based map view to visualize directional and regional clustering results and shuttle stop locations.",
+              "Inputs": [
+                "Regional clusters with regional cluster IDs"
+              ],
+              "Outputs": [
+                "Voronoi map showing shuttle stops, directional, and regional clusters"
+              ],
+              "ReferenceCitation": "Section 4: We propose a Voronoi grid-based map view to help experts understand the identified directional and regional clustering results.",
+              "FeedsInto": [
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 13,
+              "PaperDescription": "Displays the relationship between the number of travel directions and the Silhouette Coefficient to assist in determining an optimal clustering number.",
+              "Inputs": [
+                "Cluster number vs. Silhouette Coefficient data"
+              ],
+              "Outputs": [
+                "Line chart showing clustering quality metric trends"
+              ],
+              "ReferenceCitation": "Section 4: As shown in Fig. 1(C), the x-axis represents the number of travel directions and the y-axis indicates the value of the Silhouette Coefficient corresponding to the number of travel directions.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Box Plot",
+              "ID": 14,
+              "PaperDescription": "Displays the angle distribution towards the company for each travel direction, supporting analysts in evaluating directional clustering results.",
+              "Inputs": [
+                "Angle distribution data for travel directions"
+              ],
+              "Outputs": [
+                "Box plots showing angle concentration within each directional cluster"
+              ],
+              "ReferenceCitation": "Section 4: We visualize the angle distribution of the corresponding home destination towards the company as a box plot for each travel direction.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 7,
+              "PaperDescription": "Presents each candidate shuttle bus stop as a combined bar where each bar length indicates the normalized metric value of the stop, enabling comparison of stops within regional clusters.",
+              "Inputs": [
+                "Regional cluster data",
+                "Evaluation metrics (e.g., avg dist, avg dura, reach ratios)"
+              ],
+              "Outputs": [
+                "Bar charts showing shuttle stop rankings based on metrics"
+              ],
+              "ReferenceCitation": "Section 4: As shown in Fig. 1(E1), we present each candidate shuttle bus stop as a combined bar, in which the length of a single bar with colors indicates the normalized metric value of the corresponding shuttle bus stop.",
+              "FeedsInto": [
+                8,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Radar Chart",
+              "ID": 8,
+              "PaperDescription": "Displays comparative metrics (driving distance, walking reachability, driving duration, etc.) for candidate shuttle routes to support route selection.",
+              "Inputs": [
+                "Candidate shuttle route metrics (driving distance, nums, walk avg dura, etc.)"
+              ],
+              "Outputs": [
+                "Radar chart visualizing candidate shuttle route performance metrics"
+              ],
+              "ReferenceCitation": "Section 4: Experts can select multiple routes (up to three) for simultaneous comparison by adding them to a candidate list and they would appear in the radar chart (Fig. 1(E4)).",
+              "FeedsInto": [
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Marey's Graph",
+              "ID": 9,
+              "PaperDescription": "Presents the timetable for shuttle routes where the x-axis represents arrival times and the y-axis represents regional clusters and distances to the workplace.",
+              "Inputs": [
+                "Candidate shuttle route schedules and departure timestamps"
+              ],
+              "Outputs": [
+                "Line chart showing shuttle route timetable information"
+              ],
+              "ReferenceCitation": "Section 4: A timetable of the selected routes is shown in Fig. 1(E3), with x-axis representing the arrival time and y-axis representing the regional clusters and distance to the workplace.",
+              "FeedsInto": [
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 10,
+              "PaperDescription": "Allows experts to select different departure timestamps and explore their impact on shuttle route recommendations.",
+              "Inputs": [
+                "User-selected departure time"
+              ],
+              "Outputs": [
+                "Updated shuttle route recommendations based on selected time"
+              ],
+              "ReferenceCitation": "Section 4: Experts can choose different departure timestamps and ShuttleVis automatically recommends a new route.",
+              "FeedsInto": [
+                7,
+                8,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Point Selection",
+              "ID": 11,
+              "PaperDescription": "Allows experts to manually select and adjust shuttle bus stops from the candidate list for each regional cluster.",
+              "Inputs": [
+                "User-selected shuttle stop"
+              ],
+              "Outputs": [
+                "Updated shuttle route including the selected shuttle stop"
+              ],
+              "ReferenceCitation": "Section 4: They observed that in R-Cluster 4, the system recommends 'HeZhengJinYuan' as the shuttle bus stop but the experts identified that another drop-off spot 'PanShanHuaYuan' is located in the middle part in this regional cluster (Fig. 3(2)).",
+              "FeedsInto": [
+                7,
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

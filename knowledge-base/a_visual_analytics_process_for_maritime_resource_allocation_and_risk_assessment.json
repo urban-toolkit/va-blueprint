@@ -1,0 +1,234 @@
+{
+  "PaperTitle": "A visual analytics process for maritime resource allocation and risk assessment",
+  "Year": 2011,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "SAR Response Cases and Sorties",
+              "ID": 1,
+              "PaperDescription": "The SAR data consists of two main components: (1) response cases and (2) response sorties. Each entry in the response case and sortie dataset contains information that provides details of the incidents (e.g., number of lives saved, lost, assisted) and contains the geographic location of the distress.",
+              "Inputs": [
+                "SAR response case data",
+                "SAR sortie data"
+              ],
+              "Outputs": [
+                "Structured dataset of SAR cases and sorties with spatiotemporal attributes"
+              ],
+              "ReferenceCitation": "Section 3.1 Coast Guard SAR data: The SAR data consists of two main components: (1) response cases and (2) response sorties. Each entry in the response case and sortie dataset contains information that provides details of the incidents (e.g., number of lives saved, lost, assisted) and contains the geographic location of the distress.",
+              "FeedsInto": [
+                2,
+                3,
+                4,
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Assessment",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Uncertainty Calculation",
+              "ID": 2,
+              "PaperDescription": "Incorporates uncertainty and confidence levels associated with the SAR dataset in visualizations by displaying the accuracy of the results at each step of the risk assessment process.",
+              "Inputs": [
+                "SAR cases and sorties with potential data quality issues"
+              ],
+              "Outputs": [
+                "Accuracy percentage of cases with reliable data"
+              ],
+              "ReferenceCitation": "Section 3.1 Uncertainty in decision making: We incorporate uncertainty and confidence levels associated with the SAR dataset in our visualizations by displaying the accuracy of the results at each step of the risk assessment process.",
+              "FeedsInto": [
+                9,
+                10,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Kernel Density Estimation",
+              "ID": 3,
+              "PaperDescription": "Employs a modified variable kernel density estimation technique to explore the spatial distribution of the SAR cases and identify hotspots.",
+              "Inputs": [
+                "Geographic coordinates of SAR incidents"
+              ],
+              "Outputs": [
+                "Density estimated heatmaps of SAR hotspots"
+              ],
+              "ReferenceCitation": "Section 3.2 Geospatial displays: To explore the spatial distribution of the SAR cases and quickly identify hotspots, we employ a modified variable kernel density estimation technique.",
+              "FeedsInto": [
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Average Response Time Calculation",
+              "ID": 4,
+              "PaperDescription": "Calculates the average response time to SAR incidents, modeling potential response times if specific stations are closed and determining compliance with policy constraints.",
+              "Inputs": [
+                "SAR incident locations",
+                "Parent and auxiliary station locations",
+                "Asset speed assumptions"
+              ],
+              "Outputs": [
+                "Estimated response times for SAR incidents"
+              ],
+              "ReferenceCitation": "Section 4.2 Average response time for SAR incidents: We obtain the time for an asset to reach the incident location using the distance formula Time = Distance/Speed. Users may also change the speed of the asset, changing the results dynamically.",
+              "FeedsInto": [
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Distribution Analysis",
+              "ID": 5,
+              "PaperDescription": "Analyzes the temporal distribution of SAR response case load by hour, month, and day of week to inform station closure decisions and resource allocation.",
+              "Inputs": [
+                "SAR response cases with timestamp information"
+              ],
+              "Outputs": [
+                "Temporal distribution data of SAR response cases"
+              ],
+              "ReferenceCitation": "Section 4.3 Temporal distribution of response case load: One important aspect of risk assessment is analyzing the work load and distribution of response cases of the stations being analyzed over different temporal ranges.",
+              "FeedsInto": [
+                10,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 8,
+              "PaperDescription": "Displays a 2D map of the spatial distribution of SAR incidents, with options for incident points or density estimated heatmaps to highlight hotspots.",
+              "Inputs": [
+                "SAR incident locations",
+                "Density estimated heatmap data"
+              ],
+              "Outputs": [
+                "Interactive 2D map with SAR cases and hotspots"
+              ],
+              "ReferenceCitation": "Section 3.2 Geospatial displays: Our system provides analysts with the ability to plot incidents as points on the map and as density estimated heatmaps.",
+              "FeedsInto": [
+                12,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 9,
+              "PaperDescription": "Displays response time risk profiles and SAR coverage, visualizing regions with longer response times and station coverage in the Great Lakes.",
+              "Inputs": [
+                "Average response time calculations",
+                "SAR station coverage data"
+              ],
+              "Outputs": [
+                "Heatmap overlays indicating response times and coverage"
+              ],
+              "ReferenceCitation": "Figure 3: Risk profile. (Left) A heatmap showing the time taken (in minutes) by the Coast Guard stations to deploy an asset to the Great Lakes to respond to a SAR incident, assuming a speed of 15 nautical miles per hour.",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 10,
+              "PaperDescription": "Displays the temporal trends of SAR incidents, with multiple lines overlaid for comparisons across departments, distress types, or zones.",
+              "Inputs": [
+                "Temporal distribution of SAR cases"
+              ],
+              "Outputs": [
+                "Line chart showing SAR incident trends over time"
+              ],
+              "ReferenceCitation": "Section 3.3 Time series displays: The line graph visualization allows users to overlay multiple graphs for easy comparison and to visualize trends.",
+              "FeedsInto": [
+                12,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Calendar View",
+              "ID": 11,
+              "PaperDescription": "Displays SAR incident data over time in a calendar layout, enabling exploration of seasonal and cyclical trends and advanced filtering.",
+              "Inputs": [
+                "Temporal SAR incident data"
+              ],
+              "Outputs": [
+                "Calendar view of SAR incidents with interactive selection capabilities"
+              ],
+              "ReferenceCitation": "Section 3.3 Time series displays: The left-most window (Figure 1 (d)) shows the calendar view of the selected Coast Guard cases. The total number of columns on the calendar may be changed as desired to reveal seasonal trends and patterns.",
+              "FeedsInto": [
+                12,
+                13
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Distress Type Filter",
+              "ID": 12,
+              "PaperDescription": "Allows users to interactively filter SAR cases by distress type, dynamically updating all linked views.",
+              "Inputs": [
+                "User selection of distress type(s)"
+              ],
+              "Outputs": [
+                "Filtered SAR incident data by distress type"
+              ],
+              "ReferenceCitation": "Section 3 VISUAL ANALYTICS RISK ASSESSMENT ENVIRONMENT: The right-most window (Figure 1 (b)) shows the distress type menu where all SAR cases (highlighted in blue) have been selected for visualization. Users may select multiple distress types using this menu, dynamically updating all linked views.",
+              "FeedsInto": [
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Station and COTP Zone Filter",
+              "ID": 13,
+              "PaperDescription": "Enables users to filter SAR cases by station or COTP zone, dynamically updating the geospatial and temporal visualizations.",
+              "Inputs": [
+                "User selection of station or COTP zone"
+              ],
+              "Outputs": [
+                "Filtered SAR incident data by station or COTP zone"
+              ],
+              "ReferenceCitation": "Section 3 VISUAL ANALYTICS RISK ASSESSMENT ENVIRONMENT: A key feature of our system is the interactive distress, station and COTP zone filtering component. Users interactively generate combinations of filters that are applied to the data being visualized through the use of menus (like the one shown in Figure 1 (b)) and edit controls.",
+              "FeedsInto": [
+                3,
+                4,
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

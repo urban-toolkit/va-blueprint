@@ -1,0 +1,275 @@
+{
+  "PaperTitle": "Visual Analytics Using Heterogeneous Urban Data",
+  "Year": 2023,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Features",
+              "ID": 1,
+              "PaperDescription": "Loads vector data describing urban environments",
+              "Inputs": [
+                "OpenStreetMap (OSM) features"
+              ],
+              "Outputs": [
+                "Structured vector dataset"
+              ],
+              "ReferenceCitation": "Section IV-A: PLUTO is an invaluable and extensive land use and geographic data set, describing almost every piece of land in NYC...",
+              "FeedsInto": [
+                4,
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "3D Geometries",
+              "ID": 2,
+              "PaperDescription": "Loads raster data such as terrain height and rainfall volumes",
+              "Inputs": [
+                "SRTM",
+                "DTM",
+                "other raster sources"
+              ],
+              "Outputs": [
+                "Processed raster dataset"
+              ],
+              "ReferenceCitation": "Section III-B: Raster data represents regions as regular grids...",
+              "FeedsInto": [
+                4,
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Rainfall Spatiotemporal Data",
+              "ID": 3,
+              "PaperDescription": "Loads time-series data such as rainfall history and flood incidents",
+              "Inputs": [
+                "Government and city administration datasets"
+              ],
+              "Outputs": [
+                "Time-indexed spatiotemporal dataset"
+              ],
+              "ReferenceCitation": "Section III-C: Spatiotemporal data contains both space and time-varying information...",
+              "FeedsInto": [
+                4,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Combination",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D & 3D Mesh",
+              "ID": 4,
+              "PaperDescription": "Combines raster, vector, and spatiotemporal data into a unified mesh",
+              "Inputs": [
+                "Vector",
+                "raster",
+                "temporal data"
+              ],
+              "Outputs": [
+                "Data-enriched triangle mesh"
+              ],
+              "ReferenceCitation": "Section IV: We propose a data integration framework to combine the raster and vector data...",
+              "FeedsInto": [
+                5,
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Classification",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Mesh Feature Vectors",
+              "ID": 5,
+              "PaperDescription": "Classifies and clips mesh triangles based on vector features",
+              "Inputs": [
+                "Triangle mesh",
+                "vector feature set"
+              ],
+              "Outputs": [
+                "Refined and classified mesh"
+              ],
+              "ReferenceCitation": "Section IV-C: We classify the mesh triangles considering the features of the input vector data...",
+              "FeedsInto": [
+                8,
+                9,
+                10
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Rasterization",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Terrain & Feature Mapping",
+              "ID": 6,
+              "PaperDescription": "Converts 3D terrain and vector features into a raster representation",
+              "Inputs": [
+                "3D geometries",
+                "vector data"
+              ],
+              "Outputs": [
+                "Raster grid representations"
+              ],
+              "ReferenceCitation": "Section IV: Raster data are associated with the vertices of the mesh...",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Interpolation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Raster Data",
+              "ID": 7,
+              "PaperDescription": "Fills missing raster data in the mesh using median filtering",
+              "Inputs": [
+                "Raster dataset",
+                "base mesh"
+              ],
+              "Outputs": [
+                "Smoothed raster data integrated into mesh"
+              ],
+              "ReferenceCitation": "Section IV-B: To avoid the occurrence of these artificial holes, we compute the median of the raster data...",
+              "FeedsInto": [
+                8,
+                9,
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 8,
+              "PaperDescription": "Displays a 3D visualization of the risk areas",
+              "Inputs": [
+                "Data-enriched triangle mesh"
+              ],
+              "Outputs": [
+                "3D map with topographic and risk overlays"
+              ],
+              "ReferenceCitation": "Section V: The 3D Map widget visualizes the data-rich 3D mesh...",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Overlay (Mesh attribute)",
+              "ID": 9,
+              "PaperDescription": "Displays mesh attribute distributions overlaid on the map",
+              "Inputs": [
+                "Classified mesh dataset"
+              ],
+              "Outputs": [
+                "Overlay visualization with categorical filtering"
+              ],
+              "ReferenceCitation": "Section V: The Mesh Projection widget was developed to allow users to identify mesh vertices storing similar values...",
+              "FeedsInto": [
+                8,
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Sunburst Chart",
+              "ID": 10,
+              "PaperDescription": "Represents terrain attributes in hierarchical categories",
+              "Inputs": [
+                "Mesh vertex attributes"
+              ],
+              "Outputs": [
+                "Sunburst visualization with categorical filtering"
+              ],
+              "ReferenceCitation": "Section V: The Mesh Projection widget contains two rings and a central projection area...",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Heat Matrix",
+              "ID": 11,
+              "PaperDescription": "Displays rain accumulation and disaster occurrence over time",
+              "Inputs": [
+                "Spatiotemporal dataset"
+              ],
+              "Outputs": [
+                "Matrix with rainfall intensity and event data"
+              ],
+              "ReferenceCitation": "Section V: The Rain & Occurrences Matrix has a vertical axis representing a discrete scale of accumulated rain values...",
+              "FeedsInto": [
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Plot Point Selection",
+              "ID": 12,
+              "PaperDescription": "Enables filtering areas based on past rainfall occurrences",
+              "Inputs": [
+                "User selection in Heat Matrix widget"
+              ],
+              "Outputs": [
+                "Highlighted risk zones on 3D map"
+              ],
+              "ReferenceCitation": "Section V: The Heat Matrix Widget enables filtering occurrences by type (landslide or flood)...",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Plot Brush",
+              "ID": 13,
+              "PaperDescription": "Allows users to brush projected vertices to filter similar areas.",
+              "Inputs": [
+                "User selection in Mesh Projection view"
+              ],
+              "Outputs": [
+                "Highlighted regions on 3D map"
+              ],
+              "ReferenceCitation": "Section V: Projected vertices can be brushed to update the distribution of attributes...",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

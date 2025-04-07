@@ -1,0 +1,369 @@
+{
+  "PaperTitle": "HomeFinder Revisited: Finding Ideal Homes with Reachability-Centric Multi-Criteria Decision Making",
+  "Year": 2018,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Street Network",
+              "ID": 1,
+              "PaperDescription": "Loads road network data comprising a directed graph representing road intersections and roads for reachability computation.",
+              "Inputs": [
+                "Raw road network data"
+              ],
+              "Outputs": [
+                "Structured road graph (nodes and edges)"
+              ],
+              "ReferenceCitation": "Data Description section: Road network data comprise a directed graph that describes a large city, where the vertices represent road intersections and the edges represent roads.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Taxi Trajectory",
+              "ID": 2,
+              "PaperDescription": "Loads taxi trajectory data with GPS coordinates and timestamps to compute reachability between locations.",
+              "Inputs": [
+                "Raw taxi trajectory data"
+              ],
+              "Outputs": [
+                "Processed taxi trajectories with spatial and temporal attributes"
+              ],
+              "ReferenceCitation": "Data Description section: Taxi trajectory data comprise 1,783,249,500 snapshots of taxi status collected from 8,816 taxis over a two-month period.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "POI",
+              "ID": 3,
+              "PaperDescription": "Loads points of interest (POI) data tagged with GPS coordinates and predefined categories for reachability queries and filtering.",
+              "Inputs": [
+                "POI datasets"
+              ],
+              "Outputs": [
+                "Structured POI dataset"
+              ],
+              "ReferenceCitation": "Data Description section: POI data include 243,713 points of interest in the city, such as restaurants and shopping malls.",
+              "FeedsInto": [
+                6,
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Candidate",
+              "ID": 4,
+              "PaperDescription": "Loads candidate home data including spatial and intrinsic properties such as GPS coordinates, price, and floor size.",
+              "Inputs": [
+                "Real estate listing data"
+              ],
+              "Outputs": [
+                "Candidate home dataset"
+              ],
+              "ReferenceCitation": "Data Description section: Candidate data include 1,927 candidates that were available for sale in the city in December 2016.",
+              "FeedsInto": [
+                6,
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Graph Construction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory Graph Construction",
+              "ID": 5,
+              "PaperDescription": "Builds a trajectory graph by compressing taxi trajectories to support efficient reachability computation.",
+              "Inputs": [
+                "Structured road graph",
+                "Processed taxi trajectories"
+              ],
+              "Outputs": [
+                "Compressed trajectory graph with time-slot edges and day sets"
+              ],
+              "ReferenceCitation": "Model section: We designed a graph-based method to circumvent the aforementioned limitations. Instead of scanning trajectories directly, we compress them into a trajectory graph based on the assumption that numerous trajectories share partial routes with each other.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Querying",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Reachability Query Processing",
+              "ID": 6,
+              "PaperDescription": "Executes depth-first search on the trajectory graph to compute reachability probabilities between candidate locations and POIs, integrating inputs from the loaded candidate and POI data.",
+              "Inputs": [
+                "Compressed trajectory graph",
+                "POI dataset",
+                "Candidate home dataset",
+                "Query parameters (origins, destinations, time slots)"
+              ],
+              "Outputs": [
+                "Reachability probabilities for each candidate location"
+              ],
+              "ReferenceCitation": "Model section / Algorithm 1: Given a starting road and a set of time slots representing travel duration, the query algorithm determines a set of reachable days for every road by executing depth-first search on the trajectory graph.",
+              "FeedsInto": [
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 7,
+              "PaperDescription": "Displays the spatial locations of candidate houses and visualizes reachability results on a 2D map.",
+              "Inputs": [
+                "Candidate home locations",
+                "POI locations"
+              ],
+              "Outputs": [
+                "Rendered 2D map with candidate locations"
+              ],
+              "ReferenceCitation": "Map View section / Figure 4F: We adopt a map-centered exploratory approach by placing a map in the map view with two additional layers, namely, candidate and constraint layers.",
+              "FeedsInto": [
+                15,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 8,
+              "PaperDescription": "Shows the reachability probabilities from fixed locations as a heatmap based on kernel density estimation.",
+              "Inputs": [
+                "Reachability probabilities",
+                "Fixed origin locations"
+              ],
+              "Outputs": [
+                "Color-coded heatmap overlay showing reachability densities"
+              ],
+              "ReferenceCitation": "Map View section / Figure 4H: To visualize the reachability from the fixed locations of the activity, the constraint layer provides a heatmap based on kernel density estimation.",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Routes)",
+              "ID": 9,
+              "PaperDescription": "Displays the fastest computed routes from candidate homes through the daily routine locations as node-link diagrams.",
+              "Inputs": [
+                "Candidate location",
+                "Reachability constraints (origins/destinations)"
+              ],
+              "Outputs": [
+                "Visualized route as node-link diagram on the 2D map"
+              ],
+              "ReferenceCitation": "Map View section / Figure 4G: When users click on a circle, the system will compute the fastest route that starts with the corresponding candidate and passes each location as specified by the constraint.",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (POIs)",
+              "ID": 17,
+              "PaperDescription": "Overlays POIs as selectable points in the map view.",
+              "Inputs": [
+                "POI dataset"
+              ],
+              "Outputs": [
+                "Displayed POIs with category information"
+              ],
+              "ReferenceCitation": "Map View section / Figure 4F: ...two additional layers, namely, candidate and constraint layers.",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Graph (Timeline Graph)",
+              "ID": 10,
+              "PaperDescription": "Visualizes the reachability constraints as node-link diagrams representing users' daily routines in a timeline view.",
+              "Inputs": [
+                "User-defined reachability constraints",
+                "Activity parameters (origin, destination, duration)"
+              ],
+              "Outputs": [
+                "Visual representation of activity sequences as nodes and links"
+              ],
+              "ReferenceCitation": "Timeline View section / Figure 4B: Constraints are laid out vertically as node-link diagrams in the timeline view.",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 11,
+              "PaperDescription": "Displays a chart plotting the reachability threshold versus the number of reachable non-fixed locations to help users refine constraints.",
+              "Inputs": [
+                "Reachability probabilities",
+                "User-defined threshold"
+              ],
+              "Outputs": [
+                "Line/area chart showing how reachable locations change with threshold"
+              ],
+              "ReferenceCitation": "Timeline View section / Figure 4E: We draw the reachability chart to show the current reachability threshold and visualize how the number of reachable locations changes with the threshold.",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 12,
+              "PaperDescription": "Shows the distribution of candidate attributes (e.g., price, floor size) as histograms to support filtering.",
+              "Inputs": [
+                "Candidate attributes",
+                "Filter ranges"
+              ],
+              "Outputs": [
+                "Bar chart histograms for attribute distribution with dynamic filtering"
+              ],
+              "ReferenceCitation": "Ranking View section / Figure 4M: A bar chart is embedded into the header of each column with a slider at the bottom. Bars in the bar chart evenly split the value range of an attribute, and the height of each bar encodes the number of candidates that match the corresponding value range.",
+              "FeedsInto": [
+                15
+              ]
+            },
+            {
+              "GranularBlockName": "Table",
+              "ID": 13,
+              "PaperDescription": "Displays a ranked table of candidate homes with multi-attribute columns, allowing interactive sorting and filtering.",
+              "Inputs": [
+                "Candidate data",
+                "User-defined ranking weights"
+              ],
+              "Outputs": [
+                "Sorted and ranked list of candidate homes with attribute values"
+              ],
+              "ReferenceCitation": "Ranking View section / Figure 4K: The ranking view shows all candidates as a list. Inspired by LineUp, the multidimensional candidate data are organized in a table.",
+              "FeedsInto": [
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Wishlist Cards",
+              "ID": 14,
+              "PaperDescription": "Displays cards for user-saved candidates, providing a quick overview of their attributes for comparison.",
+              "Inputs": [
+                "Selected candidate homes"
+              ],
+              "Outputs": [
+                "Wishlist cards with summarized candidate data"
+              ],
+              "ReferenceCitation": "Wishlist View section / Figure 4N: The wishlist view keeps desired candidates for further comparison.",
+              "FeedsInto": [
+                19
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 15,
+              "PaperDescription": "Allows users to draw polygons on the map to spatially filter POIs or candidate locations.",
+              "Inputs": [
+                "User-drawn polygon selection on map view"
+              ],
+              "Outputs": [
+                "Filtered POIs or candidate locations"
+              ],
+              "ReferenceCitation": "Interactions section: The spatial filtering tool in the timeline view enables users to draw polygons on the map to exclude the locations that are not covered by the drawings.",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Candidate Selection",
+              "ID": 16,
+              "PaperDescription": "Enables users to select and highlight candidate homes for detailed inspection and wishlist addition.",
+              "Inputs": [
+                "User selection on map, ranking, or wishlist view"
+              ],
+              "Outputs": [
+                "Highlighted candidate in all views, candidate added to wishlist"
+              ],
+              "ReferenceCitation": "Interactions section: Users can select and highlight a candidate in the map, ranking, and wishlist views.",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Configuration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Activity Parameter Configuration",
+              "ID": 18,
+              "PaperDescription": "Allows users to configure activity parameters such as travel method, reachability thresholds, and location presets.",
+              "Inputs": [
+                "User inputs on activity editor (travel method, threshold, locations)"
+              ],
+              "Outputs": [
+                "Updated activity parameters in timeline view"
+              ],
+              "ReferenceCitation": "Timeline View section / Figure 4D: The editor enables users to view and modify parameters of an activity, including the traveling method, reachability threshold, and locations.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Comparison",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Wishlist Comparison",
+              "ID": 19,
+              "PaperDescription": "Enables users to compare wishlist candidates across multiple views for final decision making.",
+              "Inputs": [
+                "Wishlist candidates"
+              ],
+              "Outputs": [
+                "Comparison views for candidate attributes"
+              ],
+              "ReferenceCitation": "Wishlist View section / Figure 4N: The wishlist view keeps desired candidates for further comparison.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

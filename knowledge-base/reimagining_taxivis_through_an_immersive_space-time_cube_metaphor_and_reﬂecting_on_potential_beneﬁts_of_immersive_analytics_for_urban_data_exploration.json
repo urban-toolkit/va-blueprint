@@ -1,0 +1,329 @@
+{
+  "PaperTitle": "Reimagining TaxiVis through an Immersive Space-Time Cube metaphor and reﬂecting on potential beneﬁts of Immersive Analytics for urban data exploration",
+  "Year": 2024,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 1,
+              "PaperDescription": "Loads taxi trip datasets into the visualization system",
+              "Inputs": [
+                "Raw taxi trip records (origin, destination, timestamp)"
+              ],
+              "Outputs": [
+                "Structured dataset with spatial and temporal attributes"
+              ],
+              "ReferenceCitation": "Section 5: We use taxi data from 2010-2015... randomly sampled subsets of data containing up to a hundred thousand taxi trips each",
+              "FeedsInto": [
+                2,
+                3,
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Querying",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Query Prisms",
+              "ID": 2,
+              "PaperDescription": "Enables spatio-temporal querying through 3D prisms",
+              "Inputs": [
+                "User-defined query prisms (extruded 2D polygons)"
+              ],
+              "Outputs": [
+                "Filtered dataset matching query constraints"
+              ],
+              "ReferenceCitation": "Section 3.1: The visual query language extends to time through 3D prisms",
+              "FeedsInto": [
+                6,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Traffic Hotspots",
+              "ID": 3,
+              "PaperDescription": "Detects areas of high taxi activity in urban spaces",
+              "Inputs": [
+                "Taxi movement data"
+              ],
+              "Outputs": [
+                "Clustered traffic regions"
+              ],
+              "ReferenceCitation": "Section 5: The STC point cloud presents a clear picture of the evolution of an event over time",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Indexing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "OD Pair Indexing",
+              "ID": 4,
+              "PaperDescription": "Organizes origin-destination pairs for efficient queries",
+              "Inputs": [
+                "OD trip data"
+              ],
+              "Outputs": [
+                "Indexed OD dataset"
+              ],
+              "ReferenceCitation": "Section 3.1: We enable both such visualization forms in our prototype",
+              "FeedsInto": [
+                13
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 5,
+              "PaperDescription": "Displays an interactive 3D city scene for immersive exploration",
+              "Inputs": [
+                "Road network data",
+                "terrain data",
+                "buildings data"
+              ],
+              "Outputs": [
+                "Rendered 3D environment"
+              ],
+              "ReferenceCitation": "Section 3.5: By positioning a 3D widget, the user can select any position on the map, and the closest possible image is then loaded as a scene skybox",
+              "FeedsInto": [
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Space-Time Cube",
+              "ID": 6,
+              "PaperDescription": "Uses 3D space-time cube for trajectory visualization",
+              "Inputs": [
+                "Taxi trip dataset"
+              ],
+              "Outputs": [
+                "3D STC visualization with color-coded trips"
+              ],
+              "ReferenceCitation": "Section 3.1: Our main idea... is to extend the visualization to encompass the temporal component, through a Space-Time Cube (STC) metaphor",
+              "FeedsInto": [
+                14,
+                15
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 7,
+              "PaperDescription": "Highlights high-density taxi activity areas as an overlay",
+              "Inputs": [
+                "Clustered taxi data"
+              ],
+              "Outputs": [
+                "Heatmap overlay on 3D map"
+              ],
+              "ReferenceCitation": "Section 6.4.2: Our goal is to complement Immersive TaxiVis with additional functionality, such as 2D and 3D heat map visualizations",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 8,
+              "PaperDescription": "Displays temporal trends of taxi trip attributes",
+              "Inputs": [
+                "Aggregated trip counts over time"
+              ],
+              "Outputs": [
+                "Line chart embedded in STC walls"
+              ],
+              "ReferenceCitation": "Section 5.3: The embedded plots indicate how trip numbers (c) and duration (d) vary during one week.",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Scatter Plot (STC walls)",
+              "ID": 9,
+              "PaperDescription": "Represents taxi trip distributions over time",
+              "Inputs": [
+                "Taxi trip metrics (e.g., duration, fare)"
+              ],
+              "Outputs": [
+                "Scatter plot embedded in STC walls"
+              ],
+              "ReferenceCitation": "Section 5.3: The embedded plots indicate how trip numbers (c) and duration (d) vary during one week.",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Bar Chart (STC walls)",
+              "ID": 10,
+              "PaperDescription": "Displays aggregated trip counts per category",
+              "Inputs": [
+                "Taxi trip categories (e.g., trip duration bins)"
+              ],
+              "Outputs": [
+                "Bar chart embedded in STC walls"
+              ],
+              "ReferenceCitation": "Section 5.3: Comparative exploratory analysis between different neighborhoods using pointer brushes and the choropleth mode brushing.",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 11,
+              "PaperDescription": "Supports comparative brushing through scatter plot panels",
+              "Inputs": [
+                "User selections on STC"
+              ],
+              "Outputs": [
+                "Coordinated scatter plot"
+              ],
+              "ReferenceCitation": "Section 5.3: Comparative exploratory analysis between different neighborhoods using pointer brushes and the choropleth mode brushing.",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 12,
+              "PaperDescription": "Supports comparative brushing through bar chart panels",
+              "Inputs": [
+                "User selections on STC"
+              ],
+              "Outputs": [
+                "Coordinated bar chart"
+              ],
+              "ReferenceCitation": "Section 5.3: Comparative exploratory analysis between different neighborhoods using pointer brushes and the choropleth mode brushing.",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Flow Map",
+              "ID": 13,
+              "PaperDescription": "Displays OD flows between key locations",
+              "Inputs": [
+                "Indexed OD trip dataset"
+              ],
+              "Outputs": [
+                "Visualized OD flow map"
+              ],
+              "ReferenceCitation": "Section 5: To avoid clutter, showing connecting lines between pairs is more convenient when associated with specific origin-destination filters",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatiotemporal Selection",
+              "ID": 14,
+              "PaperDescription": "Allows users to create spatio-temporal queries in 3D space",
+              "Inputs": [
+                "User interaction (click, drag, scale)"
+              ],
+              "Outputs": [
+                "Filtered dataset based on spatial-temporal constraints"
+              ],
+              "ReferenceCitation": "Section 3.1: Instead of 2D query polygons, we support query prisms (i.e., extruded polygons) in 3D space, whose height corresponds to their temporal span",
+              "FeedsInto": [
+                2
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 15,
+              "PaperDescription": "Allows users to filter data based on time intervals",
+              "Inputs": [
+                "User input (time selection)"
+              ],
+              "Outputs": [
+                "Filtered dataset & visual update"
+              ],
+              "ReferenceCitation": "Section 5.1: Some features, such as the ability to manually adjust point sizes, allow the user to make patterns more evident",
+              "FeedsInto": [
+                2
+              ]
+            },
+            {
+              "GranularBlockName": "Brushing",
+              "ID": 17,
+              "PaperDescription": "Enables comparative brushing for interactive filtering",
+              "Inputs": [
+                "User selection on bar charts and scatter plots"
+              ],
+              "Outputs": [
+                "Coordinated updates in visualizations"
+              ],
+              "ReferenceCitation": "Section 5.3: Comparative exploratory analysis between different neighborhoods using pointer brushes and the choropleth mode brushing.",
+              "FeedsInto": [
+                11,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "VR Navigation",
+              "ID": 16,
+              "PaperDescription": "Supports immersive movement within the 3D visualization",
+              "Inputs": [
+                "User VR controls (joystick, gaze)"
+              ],
+              "Outputs": [
+                "Updated viewpoint in 3D space"
+              ],
+              "ReferenceCitation": "Section 5: Users can enter the query editing mode, and activate several features we propose, such as displaying links, displaying cutting planes, displaying point projections, and changing perspectives",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

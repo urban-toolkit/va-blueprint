@@ -1,0 +1,353 @@
+{
+  "PaperTitle": "SmartAdP: Visual Analytics of Large-scale Taxi Trajectories for Selecting Billboard Locations",
+  "Year": 2017,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Street Network",
+              "ID": 1,
+              "PaperDescription": "Loads road network data comprising 133,726 road segments and 99,007 vertices in the city.",
+              "Inputs": [
+                "Road network dataset"
+              ],
+              "Outputs": [
+                "Structured road network data"
+              ],
+              "ReferenceCitation": "Section 3.2 Data Abstraction: Road network data comprises 133,726 road segments (the average length is 243 m) and 99,007 vertices (i.e., intersections of road segments) in the city.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 2,
+              "PaperDescription": "Loads GPS trajectory data including the trajectories of 3,501 taxis from the city in two months.",
+              "Inputs": [
+                "GPS trajectory dataset"
+              ],
+              "Outputs": [
+                "Structured GPS trajectory data"
+              ],
+              "ReferenceCitation": "Section 3.2 Data Abstraction: GPS trajectory data includes the trajectories of 3,501 taxis from the city in two months.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "POI Data",
+              "ID": 3,
+              "PaperDescription": "Loads POI data containing 154,633 points in the city, denoted by ID, category, and GPS location.",
+              "Inputs": [
+                "POI dataset"
+              ],
+              "Outputs": [
+                "Structured POI data"
+              ],
+              "ReferenceCitation": "Section 3.2 Data Abstraction: POI data contains 154,633 points in the city. Each POI is denoted by its ID, category, and GPS location.",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Indexing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory-Edge Index",
+              "ID": 4,
+              "PaperDescription": "Constructs an index mapping trajectories to the road segments they pass by using a map-matching algorithm.",
+              "Inputs": [
+                "GPS trajectory data",
+                "Road network data"
+              ],
+              "Outputs": [
+                "Trajectory-edge index"
+              ],
+              "ReferenceCitation": "Section 5.1 Data Structure Construction: We firstly apply a map-matching algorithm to map the spatial points of a given trajectory to the underlying road network. Thereafter, the trajectory-edge index can be constructed.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Trajectory-Vertex Index",
+              "ID": 5,
+              "PaperDescription": "Records the covered vertices of all trajectories, derived from the trajectory-edge index.",
+              "Inputs": [
+                "Trajectory-edge index"
+              ],
+              "Outputs": [
+                "Trajectory-vertex index"
+              ],
+              "ReferenceCitation": "Section 5.1 Data Structure Construction: The trajectory-vertex index records the covered vertices of all trajectories and can be easily constructed from Ite.",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Vertex-Trajectory Index",
+              "ID": 6,
+              "PaperDescription": "Stores all the trajectories that are covered by a given vertex, enabling efficient coverage queries.",
+              "Inputs": [
+                "Trajectory-vertex index"
+              ],
+              "Outputs": [
+                "Vertex-trajectory index"
+              ],
+              "ReferenceCitation": "Section 5.1 Data Structure Construction: This index is an inverted trajectory-vertex index, where each entry is identified by a vertex vi on the road network.",
+              "FeedsInto": [
+                7,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Querying",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "k-Location Query",
+              "ID": 7,
+              "PaperDescription": "Selects k billboard locations from candidates to maximize coverage, using a greedy heuristic for optimization.",
+              "Inputs": [
+                "Vertex-trajectory index",
+                "Trajectory-vertex index"
+              ],
+              "Outputs": [
+                "Candidate billboard locations"
+              ],
+              "ReferenceCitation": "Section 5.2.1 k-Location Query: The literature has proven that the greedy heuristic is the most effective polynomial solution to our problem and can provide (1−1/e) approximation to the optimal solution.",
+              "FeedsInto": [
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "τ-Budget Constraint Query",
+              "ID": 8,
+              "PaperDescription": "Selects billboard locations ensuring the total cost does not exceed a specified budget τ, using a modified greedy heuristic.",
+              "Inputs": [
+                "Vertex-trajectory index",
+                "Trajectory-vertex index"
+              ],
+              "Outputs": [
+                "Candidate billboard locations under budget constraint"
+              ],
+              "ReferenceCitation": "Section 5.2.2 τ-Budget Constraint Query: The τ-budget constraint query attempts to extract a set of locations with the total cost within τ.",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 9,
+              "PaperDescription": "Provides an interactive map view that displays target and solution areas, OD heatmaps, and selected billboard locations.",
+              "Inputs": [
+                "Candidate billboard locations",
+                "Road network data",
+                "POI data"
+              ],
+              "Outputs": [
+                "Interactive 2D map with overlays and heatmaps"
+              ],
+              "ReferenceCitation": "Section 6.1.2 Map View: We provide a map view that integrates the real roadmap pictures at multiple scales by using Google Maps API.",
+              "FeedsInto": [
+                17,
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (OD Heatmap)",
+              "ID": 10,
+              "PaperDescription": "Visualizes the density of pick-up and drop-off points of target trajectories on the map.",
+              "Inputs": [
+                "Target trajectories"
+              ],
+              "Outputs": [
+                "Heatmap overlay showing OD point densities"
+              ],
+              "ReferenceCitation": "Section 6.1.2 Map View: The OD heatmap represents the density of the target trajectories' pick-up and drop-off geolocations through color encoding.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Overlay (Road Heatmap)",
+              "ID": 11,
+              "PaperDescription": "Displays trajectory density on road segments, highlighting heavy traffic areas.",
+              "Inputs": [
+                "Target trajectories"
+              ],
+              "Outputs": [
+                "Heatmap overlay showing trajectory density on road segments"
+              ],
+              "ReferenceCitation": "Section 6.1.2 Map View: The road heatmap shows the density of the target trajectories on each road segment using the same color encoding.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Dashboard View",
+              "ID": 12,
+              "PaperDescription": "Displays the current solution parameters, such as the number of billboards, speed filters, and trajectory weights.",
+              "Inputs": [
+                "User input parameters"
+              ],
+              "Outputs": [
+                "Dashboard interface displaying current configuration"
+              ],
+              "ReferenceCitation": "Section 6.1.1 Dashboard View: The dashboard view shows the information of the current solution under construction.",
+              "FeedsInto": [
+                17,
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Solution Preview",
+              "ID": 13,
+              "PaperDescription": "Provides a preview of previously generated solutions as horizontally laid boxes with bar charts of their key metrics.",
+              "Inputs": [
+                "Candidate solutions"
+              ],
+              "Outputs": [
+                "Bar chart representations of multiple solutions"
+              ],
+              "ReferenceCitation": "Section 6.1.3 Solution Preview: The solution preview saves the user's previous settings on each solution and also provides the statistical information for each of them.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Solution Glyph View",
+              "ID": 14,
+              "PaperDescription": "Displays dashboard-style radial glyphs for each solution, summarizing attributes like reach, speed, cost, and POIs.",
+              "Inputs": [
+                "Candidate billboard solutions"
+              ],
+              "Outputs": [
+                "Glyph-based visual summaries of solutions"
+              ],
+              "ReferenceCitation": "Section 6.2.1 Solution View: We design a novel radial-based visual metaphor to represent a solution.",
+              "FeedsInto": [
+                15
+              ]
+            },
+            {
+              "GranularBlockName": "Location Glyphs",
+              "ID": 15,
+              "PaperDescription": "Uses radial glyphs in a Dorling cartogram layout to visualize billboard locations, their costs, and related solution memberships.",
+              "Inputs": [
+                "Billboard location data",
+                "Performance indicators"
+              ],
+              "Outputs": [
+                "Radial glyphs showing billboard location attributes"
+              ],
+              "ReferenceCitation": "Section 6.2.2 Location View: We designed a new radial location glyph and derived a layout algorithm by extending Dorling cartogram.",
+              "FeedsInto": [
+                19
+              ]
+            },
+            {
+              "GranularBlockName": "Ranking Table",
+              "ID": 16,
+              "PaperDescription": "Displays ranked solutions with bar charts and boxplots, enabling multi-criteria ranking and detailed comparison.",
+              "Inputs": [
+                "Performance indicators",
+                "Candidate solutions"
+              ],
+              "Outputs": [
+                "Interactive ranking table with bar charts and boxplots"
+              ],
+              "ReferenceCitation": "Section 6.2.3 Ranking View: The ranking view visualizes the detailed performance related to the attributes of each solution.",
+              "FeedsInto": [
+                19
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Filter",
+              "ID": 17,
+              "PaperDescription": "Filters trajectories by temporal constraints (weekday/weekend) to refine billboard selection queries.",
+              "Inputs": [
+                "User-defined temporal filter"
+              ],
+              "Outputs": [
+                "Filtered trajectory data"
+              ],
+              "ReferenceCitation": "Section 5.2.3 Handling Interactive Query: Setting the temporal filter to consider the trajectories within that specified period only.",
+              "FeedsInto": [
+                7,
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 18,
+              "PaperDescription": "Allows users to define target and solution areas by drawing polygons on the map.",
+              "Inputs": [
+                "User-drawn polygons on the map"
+              ],
+              "Outputs": [
+                "Spatial constraints for billboard selection"
+              ],
+              "ReferenceCitation": "Section 6.1.2 Map View: The area drawing layer provides the function of drawing polygons in the map, enabling users to specify the target and solution areas.",
+              "FeedsInto": [
+                7,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Linking & Highlighting",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Cross-View Highlighting",
+              "ID": 19,
+              "PaperDescription": "Synchronizes highlighting across views (solution, location, ranking) when hovering or clicking on elements.",
+              "Inputs": [
+                "User hover/click events"
+              ],
+              "Outputs": [
+                "Linked highlighting in multiple views"
+              ],
+              "ReferenceCitation": "Section 6.3 Interactions: The highlighting feature is supported in every view... hovering on a glyph in the solution view, the corresponding locations and solutions are highlighted in the location and ranking views.",
+              "FeedsInto": [
+                7,
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

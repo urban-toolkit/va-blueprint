@@ -1,0 +1,281 @@
+{
+  "PaperTitle": "Revisiting the Modifiable Areal Unit Problem in Deep Traffic Prediction with Visual Analytics",
+  "Year": 2021,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Taxi Transaction Records",
+              "ID": 1,
+              "PaperDescription": "Loads two-month (59 days) taxi transaction data from Shenzhen, consisting of about 47 million records, including taxi IDs, prices, mileage, positions, and times.",
+              "Inputs": [
+                "Raw taxi transaction data (ID, price, mileage, get-on/off positions, get-on/off times)"
+              ],
+              "Outputs": [
+                "Cleaned and structured taxi movement records"
+              ],
+              "ReferenceCitation": "Section 4.1 Input Dataset: The data record taxi transactions made by over 20k taxis during the period from 1 Jan. 2019 to 28 Feb. 2019 (59 days).",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Traffic Analysis Zones",
+              "ID": 2,
+              "PaperDescription": "Loads TAZ data delineated by Shenzhen transportation officials, consisting of 1066 zones of varying size for partitioning traffic data.",
+              "Inputs": [
+                "Shenzhen transportation official TAZ dataset"
+              ],
+              "Outputs": [
+                "Spatial partitioning scheme for traffic regions (TAZs)"
+              ],
+              "ReferenceCitation": "Section 4.1 Input Dataset: This work leverages TAZs of 1066 zones delineated by Shenzhen transportation officials.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Preprocessing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Partitioning",
+              "ID": 3,
+              "PaperDescription": "Partitions the study area into two shapes (grid and TAZ) and three scales (50x25, 100x50, 200x100) for traffic aggregation, with TAZs rasterized into fixed-size grids.",
+              "Inputs": [
+                "Cleaned taxi movement data",
+                "TAZ data"
+              ],
+              "Outputs": [
+                "Partitioned datasets by shape and scale, suitable for neural network input"
+              ],
+              "ReferenceCitation": "Section 4.2 Data Preprocessing: To explore the shaping effect, two partition shapes are tested: grids and TAZs.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Rasterization",
+              "ID": 4,
+              "PaperDescription": "Aggregates traffic records by region and time slot, rasterizing TAZs into fixed-size matrices for ST-ResNet consumption.",
+              "Inputs": [
+                "Partitioned datasets",
+                "Taxi transaction records"
+              ],
+              "Outputs": [
+                "Raster matrices representing traffic movements over time and space"
+              ],
+              "ReferenceCitation": "Section 4.2 Data Preprocessing: The process is to convert TAZ-based traffic aggregations Xrt into a raster matrix Xgt ∈ Rwxh.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Prediction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "ST-ResNet Model Training",
+              "ID": 5,
+              "PaperDescription": "Trains six ST-ResNet models on grid and TAZ partitions of varying scales, modeling temporal dependencies (trend, period, closeness) in traffic data.",
+              "Inputs": [
+                "Rasterized traffic matrices"
+              ],
+              "Outputs": [
+                "Predicted traffic matrices for testing data"
+              ],
+              "ReferenceCitation": "Section 4.2 Data Preprocessing: ST-ResNet is designed to consume a sequence of fixed-sized matrices.",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Scale-independent Metrics Computation",
+              "ID": 6,
+              "PaperDescription": "Computes prediction accuracy metrics (PRMSE, Uncertainty Coefficient U, and Correlation Coefficient CORR) at the regional level to support multi-scale comparisons.",
+              "Inputs": [
+                "Predicted traffic matrices",
+                "Observed traffic matrices"
+              ],
+              "Outputs": [
+                "Metrics for model evaluation across scales and regions"
+              ],
+              "ReferenceCitation": "Section 4.3 Scale-Independent Evaluation Metrics: We select three metrics satisfying this requirement: percentage RMSE (PRMSE), uncertainty coefficient (U), and correlation coefficient (CORR).",
+              "FeedsInto": [
+                7,
+                8,
+                9,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 7,
+              "PaperDescription": "Displays spatial distributions of traffic volumes and prediction errors using a bivariate choropleth map with a value-suppressing uncertainty palette (VSUP).",
+              "Inputs": [
+                "Traffic volume data",
+                "Prediction error data"
+              ],
+              "Outputs": [
+                "Interactive bivariate choropleth map showing spatial variation and uncertainty"
+              ],
+              "ReferenceCitation": "Section 5.1 Bivariate Map: We design Bivariate Map to support spatial variation exploration (T.1).",
+              "FeedsInto": [
+                10,
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Moran's I Scatterplot",
+              "ID": 8,
+              "PaperDescription": "Visualizes spatial autocorrelation of traffic volumes and prediction errors at regional and local tract levels, supporting spatial association analysis.",
+              "Inputs": [
+                "Moran's I indices",
+                "Traffic volume data"
+              ],
+              "Outputs": [
+                "Scatter plot showing spatial association of traffic data"
+              ],
+              "ReferenceCitation": "Section 5.2 Moran's I Scatterplot: The Moran's I Scatterplot is designed to reveal the spatial autocorrelation of traffic volumes in each grid-based partition and local tract (T.2).",
+              "FeedsInto": [
+                10,
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Dot Plot",
+              "ID": 9,
+              "PaperDescription": "Presents scale-independent metrics across different scales and regions using nonlinear dot plots in a tree layout, facilitating comparison of uncertainties and errors.",
+              "Inputs": [
+                "PRMSE values",
+                "Uncertainty coefficients (U)",
+                "Correlation coefficients (CORR)"
+              ],
+              "Outputs": [
+                "Nonlinear dot plots for multi-scale metric comparisons"
+              ],
+              "ReferenceCitation": "Section 5.3 Multi-scale Attribution View: The view adopts the idea of nonlinear dot plot [31] to encode each region as a dot.",
+              "FeedsInto": [
+                10,
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Heat Matrix",
+              "ID": 11,
+              "PaperDescription": "Displays temporal variations of traffic volumes and prediction errors for selected partitions over time slots using a heatmap.",
+              "Inputs": [
+                "Temporal traffic volumes",
+                "Prediction errors over time"
+              ],
+              "Outputs": [
+                "Heatmap view showing traffic and error variations over time for selected regions"
+              ],
+              "ReferenceCitation": "Section 5.1 Bivariate Map: Variations of traffic volumes and prediction errors over all testing time slots (7 daysx48 slots/day) are presented as a heatmap (Fig. 5(b)).",
+              "FeedsInto": [
+                10,
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Point Selection",
+              "ID": 10,
+              "PaperDescription": "Allows users to select individual data points or regions using point or lasso tools, linking selections across views for detailed exploration and filtering.",
+              "Inputs": [
+                "User selection inputs"
+              ],
+              "Outputs": [
+                "Highlighted data points and updated views (map, scatterplot, dot plot)"
+              ],
+              "ReferenceCitation": "Section 5.4 User Interactions: Users can select a specific data point of interest with Point selection tool, or filter a subset of data points with Rect or Lasso tools.",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 14,
+              "PaperDescription": "Allows users to select individual data points or regions using point or lasso tools, linking selections across views for detailed exploration and filtering.",
+              "Inputs": [
+                "User selection inputs"
+              ],
+              "Outputs": [
+                "Highlighted data points and updated views (map, scatterplot, dot plot)"
+              ],
+              "ReferenceCitation": "Section 5.4 User Interactions: Users can select a specific data point of interest with Point selection tool, or filter a subset of data points with Rect or Lasso tools.",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Partition Shape Selection",
+              "ID": 12,
+              "PaperDescription": "Allows users to switch between different partition shapes (Grid or TAZ) for spatial analysis and visualization.",
+              "Inputs": [
+                "User selection input"
+              ],
+              "Outputs": [
+                "Updated partitioned datasets and refreshed visualization views"
+              ],
+              "ReferenceCitation": "Section 5.4 User Interactions: First, the interface includes widgets to explore partition scales (50x25, 100x50, and 200x100) and shapes (grid and TAZ).",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Partition Scale Selection",
+              "ID": 13,
+              "PaperDescription": "Allows users to switch between different partition scales (50x25, 100x50, 200x100) for multi-scale analysis and visualization.",
+              "Inputs": [
+                "User selection input"
+              ],
+              "Outputs": [
+                "Updated partitioned datasets and refreshed visualization views"
+              ],
+              "ReferenceCitation": "Section 5.4 User Interactions: First, the interface includes widgets to explore partition scales (50x25, 100x50, and 200x100) and shapes (grid and TAZ).",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

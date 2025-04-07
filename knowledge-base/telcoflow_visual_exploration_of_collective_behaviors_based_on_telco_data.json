@@ -1,0 +1,309 @@
+{
+  "PaperTitle": "TelcoFlow: Visual Exploration of Collective Behaviors Based on Telco Data",
+  "Year": 2016,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Telco Data",
+              "ID": 1,
+              "PaperDescription": "Loads telco data consisting of timestamped records of data exchanges between mobile phones and cell stations, providing spatiotemporal movement information for each user.",
+              "Inputs": [
+                "Raw telco data: <Timestamp, IDphone, IDstation, Latitudestation, Longitudestation>"
+              ],
+              "Outputs": [
+                "Structured spatiotemporal dataset"
+              ],
+              "ReferenceCitation": "Section IV-A Data Characteristics: The dataset contains a list of data exchange records between each mobile phone and cell stations when mobile phone users make phone calls, send messages or connect to the Internet.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Modeling",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "State-based Behavior Model",
+              "ID": 2,
+              "PaperDescription": "Models individuals' behaviors as transitions among probabilistic states, each representing spatial distributions over cell towers and associated certainty values during a time interval.",
+              "Inputs": [
+                "Structured spatiotemporal dataset"
+              ],
+              "Outputs": [
+                "State sequences for each person (probabilistic distributions and certainty measures)"
+              ],
+              "ReferenceCitation": "Section IV-B State-based Behavior Model: A person's states (e.g., home, work) are usually characterized by different locations. Thus formally, the state of a person uj for a time interval Tk can be defined with two components <Pj,k,Cj,k>.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "State Cube Construction",
+              "ID": 3,
+              "PaperDescription": "Constructs a state cube, storing each individual's sequence of probabilistic states over time intervals, organized into a structured matrix for subsequent clustering and analysis.",
+              "Inputs": [
+                "State sequences for each person"
+              ],
+              "Outputs": [
+                "State cube matrix"
+              ],
+              "ReferenceCitation": "Section IV-B State-based Behavior Model: We compute the sequence of a person's states as described above. The obtained state sequence is stored in a matrix (termed as person matrix), which is a slice of the state cube.",
+              "FeedsInto": [
+                4,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Sequential State Clustering",
+              "ID": 4,
+              "PaperDescription": "Clusters people who share similar probabilistic state distributions within each time interval using the Wasserstein distance and density-based clustering techniques.",
+              "Inputs": [
+                "State cube matrix"
+              ],
+              "Outputs": [
+                "Clusters of people with similar states per time interval"
+              ],
+              "ReferenceCitation": "Section IV-C Detecting Collective Behaviors: We extract a time interval matrix from the state cube for each time interval, based on which people are clustered into groups according to the similarity of their states.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Sequential Biclustering",
+              "ID": 5,
+              "PaperDescription": "Detects collective behaviors as sequences of state clusters by performing biclustering across people and time intervals, producing groups that follow shared behavioral patterns.",
+              "Inputs": [
+                "Clusters of people with similar states per time interval"
+              ],
+              "Outputs": [
+                "Collective behavior biclusters"
+              ],
+              "ReferenceCitation": "Section IV-C Detecting Collective Behaviors: In this step, we adopt biclustering for sequential state-cluster detection, which is a popular data mining technique to identify coordinated relationships between groups of entities.",
+              "FeedsInto": [
+                6,
+                7,
+                8,
+                9,
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Flow Diagram",
+              "ID": 6,
+              "PaperDescription": "Visualizes the evolution of state clusters over time using a river flow metaphor where flows merge and split to represent cluster transitions and behavioral dynamics.",
+              "Inputs": [
+                "Collective behavior biclusters"
+              ],
+              "Outputs": [
+                "River flow diagram of state cluster evolution"
+              ],
+              "ReferenceCitation": "Section V-B Visualization Design: Flow View that provides an overview of collective behaviors through state-based modeling.",
+              "FeedsInto": [
+                12,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Outlier Volume Flow Chart",
+              "ID": 7,
+              "PaperDescription": "Displays the changing number of outliers over time as an additional flow diagram underneath the main river flow, highlighting behavioral anomalies and transitions.",
+              "Inputs": [
+                "Collective behavior biclusters"
+              ],
+              "Outputs": [
+                "Outlier volume flow visualization"
+              ],
+              "ReferenceCitation": "Section V-B Visualization Design: In addition to state clusters, analysts also wish to be aware of outliers (R.2.1). To this end, an outlier volume flow is appended at the lower part of the view.",
+              "FeedsInto": [
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Matrix",
+              "ID": 8,
+              "PaperDescription": "Presents collective behaviors as sequences of state clusters in a matrix layout where rows represent sequences and columns represent time intervals.",
+              "Inputs": [
+                "Collective behavior biclusters"
+              ],
+              "Outputs": [
+                "Sequence matrix chart"
+              ],
+              "ReferenceCitation": "Section V-B Visualization Design: Sequence View that visualizes the extracted sequences of state clusters representing different collective behaviors and navigates analysts to find ones of their interest.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Radial Chart",
+              "ID": 9,
+              "PaperDescription": "Visualizes the distribution of people's states within a state cluster using a radial chart layout based on Barycentric coordinates, preserving spatial relationships.",
+              "Inputs": [
+                "State cluster data"
+              ],
+              "Outputs": [
+                "Radial distribution chart"
+              ],
+              "ReferenceCitation": "Section V-B Visualization Design: Radial Distribution Map that conveys the details of a state cluster to facilitate understanding and comparative analysis.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Stacked Radial Chart",
+              "ID": 10,
+              "PaperDescription": "Displays the state evolutionary trends of clusters using a stacked radial chart, showing cluster size and distance from a reference state over time.",
+              "Inputs": [
+                "State cluster data over time"
+              ],
+              "Outputs": [
+                "Stacked radial chart showing state evolution trends"
+              ],
+              "ReferenceCitation": "Section V-B Visualization Design: Radial Distance Map that conveys the details of a state cluster to facilitate understanding and comparative analysis.",
+              "FeedsInto": [
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Map",
+              "ID": 14,
+              "PaperDescription": "Displays a geographic map as the base layer for showing spatial distributions and overlays of user state clusters.",
+              "Inputs": [
+                "Geographic basemap data"
+              ],
+              "Outputs": [
+                "Rendered 2D geographic map"
+              ],
+              "ReferenceCitation": "Section V-B Visualization Design: A map-based visualization was designed to help users perceive spatial distributions of state clusters in geographic space (R.3).",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Overlay (Points)",
+              "ID": 15,
+              "PaperDescription": "Displays the spatial distribution of users in a state cluster as point overlays on the 2D map, providing spatial context and enabling analysis of user locations.",
+              "Inputs": [
+                "State cluster data",
+                "User location data"
+              ],
+              "Outputs": [
+                "Point overlays on 2D map"
+              ],
+              "ReferenceCitation": "Section V-B Visualization Design: To enhance spatial perception, the spatial distribution of users in the state cluster is displayed on a geographic map (R.3).",
+              "FeedsInto": [
+                13,
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 16,
+              "PaperDescription": "Displays an aggregated heatmap overlay on the 2D map representing the density distribution of users in a state cluster, enabling analysts to perceive spatial hotspots and density variations.",
+              "Inputs": [
+                "State cluster data",
+                "User location density data"
+              ],
+              "Outputs": [
+                "Heatmap overlay on 2D map"
+              ],
+              "ReferenceCitation": "Section V-B Visualization Design: To further enhance spatial perception, we visualize the density of users' distributions as a heatmap overlaid on the geographic map (R.3).",
+              "FeedsInto": [
+                13,
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatiotemporal Selection",
+              "ID": 11,
+              "PaperDescription": "Allows dynamic filtering of telco data based on population, activeness, and correlations, enabling analysts to focus on subsets of interest for detailed analysis.",
+              "Inputs": [
+                "User selection (population, activeness, correlation)"
+              ],
+              "Outputs": [
+                "Filtered collective behavior data"
+              ],
+              "ReferenceCitation": "Section V-B Visualization Design: Multi-facet Filter View that supports dynamic aggregation and filtering of data (R.1) within spatial and temporal context.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 12,
+              "PaperDescription": "Enables analysts to select specific time intervals on the interactive time axis to reveal relationships between state clusters at non-adjacent points in time.",
+              "Inputs": [
+                "User selection on time axis"
+              ],
+              "Outputs": [
+                "Highlighted time intervals and linked state clusters"
+              ],
+              "ReferenceCitation": "Section V-B Visualization Design: Interactive Time Axis enables a convenient pair-wise analysis.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Comparison",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Snapshot Comparison",
+              "ID": 13,
+              "PaperDescription": "Enables comparison of different state clusters by taking snapshots of radial distribution charts and highlighting shared and non-shared spatial states.",
+              "Inputs": [
+                "User-selected radial distribution snapshots"
+              ],
+              "Outputs": [
+                "Comparison view of multiple state clusters"
+              ],
+              "ReferenceCitation": "Section V-B Visualization Design: Snapshot function is provided. Analysts can click the snapshot button to store the visualization of current cluster in the clipboard on the right side.",
+              "FeedsInto": [
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,312 @@
+{
+  "PaperTitle": "Towards Better Bus Networks: A Visual Analytics Approach",
+  "Year": 2021,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Bus Stops",
+              "ID": 1,
+              "PaperDescription": "Loads the bus stops in a city, where each stop is defined by its ID, name, and coordinates.",
+              "Inputs": [
+                "Raw bus stop data (ID, name, coordinates)"
+              ],
+              "Outputs": [
+                "Structured dataset of bus stops"
+              ],
+              "ReferenceCitation": "Section 3.2 Data Description: Bus stop data comprise the bus stops in a city. Each stop is defined by its ID, name, and coordinates.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Bus Routes",
+              "ID": 2,
+              "PaperDescription": "Loads the bus routes, where each route is identified by its ID and a stop sequence.",
+              "Inputs": [
+                "Raw bus route data (ID, stop sequence)"
+              ],
+              "Outputs": [
+                "Structured dataset of bus routes"
+              ],
+              "ReferenceCitation": "Section 3.2 Data Description: Bus route data comprise the bus routes, where each of them is identified by its ID and a stop sequence.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Bus Trips",
+              "ID": 3,
+              "PaperDescription": "Loads the bus trip data comprising a series of bus fare card records, including card ID, tap-on timestamp, and the route and stops where the fare card was tapped on and off.",
+              "Inputs": [
+                "Bus fare card records"
+              ],
+              "Outputs": [
+                "Structured dataset of bus trips with inferred tap-off timestamps"
+              ],
+              "ReferenceCitation": "Section 3.2 Data Description: Bus trip data contain a series of bus fare card records, where each of them comprises a card ID, a tap-on timestamp, and the route and stops where the fare card was tapped on and off.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Indexing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map Matching",
+              "ID": 4,
+              "PaperDescription": "Performs preprocessing and spatial indexing of bus stop, route, and trip data, matching trip records to the spatial map of routes and stops.",
+              "Inputs": [
+                "Bus stops dataset",
+                "Bus routes dataset",
+                "Bus trips dataset"
+              ],
+              "Outputs": [
+                "Spatially indexed data for stops, routes, and trips"
+              ],
+              "ReferenceCitation": "Figure 3: The data storage preprocesses the data and indexes the data with a spatial database.",
+              "FeedsInto": [
+                5,
+                6,
+                7,
+                8,
+                13,
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Graph Construction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Station Graph Construction",
+              "ID": 5,
+              "PaperDescription": "Builds station graphs from the spatially indexed stop, route, and trip data to support the Pareto-optimal route generation model.",
+              "Inputs": [
+                "Spatially indexed data for stops, routes, and trips"
+              ],
+              "Outputs": [
+                "Station graph for route generation"
+              ],
+              "ReferenceCitation": "Figure 3: Backend builds station graphs and answers route generation requests.",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Querying",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Parallelized Pareto-Optimal Route Search",
+              "ID": 14,
+              "PaperDescription": "Performs parallelized route generation using Monte-Carlo tree search to generate Pareto-optimal transit routes with progressive and interactive constraints.",
+              "Inputs": [
+                "Station graph",
+                "User-defined constraints from the manipulation interface"
+              ],
+              "Outputs": [
+                "Generated Pareto-optimal routes"
+              ],
+              "ReferenceCitation": "Section 4.2.3 Parallelized Pareto-Optimal Route Search: We accelerate the route generation model by exploiting multiple cores on modern workstations and parallelizing the search process.",
+              "FeedsInto": [
+                11,
+                15,
+                16
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 6,
+              "PaperDescription": "Displays an overview map of the bus network, divided into transportation zones with aggregated statistics using zone glyphs and route layers.",
+              "Inputs": [
+                "Spatially indexed data for stops, routes, and trips",
+                "Aggregated performance statistics"
+              ],
+              "Outputs": [
+                "2D map visualization with spatial aggregation and zone glyphs"
+              ],
+              "ReferenceCitation": "Section 6.1.1 Network-Level Analysis: The spatial aggregation view (Fig. 1B), designed for the network-level analysis, comprises three linked layers, namely, the map, route, and aggregation layers.",
+              "FeedsInto": [
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Glyph)",
+              "ID": 13,
+              "PaperDescription": "Overlays zone glyphs on the 2D map to summarize key statistics of each transportation zone, including passenger flows and six averaged criteria.",
+              "Inputs": [
+                "Aggregated zone performance metrics"
+              ],
+              "Outputs": [
+                "Zone glyph overlay for the map"
+              ],
+              "ReferenceCitation": "Section 6.1.1 Network-Level Analysis: A zone glyph (Fig. 1D) is placed at the centroid of each transportation zone to summarize the key statistics of this zone.",
+              "FeedsInto": [
+                9,
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Conflict Markers)",
+              "ID": 15,
+              "PaperDescription": "Displays conflict markers on the map to indicate stops where route alternatives differ, supporting conflict resolution during evaluation.",
+              "Inputs": [
+                "Detected route conflicts",
+                "Clustered candidate routes"
+              ],
+              "Outputs": [
+                "Conflict markers on the 2D map"
+              ],
+              "ReferenceCitation": "Section 6.3.2 Resolving Conflicts: The topology of the route clusters is visualized on the map with a node-link diagram (Fig. 7C). A conflict marker is placed on every stop in the topology showing the conflict status associated with this stop.",
+              "FeedsInto": [
+                11,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Table",
+              "ID": 7,
+              "PaperDescription": "Displays a table-based ranking visualization of routes based on multiple performance criteria, allowing filtering and sorting by individual or grouped metrics.",
+              "Inputs": [
+                "Performance criteria for bus routes"
+              ],
+              "Outputs": [
+                "Ranked route table with interactive filters"
+              ],
+              "ReferenceCitation": "Section 6.1.2 Route-Level Analysis: A table-based ranking visualization is included in the route ranking view (Fig. 1F) to facilitate the multi-criteria analysis of the routes.",
+              "FeedsInto": [
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Matrix",
+              "ID": 8,
+              "PaperDescription": "Displays flow matrices visualizing passenger flows and transfers among stops for selected routes, including transfer links and passenger volumes.",
+              "Inputs": [
+                "Passenger flow data between stops",
+                "Transfer data between routes"
+              ],
+              "Outputs": [
+                "Matrix visualization of passenger flows and transfers"
+              ],
+              "ReferenceCitation": "Section 6.1.3 Stop-Level Analysis: A flow matrix (Fig. 4A) is designed to visualize the passenger flows and transfers among the stops in a selected route.",
+              "FeedsInto": [
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart (Animated)",
+              "ID": 16,
+              "PaperDescription": "Displays an animated line chart showing the number of generated routes over time during the progressive route generation process.",
+              "Inputs": [
+                "Generated route statistics"
+              ],
+              "Outputs": [
+                "Line chart with animated updates"
+              ],
+              "ReferenceCitation": "Section 6.2 Manipulation Interface: An animated line plot (Fig. 5C) in the left top of the table shows the number of generated routes.",
+              "FeedsInto": [
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 9,
+              "PaperDescription": "Allows users to filter and focus on specific transportation zones, routes, or stops on the 2D map or route ranking views.",
+              "Inputs": [
+                "User interaction on 2D map or ranking table"
+              ],
+              "Outputs": [
+                "Filtered subset of routes or stops for further analysis"
+              ],
+              "ReferenceCitation": "Section 6.1.1 Network-Level Analysis: The spatial aggregation view provides a spatial overview of the entire network and helps the users filter routes with spatial constraints.",
+              "FeedsInto": [
+                10,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Manipulation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Route Generation Controls",
+              "ID": 10,
+              "PaperDescription": "Allows users to control the progressive route generation model, including pausing, adding/removing stops, setting constraints, and interacting with the generation process in real-time.",
+              "Inputs": [
+                "User-defined constraints and control commands",
+                "Station graph"
+              ],
+              "Outputs": [
+                "Customized route generation requests"
+              ],
+              "ReferenceCitation": "Section 6.2 Manipulation Interface: The toolbox at the left of the system provides fine-grained model controls, including starting/pausing the optimization of the selected route (Fig. 1E).",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Evaluation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Conflict Resolution",
+              "ID": 11,
+              "PaperDescription": "Supports progressive decision-making by enabling users to resolve conflicts among alternative route candidates through interactive cluster selection and comparison.",
+              "Inputs": [
+                "Route generation results",
+                "Performance criteria for candidate routes"
+              ],
+              "Outputs": [
+                "Resolved candidate routes based on topological and criteria analysis"
+              ],
+              "ReferenceCitation": "Section 6.3.2 Resolving Conflicts: Each detected conflict is shown in the ranking view as a collapsible group (Fig. 7A). The users can hover on a row to see the routes in the cluster on the map and click on a row to resolve the conflict with the cluster.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

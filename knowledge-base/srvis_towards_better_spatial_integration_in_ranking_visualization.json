@@ -1,0 +1,273 @@
+{
+  "PaperTitle": "SRVis: Towards Better Spatial Integration in Ranking Visualization",
+  "Year": 2019,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatial Alternatives",
+              "ID": 1,
+              "PaperDescription": "Loads spatial alternatives including their location data and associated multi-criteria attributes for ranking visualization.",
+              "Inputs": [
+                "Spatial alternatives dataset (e.g., coordinates, criteria values)"
+              ],
+              "Outputs": [
+                "Structured dataset of spatial alternatives with criteria values"
+              ],
+              "ReferenceCitation": "Section 5 IMPLEMENTATION: During the iterative development process, two spatial ranking datasets are used to evaluate the effectiveness of SRVis: House dataset comprises 1,927 houses available for sale during December 2016 in Hangzhou, China. Store dataset describes 4,968 convenience stores in the same city.",
+              "FeedsInto": [
+                2,
+                4,
+                8,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Ranking",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Simple Additive Weighting (SAW)",
+              "ID": 2,
+              "PaperDescription": "Computes the rankings of spatial alternatives using the simple additive weighting (SAW) method based on the criteria and user-defined weights.",
+              "Inputs": [
+                "Spatial alternatives with criteria values",
+                "User-defined criterion weights"
+              ],
+              "Outputs": [
+                "Rank scores for spatial alternatives"
+              ],
+              "ReferenceCitation": "Section 4.1.3 Visualizing Cause of Rankings: This study ranks alternatives using the simple additive weighting (SAW) technique [21], which has been extensively adopted in various MCDM scenarios.",
+              "FeedsInto": [
+                3,
+                4,
+                6,
+                7,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Optimization",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Two-Phase Optimization Framework",
+              "ID": 3,
+              "PaperDescription": "Optimizes the layout of criteria charts by minimizing information loss and reducing wiggles to achieve scalable and legible visual representation of weighted criteria distributions.",
+              "Inputs": [
+                "Rank scores",
+                "Criteria values of alternatives"
+              ],
+              "Outputs": [
+                "Optimized criteria chart layout for visual representation"
+              ],
+              "ReferenceCitation": "Section 4.1.3 Visualizing Cause of Rankings: We optimize the bar layout in criteria charts with a novel two-phase framework based on greedy heuristics, enabling a scalable and legible design of the proposed charts.",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 4,
+              "PaperDescription": "Displays spatial alternatives as points overlaid on a 2D map with optional spatial context layers such as population density and competitor locations.",
+              "Inputs": [
+                "Spatial alternatives dataset",
+                "Optional context layers (e.g., population density)",
+                "Rank scores",
+                "Filtered alternatives (user selection)"
+              ],
+              "Outputs": [
+                "Interactive 2D map with alternative locations and spatial contexts"
+              ],
+              "ReferenceCitation": "Section 4.1.1 Visualizing Spatial Contexts: SRVis adopts the map-centred exploratory approach by visualizing the spatial contexts with a map (Fig. 2L), wherein small blue circles encode the locations of alternatives.",
+              "FeedsInto": [
+                5,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 5,
+              "PaperDescription": "Overlays additional spatial contexts on the map such as the population density heatmap or the locations of competitors.",
+              "Inputs": [
+                "Population density data",
+                "Competitor location data"
+              ],
+              "Outputs": [
+                "Heatmap or marker overlay on Map 2D"
+              ],
+              "ReferenceCitation": "Section 4.1.1 Visualizing Spatial Contexts: Users can overlay additional spatial contexts on the map, such as the population density heatmap or the locations of competitors.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Matrix",
+              "ID": 6,
+              "PaperDescription": "Presents scalable matrix-based visual summaries of spatial rankings, showing the density of alternatives per ranking group in map slices aligned vertically and horizontally with the map.",
+              "Inputs": [
+                "Rank scores",
+                "Spatial alternatives dataset",
+                "Filtered alternatives"
+              ],
+              "Outputs": [
+                "Interactive matrix charts showing spatial distribution of rankings"
+              ],
+              "ReferenceCitation": "Section 4.1.2 Visualizing Rankings: Two ranking matrices (Fig. 2E) are placed to the top and the left of the map, respectively.",
+              "FeedsInto": [
+                8,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Stacked Bar Chart",
+              "ID": 7,
+              "PaperDescription": "Displays the weighted criteria distributions of alternatives spatially as stacked bar charts placed alongside the map, supporting exploration of the causes behind rankings.",
+              "Inputs": [
+                "Optimized criteria chart layout",
+                "Weighted criteria values of alternatives",
+                "Filtered alternatives"
+              ],
+              "Outputs": [
+                "Stacked bar charts representing the cause of rankings spatially"
+              ],
+              "ReferenceCitation": "Section 4.1.3 Visualizing Cause of Rankings: Similar to the ranking matrices, two criteria charts (Fig. 2C) are placed to the right and the bottom of the map.",
+              "FeedsInto": [
+                8,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Table",
+              "ID": 8,
+              "PaperDescription": "Presents the detailed rankings and criterion values for each alternative in a table format, supporting weight adjustments and comparisons.",
+              "Inputs": [
+                "Filtered alternatives",
+                "Criteria values",
+                "User-defined criterion weights"
+              ],
+              "Outputs": [
+                "Detailed table of alternatives with criteria breakdown and rankings"
+              ],
+              "ReferenceCitation": "Section 4.2 Inspector View: To present the details (R.1) and cause (R.2) of rankings, we implement a tailored table-based ValueChart (Fig. 1F).",
+              "FeedsInto": [
+                9,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 9,
+              "PaperDescription": "Provides a projection view for similarity analysis of alternatives based on their criteria using nonmetric multidimensional scaling.",
+              "Inputs": [
+                "Criteria values of alternatives",
+                "User selection"
+              ],
+              "Outputs": [
+                "2D scatter plot showing similarity clusters of alternatives"
+              ],
+              "ReferenceCitation": "Section 4.2 Inspector View: We project all alternatives with nonmetric multidimensional scaling [27] based on the Euclidean distances between criterion values onto a 2D projection view.",
+              "FeedsInto": [
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 10,
+              "PaperDescription": "Enables users to interactively filter alternatives by drawing polygons on the map or by brushing on ranking matrices and criteria charts to focus analysis on specific regions.",
+              "Inputs": [
+                "User-defined spatial selection (polygon on map, brush on matrices/charts)"
+              ],
+              "Outputs": [
+                "Subset of alternatives filtered by spatial region"
+              ],
+              "ReferenceCitation": "Section 4.1.1 Visualizing Spatial Contexts: They can also draw polygons on the map to create a selection of interesting alternatives, thereby enabling interactive spatial filtering (R.4).",
+              "FeedsInto": [
+                4,
+                6,
+                7,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Comparison",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Snapshot Management",
+              "ID": 11,
+              "PaperDescription": "Allows users to save snapshots of current selections and criteria weights for later comparison and analysis.",
+              "Inputs": [
+                "User-defined spatial selection",
+                "Criteria weights"
+              ],
+              "Outputs": [
+                "Stored snapshots with associated rankings and criteria weights"
+              ],
+              "ReferenceCitation": "Section 4.3 Snapshot View: The snapshot view (Fig. 1G) allows users to save a snapshot of the current spatial selection of alternatives and the weights of criteria to record interesting spatial patterns.",
+              "FeedsInto": [
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Snapshot Comparison",
+              "ID": 12,
+              "PaperDescription": "Enables comparative analysis between different snapshots to reveal spatial and ranking differences.",
+              "Inputs": [
+                "Two selected snapshots",
+                "Spatial alternatives dataset"
+              ],
+              "Outputs": [
+                "Visual comparisons showing differences between ranking sets"
+              ],
+              "ReferenceCitation": "Section 4.1.4 Comparative Analysis of Rankings: Users can make comparisons between snapshots by dragging a snapshot onto another in the snapshot view.",
+              "FeedsInto": [
+                4,
+                6,
+                7,
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

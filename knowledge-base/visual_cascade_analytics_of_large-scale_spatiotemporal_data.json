@@ -1,0 +1,278 @@
+{
+  "PaperTitle": "Visual Cascade Analytics of Large-Scale Spatiotemporal Data",
+  "Year": 2022,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatial Event Time Series",
+              "ID": 1,
+              "PaperDescription": "Converts spatial time series of urban data (e.g., PM2.5 concentration, traffic speed) into spatial event time series based on application-specific predicates and thresholds.",
+              "Inputs": [
+                "Spatial time series data (e.g., PM2.5 concentrations, traffic speed)"
+              ],
+              "Outputs": [
+                "Spatial event time series indicating event occurrences at locations"
+              ],
+              "ReferenceCitation": "Section 4.1: First of all, infection events are extracted from the given spatial time series fAl1 ; Al2 ; . . .g by converting the series to spatial event time series fBl1 ; Bl2 ; . . .g with application-specific predicates and identifying the start and end times of continuous events.",
+              "FeedsInto": [
+                2,
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Inference",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Generalized Cascading Network Inference",
+              "ID": 2,
+              "PaperDescription": "Infers cascading patterns from spatial event time series using a monotonic exponential influence model, incorporating influence durations and avoiding time partitioning by applying a time window strategy.",
+              "Inputs": [
+                "Spatial event time series"
+              ],
+              "Outputs": [
+                "Cascading network (graph of inferred spatial dependencies)"
+              ],
+              "ReferenceCitation": "Section 4.2.2: Following Liang et al., we also use a similar monotonic exponential model for characterizing influence likelihood. However, two limitations of Liang et al.'s approach must be addressed for generalized pattern inference.",
+              "FeedsInto": [
+                3,
+                4,
+                13,
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Cascade Retrieving",
+              "ID": 3,
+              "PaperDescription": "Retrieves cascades of infection events based on the extracted cascading network by linking downstream events with their inferred upstream causes within a specified time window.",
+              "Inputs": [
+                "Cascading network",
+                "Infection event series"
+              ],
+              "Outputs": [
+                "Cascades of infection events (event graphs)"
+              ],
+              "ReferenceCitation": "Section 4.3: Based on the extracted cascading network G = (V, S), we further describe the procedure for obtaining the cascades of infection events that reveal how spatial contagions spread.",
+              "FeedsInto": [
+                6,
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 4,
+              "PaperDescription": "Displays the spatial distribution of locations on a 2D map, using circle size and opacity to encode event counts, with radial heatmaps to show temporal event distributions.",
+              "Inputs": [
+                "Spatial locations",
+                "Event distributions",
+                "Cascading network"
+              ],
+              "Outputs": [
+                "Interactive 2D spatial map with cascading pattern overlays"
+              ],
+              "ReferenceCitation": "Section 6.1.1: Each location is represented by a circle, and the size and opacity of the circles encode the number of events. Zooming in on the map reveals the spatiotemporal overviews (Figs. 8 B2 and 4 A6) for the locations.",
+              "FeedsInto": [
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Cascading Network)",
+              "ID": 13,
+              "PaperDescription": "Overlays the inferred cascading network as edges on the 2D map, showing dependencies between locations.",
+              "Inputs": [
+                "Cascading network"
+              ],
+              "Outputs": [
+                "Cascading network edges visualized on Map 2D"
+              ],
+              "ReferenceCitation": "Section 6.1.1: The map also depicts the cascading patterns inferred by the model as spatial networks (Fig. 4 A4).",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Radial Heatmap)",
+              "ID": 14,
+              "PaperDescription": "Overlays radial heatmaps on map locations to encode the temporal distribution of events.",
+              "Inputs": [
+                "Event distributions at locations"
+              ],
+              "Outputs": [
+                "Radial heatmap overlay on Map 2D"
+              ],
+              "ReferenceCitation": "Section 6.1.1: We encode the temporal distribution of events with a radial heatmap around the circle for each location.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Table",
+              "ID": 6,
+              "PaperDescription": "Summarizes cascades in a table-based view where each row represents a group of cascades with similar topology, and columns represent edges in the cascading network.",
+              "Inputs": [
+                "Cascades of infection events",
+                "Cascading network edges"
+              ],
+              "Outputs": [
+                "Table summarizing cascade groups and influence uncertainties"
+              ],
+              "ReferenceCitation": "Section 6.2.1: The influence view adopts a table-based layout to organize and summarize cascades in an occlusion-free manner (R3), as illustrated in Fig. 5.",
+              "FeedsInto": [
+                7,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Timeline (Influence Glyphs)",
+              "ID": 7,
+              "PaperDescription": "Displays individual influence processes as timeline glyphs showing infection event durations for upstream and downstream locations.",
+              "Inputs": [
+                "Cascade group influences"
+              ],
+              "Outputs": [
+                "Timeline-based glyphs for influence process analysis"
+              ],
+              "ReferenceCitation": "Section 6.2.2: We visualize every single influence with a timeline-based influence glyph (Fig. 6 B), where the two infection events are aligned along the timeline.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Timeline (Folded Chart)",
+              "ID": 8,
+              "PaperDescription": "Visualizes cascades over time along a folded timeline, encoding the start and end times of cascades as bars, with aggregated occurrences as heatmaps.",
+              "Inputs": [
+                "Cascade event timelines"
+              ],
+              "Outputs": [
+                "Folded timeline showing temporal distribution and duration of cascades"
+              ],
+              "ReferenceCitation": "Section 6.3: As illustrated in Fig. 4 C3, the temporal chart folds the timeline from top to bottom and left to right. Each cascade is represented as a bar.",
+              "FeedsInto": [
+                9,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Timeline (Cascading Cards View)",
+              "ID": 9,
+              "PaperDescription": "Displays individual cascades as cascading cards, showing infection status over time for involved locations.",
+              "Inputs": [
+                "Individual cascades of infection events"
+              ],
+              "Outputs": [
+                "Detailed cascading cards for individual cascade analysis"
+              ],
+              "ReferenceCitation": "Section 6.3: Each card presents an individual cascade in detail (R7) and mainly constitutes multiple timelines.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Scatter Plot (t-SNE Projection)",
+              "ID": 5,
+              "PaperDescription": "Projects locations into 2D space using t-SNE based on temporal co-occurrences of infection events to reveal clusters.",
+              "Inputs": [
+                "Spatial event co-occurrence distances"
+              ],
+              "Outputs": [
+                "Scatter plot of location projections for cluster exploration"
+              ],
+              "ReferenceCitation": "Section 6.1.2: Finally, we feed a matrix that comprises the distances between all pairs of locations into t-SNE and obtain projected 2D coordinates for each location.",
+              "FeedsInto": [
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 10,
+              "PaperDescription": "Allows users to specify locations of interest by drawing polygons on the map or using lasso tools in the projection view to initialize cascading network inference.",
+              "Inputs": [
+                "User-defined spatial selection (polygon, lasso)"
+              ],
+              "Outputs": [
+                "Selected spatial locations for cascading network inference"
+              ],
+              "ReferenceCitation": "Section 6.4: Users can specify locations by drawing polygons in the geographic map or using a lasso tool in the projection view.",
+              "FeedsInto": [
+                2
+              ]
+            },
+            {
+              "GranularBlockName": "Brushing",
+              "ID": 11,
+              "PaperDescription": "Enables users to brush the temporal chart to filter cascades by time range, updating the cascading cards accordingly.",
+              "Inputs": [
+                "User brush interaction on folded temporal chart"
+              ],
+              "Outputs": [
+                "Filtered cascades within selected time intervals"
+              ],
+              "ReferenceCitation": "Section 6.4: Users can brush the temporal chart (Fig. 4 C4), and these brushed cascades (i.e., bars) are shown with cascading cards (Fig. 4 C2).",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Switch",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Uncertainty/Influence Toggle",
+              "ID": 12,
+              "PaperDescription": "Allows users to toggle between uncertainty and influence visualizations in the table-based view to switch perspectives during influence analysis.",
+              "Inputs": [
+                "User click interaction on row or column in table-based influence view"
+              ],
+              "Outputs": [
+                "Switched visualization mode for selected table cells"
+              ],
+              "ReferenceCitation": "Section 6.4: When a row is selected (e.g., the first row in Fig. 4 B) or a floating button of a column is clicked (e.g., e4 in Fig. 8 C), the involved cells will be switched to the influence visualizations.",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

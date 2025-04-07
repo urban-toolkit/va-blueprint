@@ -1,0 +1,253 @@
+{
+  "PaperTitle": "SensorAware: visual analysis of both static and mobile sensor information",
+  "Year": 2021,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Static Sensor",
+              "ID": 1,
+              "PaperDescription": "Loads spatial-temporal readings from static sensors, including radiation measurements with fixed positions.",
+              "Inputs": [
+                "Raw data from static sensors (location, time, measurement value)"
+              ],
+              "Outputs": [
+                "Structured static sensor dataset with spatial and temporal attributes"
+              ],
+              "ReferenceCitation": "Section 3.1 Data characteristics and challenge",
+              "FeedsInto": [
+                3,
+                4,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Mobile Sensor",
+              "ID": 2,
+              "PaperDescription": "Loads spatial-temporal readings from mobile sensors, including dynamic positions and measurements over time.",
+              "Inputs": [
+                "Raw data from mobile sensors (location, time, measurement value)"
+              ],
+              "Outputs": [
+                "Structured mobile sensor dataset with spatial and temporal attributes"
+              ],
+              "ReferenceCitation": "Section 3.1 Data characteristics and challenge",
+              "FeedsInto": [
+                3,
+                4,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Aggregation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatial Aggregation",
+              "ID": 3,
+              "PaperDescription": "Aggregates sensor readings within spatial blocks to compute mean, standard deviation, and count of measurements for each block. Supports resolution adjustment to balance detail and noise.",
+              "Inputs": [
+                "Static sensor data",
+                "Mobile sensor data"
+              ],
+              "Outputs": [
+                "Aggregated spatial statistics (mean, standard deviation, count) per spatial block"
+              ],
+              "ReferenceCitation": "Section 4.2 Spatial Measurement Map",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Aggregation",
+              "ID": 4,
+              "PaperDescription": "Aggregates sensor readings over time slices to compute mean, standard deviation, and sensor status indicators for each time interval.",
+              "Inputs": [
+                "Static sensor data",
+                "Mobile sensor data"
+              ],
+              "Outputs": [
+                "Aggregated temporal statistics (mean, standard deviation, sensor status) per time slice"
+              ],
+              "ReferenceCitation": "Section 4.3 Pixel-based Timeline",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Detection",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Sensor Measurement Pattern Detection",
+              "ID": 11,
+              "PaperDescription": "Performs detection of temporal and spatial patterns from raw sensor readings, such as jumps, constant values, or missing data, and represents them through color-coded background channels.",
+              "Inputs": [
+                "Raw sensor readings from static and mobile sensors"
+              ],
+              "Outputs": [
+                "Pattern labels for visualization (e.g., Normal, Jump, Missing)"
+              ],
+              "ReferenceCitation": "Section 4.3 Pixel-based Timeline & Fig. 5",
+              "FeedsInto": [
+                6,
+                7,
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 5,
+              "PaperDescription": "Displays spatial distributions of aggregated sensor measurements on a 2D map, using color and size to encode data attributes like mean, standard deviation, and count. Resolution is user-adjustable.",
+              "Inputs": [
+                "Aggregated spatial statistics"
+              ],
+              "Outputs": [
+                "Rendered 2D spatial map showing sensor measurement distributions"
+              ],
+              "ReferenceCitation": "Section 4.2 Spatial Measurement Map",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Pixel-based Timeline",
+              "ID": 6,
+              "PaperDescription": "Displays temporal evolution of sensor readings as a pixel-based timeline, where each pixel encodes aggregated measurements, uncertainty (via size), and sensor patterns (via background color).",
+              "Inputs": [
+                "Aggregated temporal statistics",
+                "Pattern labels"
+              ],
+              "Outputs": [
+                "Pixel-based timeline visualization showing temporal sensor measurement patterns"
+              ],
+              "ReferenceCitation": "Section 4.3 Pixel-based Timeline",
+              "FeedsInto": [
+                8,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 7,
+              "PaperDescription": "Displays detailed time series of raw sensor measurements for selected sensors or areas. Visual encodings support outlier management via quantile limits and highlight sensor movement.",
+              "Inputs": [
+                "Raw sensor data (filtered by sensor or area selection)",
+                "Pattern labels"
+              ],
+              "Outputs": [
+                "Line chart showing raw sensor measurement trends over time"
+              ],
+              "ReferenceCitation": "Section 4.4 Sensor Reading Plot & Fig. 7",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 12,
+              "PaperDescription": "Displays detailed raw sensor measurements as a scatter plot, used to show noisy data points, manage occlusion, and highlight out-of-range values via point size.",
+              "Inputs": [
+                "Raw sensor data (filtered by sensor or area selection)",
+                "Pattern labels"
+              ],
+              "Outputs": [
+                "Scatter plot visualization of raw sensor readings"
+              ],
+              "ReferenceCitation": "Section 4.4 Sensor Reading Plot & Fig. 7, Fig. 8",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 8,
+              "PaperDescription": "Allows users to select a time range in the Pixel-based Timeline, filtering the data displayed in both the Spatial Measurement Map and Sensor Reading Plot.",
+              "Inputs": [
+                "User selection on Pixel-based Timeline"
+              ],
+              "Outputs": [
+                "Filtered sensor data for selected time range"
+              ],
+              "ReferenceCitation": "Section 4.5.1 Time range control",
+              "FeedsInto": [
+                5,
+                7,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 9,
+              "PaperDescription": "Allows users to select a spatial region on the Spatial Measurement Map, filtering sensor readings within the region for detailed analysis in Sensor Reading Plot.",
+              "Inputs": [
+                "User selection on Spatial Measurement Map"
+              ],
+              "Outputs": [
+                "Filtered sensor data for selected area"
+              ],
+              "ReferenceCitation": "Section 4.5.3 Measurement query",
+              "FeedsInto": [
+                7,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Sensor Trajectory Exploration",
+              "ID": 10,
+              "PaperDescription": "Displays the trajectory of a mobile sensor on the Spatial Measurement Map when it is selected in the Pixel-based Timeline. Movement status is also shown in the Pixel-based Timeline.",
+              "Inputs": [
+                "User selection on Pixel-based Timeline",
+                "Mobile sensor data"
+              ],
+              "Outputs": [
+                "Sensor trajectory visualization on Spatial Measurement Map"
+              ],
+              "ReferenceCitation": "Section 4.5.2 Location query",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,402 @@
+{
+  "PaperTitle": "MobiSeg: Interactive Region Segmentation Using Heterogeneous Mobility Data",
+  "Year": 2017,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Voronoi Cells",
+              "ID": 1,
+              "PaperDescription": "Partitions the urban area into local districts using Voronoi tessellation based on telco cell stations.",
+              "Inputs": [
+                "Telco cell station locations"
+              ],
+              "Outputs": [
+                "Voronoi cells representing local districts"
+              ],
+              "ReferenceCitation": "Section 4.1 Data Fusion: Therefore, a natural approach is to cluster cell stations by spatial proximity, and use the centers of groups as seed points to compute a voronoi tessellation of the urban area.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 2,
+              "PaperDescription": "Loads GPS trajectories of taxis including time, position, and status (occupied/vacant).",
+              "Inputs": [
+                "Raw taxi GPS records"
+              ],
+              "Outputs": [
+                "Taxi-in and Taxi-out data for each local district"
+              ],
+              "ReferenceCitation": "Section 4.1 Data Fusion: Taxi data consist of a series of GPS records of over 10,000 taxis in Shanghai, China, with around 80 million records per day.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Metro Passenger RFID Card",
+              "ID": 3,
+              "PaperDescription": "Loads metro RFID card data capturing passenger tap in/out actions at metro stations.",
+              "Inputs": [
+                "RFID metro passenger data"
+              ],
+              "Outputs": [
+                "Metro-in and Metro-out data for each local district"
+              ],
+              "ReferenceCitation": "Section 4.1 Data Fusion: Metro passenger RFID card data (metro data for short) record passengers’ journeys in the Shanghai metro system.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Telco",
+              "ID": 4,
+              "PaperDescription": "Loads telco data recording data exchanges between mobile phones and cell stations.",
+              "Inputs": [
+                "Telco data records (user ID, timestamp, cell station ID, location)"
+              ],
+              "Outputs": [
+                "Telco-stay data representing the number of people staying in each local district"
+              ],
+              "ReferenceCitation": "Section 4.1 Data Fusion: Telco data contain all data exchange records between each mobile phone and cell station when mobile phone users make calls, send messages or connect to the Internet.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Feature Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Mobility Features with KDE",
+              "ID": 5,
+              "PaperDescription": "Extracts five mobility features (Taxi-in/out, Metro-in/out, Telco-stay) for each local district and applies Kernel Density Estimation (KDE) to smooth them.",
+              "Inputs": [
+                "Taxi-in/out data",
+                "Metro-in/out data",
+                "Telco-stay data"
+              ],
+              "Outputs": [
+                "Smoothed mobility feature vectors over time"
+              ],
+              "ReferenceCitation": "Section 4.2 Feature Extraction: We first calculate five raw features to capture people's activities within each local district during a given time interval... Then we employ kernel density estimation (KDE) to smooth the features.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Detection",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Peak Detection",
+              "ID": 6,
+              "PaperDescription": "Detects significant peaks in the mobility feature time series using variance and mean changes with a sliding window.",
+              "Inputs": [
+                "Smoothed mobility feature vectors over time"
+              ],
+              "Outputs": [
+                "Time series peaks representing potential activity events"
+              ],
+              "ReferenceCitation": "Section 4.3 Activity Event Detection: Among many peak detection techniques, we adopt the algorithm introduced in [20]... A sliding time window is used to calculate the change of data variance and mean over time, which helps to reveal peaks in the time series.",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "TF-IDF Ranking",
+              "ID": 7,
+              "PaperDescription": "Ranks detected peaks using TF-IDF to identify representative activity events for each local district.",
+              "Inputs": [
+                "Time series peaks",
+                "Dynamic Time Warping (DTW) clustering"
+              ],
+              "Outputs": [
+                "Ranked representative activity events per district"
+              ],
+              "ReferenceCitation": "Section 4.3 Activity Event Detection: We employ 'Term Frequency - Inverse Document Frequency' (TF-IDF) [26] that is commonly used in text analysis, given the similarity of the problem to be solved.",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Pattern Analysis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Non-negative Matrix Factorization (NMF)",
+              "ID": 8,
+              "PaperDescription": "Applies NMF to extract latent activity patterns from the activity event matrix of all local districts.",
+              "Inputs": [
+                "Matrix of ranked activity events per district"
+              ],
+              "Outputs": [
+                "W and H matrices representing latent activity patterns and their weights"
+              ],
+              "ReferenceCitation": "Section 4.4 Latent Activity Pattern Analysis: We employ NMF to detect latent activity patterns due to its simplicity and high efficiency compared to traditional topic models such as LDA.",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Metric Learning-based",
+              "ID": 9,
+              "PaperDescription": "Clusters local districts based on their similarity in latent activity patterns using a learned distance metric and supports iterative refinement via user interaction.",
+              "Inputs": [
+                "W matrix (local district activity pattern weights)"
+              ],
+              "Outputs": [
+                "Clusters of local districts grouped into activity regions"
+              ],
+              "ReferenceCitation": "Section 4.5 Local District Clustering: Based on W, we cluster local districts sharing similar activity patterns to form activity regions via metric learning [17].",
+              "FeedsInto": [
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 10,
+              "PaperDescription": "Displays the urban area and partitions local districts with Voronoi cells. Supports spatial filtering and selection.",
+              "Inputs": [
+                "Voronoi cells (local districts)",
+                "Activity region clusters"
+              ],
+              "Outputs": [
+                "2D map view with local districts and selected activity regions"
+              ],
+              "ReferenceCitation": "Section 5.2.1 Global Exploration and Filtering: It combines a map and a timeline plot together to support an efficient exploration and filtering of data from both spatial and temporal domains.",
+              "FeedsInto": [
+                18,
+                19,
+                21
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 11,
+              "PaperDescription": "Adds a heatmap layer showing spatial distribution of activity events over the 2D map.",
+              "Inputs": [
+                "Activity events data"
+              ],
+              "Outputs": [
+                "Heatmap overlay on 2D map"
+              ],
+              "ReferenceCitation": "Section 5.2.1 Global Exploration and Filtering: Moreover, users can further activate a heatmap layer which shows the spatial distribution of activity events.",
+              "FeedsInto": [
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Centroid Voronoi Tessellation",
+              "ID": 12,
+              "PaperDescription": "Visualizes local districts as equally-sized Voronoi cells adjusted by centroid tessellation for comparison in the Inspection View.",
+              "Inputs": [
+                "Voronoi cells",
+                "Activity region clustering results"
+              ],
+              "Outputs": [
+                "Equal-sized tessellated map for visual analysis"
+              ],
+              "ReferenceCitation": "Section 5.2.2 Inspecting Segmentation Result: We employ the centroid voronoi tessellation to produce voronoi cells with an approximately equal size, so that activity glyphs can be visualized at the same scale.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Stacked Elliptical Glyphs",
+              "ID": 13,
+              "PaperDescription": "Visualizes activity patterns of each local district in the Inspection View, using stacked elliptical glyphs to summarize features like taxi-in/out, metro-in/out, and telco-stay.",
+              "Inputs": [
+                "Activity pattern feature vectors for each district"
+              ],
+              "Outputs": [
+                "Elliptical glyphs representing district activity patterns"
+              ],
+              "ReferenceCitation": "Section 5.2.2 Inspecting Segmentation Result: A stacked elliptical glyph embedded in each cell summarizes people's activities of five types, which forms a texture and enables a fast comparison across different local districts.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Circular Horizon Graph",
+              "ID": 14,
+              "PaperDescription": "Visualizes the feature vector time series for local districts to support detailed analysis and comparisons of activity events.",
+              "Inputs": [
+                "Feature vector time series of a local district"
+              ],
+              "Outputs": [
+                "Circular horizon graph showing temporal activity variations"
+              ],
+              "ReferenceCitation": "Section 5.2.2 Inspecting Segmentation Result: The time series of each feature is visualized as a horizon-graph along the circular time axis, illustrating changes of feature values over time in a clock-wise order.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Event Glyph",
+              "ID": 15,
+              "PaperDescription": "Represents activity events of latent activity patterns in the Activity Pattern View using trapezoid metaphors to show peak significance, skewness, and occurrence probability.",
+              "Inputs": [
+                "Extracted activity events from latent activity patterns"
+              ],
+              "Outputs": [
+                "Event glyph matrix displaying latent activity patterns"
+              ],
+              "ReferenceCitation": "Section 5.2.3 Interpreting Latent Activity Pattern: We visualize each activity event based on a trapezoid-metaphor (Fig. 6) to facilitate an easier comparison by encoding statistical information of the corresponding peak cluster on an event glyph.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Timeline Bar Chart",
+              "ID": 16,
+              "PaperDescription": "Displays the distribution of activity events over time in the Global Map View, using a stacked bar chart.",
+              "Inputs": [
+                "Activity events data by time"
+              ],
+              "Outputs": [
+                "Stacked bar chart showing activity events distribution by time interval"
+              ],
+              "ReferenceCitation": "Section 5.2.1 Global Exploration and Filtering: In the timeline view, a stacked bar chart is employed to visually summarize the varying number of activity events of different types.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Snapshot Clipboard",
+              "ID": 17,
+              "PaperDescription": "Stores snapshots of segmentation results for comparison, displaying them in a clipboard view for easy browsing.",
+              "Inputs": [
+                "Segmentation result snapshot"
+              ],
+              "Outputs": [
+                "Thumbnail previews for visual comparison"
+              ],
+              "ReferenceCitation": "Section 5.3 Interactions: A clipboard is shown on the right side to record snapshots. By hovering over a clipboard box, the snapshot will be magnified.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 18,
+              "PaperDescription": "Allows users to filter the dataset by selecting specific days and time intervals on the timeline view for focused analysis.",
+              "Inputs": [
+                "User time range selection"
+              ],
+              "Outputs": [
+                "Filtered dataset loaded into visual components"
+              ],
+              "ReferenceCitation": "Section 5.2.1 Global Exploration and Filtering: Our system also allows users to make a linear time selection of days (e.g., Monday).",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 19,
+              "PaperDescription": "Allows users to brush-select a spatial region on the map to filter and explore the corresponding local districts.",
+              "Inputs": [
+                "User-defined spatial brush selection"
+              ],
+              "Outputs": [
+                "Subset of districts highlighted and loaded into subsequent views"
+              ],
+              "ReferenceCitation": "Section 5.2.1 Global Exploration and Filtering: Based on the information provided, users can brush to choose an area on the map, then the corresponding local districts will be highlighted and corresponding data will be loaded for further exploration.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Zooming and Panning",
+              "ID": 21,
+              "PaperDescription": "Supports zooming and panning in the Global Map View, Inspection View, and Activity Pattern View to explore data at different scales.",
+              "Inputs": [
+                "User zoom and pan gestures"
+              ],
+              "Outputs": [
+                "Updated focus and scale in views"
+              ],
+              "ReferenceCitation": "Section 5.3 Interactions: Zooming and panning are supported in the Global Map View, Inspection View and Activity Pattern View to explore a large set of data items.",
+              "FeedsInto": [
+                10
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Configuration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Region Boundary Adjustment",
+              "ID": 20,
+              "PaperDescription": "Enables users to merge or split local districts by editing boundaries in the Inspection View, refining segmentation results via metric learning updates.",
+              "Inputs": [
+                "User boundary edits",
+                "Initial clustering results"
+              ],
+              "Outputs": [
+                "Updated clustering and activity regions via metric learning"
+              ],
+              "ReferenceCitation": "Section 5.2.2 Inspecting Segmentation Result: Their revisions produce a set of constraints S and D which are then used in the metric learning procedure described above to refine the distance metric iteratively.",
+              "FeedsInto": [
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Feature and Parameter Configuration",
+              "ID": 22,
+              "PaperDescription": "Allows users to configure features, parameters, and visualization design choices for region segmentation and analysis.",
+              "Inputs": [
+                "User configuration inputs (features, parameters, visualization settings)"
+              ],
+              "Outputs": [
+                "Updated analysis results and visualizations"
+              ],
+              "ReferenceCitation": "Section 5.3 Interactions: Users can configure our system to choose features as well as parameters for region segmentation, and switch between alternative designs to support different analytical tasks.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,377 @@
+{
+  "PaperTitle": "TriPlan: an interactive visual analytics approach for better tourism route planning",
+  "Year": 2023,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Travel Routes",
+              "ID": 1,
+              "PaperDescription": "Collects travel route data from online sources.",
+              "Inputs": [
+                "Travel routes from Qyer.com",
+                "Travel routes from Mafengwo.com"
+              ],
+              "Outputs": [
+                "Structured route database for analysis and visualization"
+              ],
+              "ReferenceCitation": "Section 3.2.1 We crawl 30,000 domestic city-level routes and 70,000 POI-level routes, including attributes such as locations, planned travel duration, time spent, page views, and the number of times copied.",
+              "FeedsInto": [
+                4,
+                5,
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "UGC",
+              "ID": 2,
+              "PaperDescription": "Collects user-generated reviews for sentiment analysis.",
+              "Inputs": [
+                "User comments from travel forums"
+              ],
+              "Outputs": [
+                "Structured sentiment dataset"
+              ],
+              "ReferenceCitation": "Section 3.2.1 We crawl about 1.45 million short comment texts in the unit of POI, including attributes such as POI information, comment content, and evaluation ratings.",
+              "FeedsInto": [
+                5,
+                7,
+                15,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Geographic Information",
+              "ID": 3,
+              "PaperDescription": "Integrates spatial metadata for route and POI mapping.",
+              "Inputs": [
+                "Geographic metadata from Amap API"
+              ],
+              "Outputs": [
+                "Location-based reference system"
+              ],
+              "ReferenceCitation": "Section 3.2.1 We collect the geographic information of roughly 2,000 cities (counties) and 30,000 POIs.",
+              "FeedsInto": [
+                8,
+                10,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Frequent Route Patterns",
+              "ID": 4,
+              "PaperDescription": "Identifies popular travel route sequences using pattern mining.",
+              "Inputs": [
+                "Route database",
+                "Thematic classifications"
+              ],
+              "Outputs": [
+                "Frequent route patterns"
+              ],
+              "ReferenceCitation": "Section 4.2.1 We use a proposed graph-based substructure pattern mining algorithm called gSpan to mine frequent route patterns.",
+              "FeedsInto": [
+                9,
+                10,
+                11,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Classification",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Thematic Route Categorization",
+              "ID": 5,
+              "PaperDescription": "Categorizes tourism routes into thematic clusters.",
+              "Inputs": [
+                "UGC keywords",
+                "Route metadata"
+              ],
+              "Outputs": [
+                "Thematic classification of routes"
+              ],
+              "ReferenceCitation": "Section 3.2.2 We extract ten themes and their corresponding keywords using the latent Dirichlet allocation (LDA) algorithm.",
+              "FeedsInto": [
+                6,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Dimension Reduction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "High-dimensional Route Feature Vectors",
+              "ID": 6,
+              "PaperDescription": "Reduces high-dimensional route attributes for visualization.",
+              "Inputs": [
+                "Thematic probability vectors"
+              ],
+              "Outputs": [
+                "Low-dimensional representation for visualization"
+              ],
+              "ReferenceCitation": "Section 4.2.1 The route projection view uses the t-SNE method to reduce the dimensionality of the routes according to the route theme.",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Indicator Calculation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Visit Popularity + Tourist Ratings",
+              "ID": 7,
+              "PaperDescription": "Computes destination attractiveness based on visit frequency and sentiment analysis.",
+              "Inputs": [
+                "POI visit data",
+                "User reviews",
+                "Online ratings"
+              ],
+              "Outputs": [
+                "Popularity scores",
+                "Rating scores"
+              ],
+              "ReferenceCitation": "Section 3.2.3 The final tourist rating of each city (POI) is the average of the online rating and comment rating.",
+              "FeedsInto": [
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Optimization",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Automated Route Optimization",
+              "ID": 8,
+              "PaperDescription": "Reorders travel plans to minimize travel time.",
+              "Inputs": [
+                "Route data",
+                "POI locations",
+                "constraints"
+              ],
+              "Outputs": [
+                "Optimized travel itinerary"
+              ],
+              "ReferenceCitation": "Section 5.1.2 By algorithm, the itinerary was divided into three days automatically, and the daily scheduling duration was limited to a reasonable range.",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 9,
+              "PaperDescription": "Displays routes in a scatter plot using t-SNE clustering.",
+              "Inputs": [
+                "High-dimensional route features"
+              ],
+              "Outputs": [
+                "2D scatter plot, color-coded by theme"
+              ],
+              "ReferenceCitation": "Section 4.2.1 A point represents a route, and each route has ten theme probability values. The color encodes the highest probability theme.",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Donut Chart",
+              "ID": 12,
+              "PaperDescription": "Displays route theme distributions using a donut chart.",
+              "Inputs": [
+                "Route clusters",
+                "Theme proportions"
+              ],
+              "Outputs": [
+                "Thematic distribution of routes"
+              ],
+              "ReferenceCitation": "Section 4.2.2 The middle donut chart shows which themes of routes the frequent route pattern is mined from.",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Annular Chart",
+              "ID": 13,
+              "PaperDescription": "Represents route popularity and ratings using annular charts.",
+              "Inputs": [
+                "Route popularity data",
+                "Rating data"
+              ],
+              "Outputs": [
+                "Comparative visualization of route characteristics"
+              ],
+              "ReferenceCitation": "Section 4.2.2 The outermost annular area chart shows the popularity and rating index information.",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Stacked Column Chart",
+              "ID": 14,
+              "PaperDescription": "Represents trip schedules in a structured format.",
+              "Inputs": [
+                "User-selected itinerary"
+              ],
+              "Outputs": [
+                "Hierarchical stacked column visualization of travel plans"
+              ],
+              "ReferenceCitation": "Section 4.2.3 We designed a two-layer stacked column chart with a vertical layout, displaying the itinerary's structure clearly.",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Flowchart",
+              "ID": 15,
+              "PaperDescription": "Displays changes in visitor sentiment over time.",
+              "Inputs": [
+                "User-generated review sentiments"
+              ],
+              "Outputs": [
+                "Flowchart showing sentiment distribution trends"
+              ],
+              "ReferenceCitation": "Section 4.2.4 The time-series affection view uses a time-series flowchart to express variations in affective states of visitor comments over time.",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Word Cloud",
+              "ID": 16,
+              "PaperDescription": "Extracts frequent words from user comments, encoding sentiment polarity.",
+              "Inputs": [
+                "User reviews",
+                "Extracted keywords"
+              ],
+              "Outputs": [
+                "Word cloud encoding sentiment polarity"
+              ],
+              "ReferenceCitation": "Section 4.2.4 Keywords are extracted from the UGC comments on the corresponding destination. Its color encodes the corresponding type of sentiment, and size indicates its frequency.",
+              "FeedsInto": [
+                17
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Map",
+              "ID": 10,
+              "PaperDescription": "Displays frequent travel routes on a geographic map.",
+              "Inputs": [
+                "Extracted frequent travel routes"
+              ],
+              "Outputs": [
+                "Map-based visualization of popular routes"
+              ],
+              "ReferenceCitation": "Section 4.2.2 The spatial map occupies the largest visual area, making it convenient for users to observe the geographic distribution and its commercial environment nearby.",
+              "FeedsInto": [
+                17,
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Route)",
+              "ID": 11,
+              "PaperDescription": "Overlays route data on a map for deeper insights.",
+              "Inputs": [
+                "Route metadata"
+              ],
+              "Outputs": [
+                "Enhanced map visualization with overlays"
+              ],
+              "ReferenceCitation": "Section 4.2.2 The frequent route analysis aims to summarize and overview statistical information such as geographic mode, theme distribution, popularity, and ratings.",
+              "FeedsInto": [
+                10,
+                17,
+                18
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Route Selection",
+              "ID": 17,
+              "PaperDescription": "Allows users to filter and select routes based on preferences.",
+              "Inputs": [
+                "User-defined filters (location, theme, duration)"
+              ],
+              "Outputs": [
+                "Subset of relevant routes"
+              ],
+              "ReferenceCitation": "Section 4.2.1 Users searched for Chengdu and Chongqing as the spatial constraints and selected the default time range as the temporal constraints.",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                7,
+                8,
+                18
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Modification",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Route Editing",
+              "ID": 18,
+              "PaperDescription": "Enables users to manually adjust their itineraries.",
+              "Inputs": [
+                "User interactions (dragging, reordering, adding/removing POIs)"
+              ],
+              "Outputs": [
+                "Adjusted travel plan"
+              ],
+              "ReferenceCitation": "Section 4.2.3 Users also want to adjust the plan intuitively, such as deleting a destination or adjusting the play duration and sequence.",
+              "FeedsInto": [
+                8,
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

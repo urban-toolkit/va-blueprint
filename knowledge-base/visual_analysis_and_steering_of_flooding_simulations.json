@@ -1,0 +1,310 @@
+{
+  "PaperTitle": "Visual Analysis and Steering of Flooding Simulations",
+  "Year": 2013,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Geometries",
+              "ID": 1,
+              "PaperDescription": "Loads 3D geometries of buildings, barriers, cars, and terrain for flood simulation visualizations.",
+              "Inputs": [
+                "3D building models",
+                "Terrain meshes",
+                "Barrier geometries",
+                "Car models"
+              ],
+              "Outputs": [
+                "Scene geometry for simulation and visualization"
+              ],
+              "ReferenceCitation": "Section 3.1: The simulation states are shown as frames—rectangles that are the building blocks of tracks. By selecting a frame, the simulation data are forwarded to views, which render and display a representation of the simulation state.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Aggregation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Object Aggregation (Buildings)",
+              "ID": 2,
+              "PaperDescription": "Aggregates damage metrics for buildings across multiple simulation states to display worst-case scenarios.",
+              "Inputs": [
+                "Building damage data from simulation states"
+              ],
+              "Outputs": [
+                "Aggregated damage values per building"
+              ],
+              "ReferenceCitation": "Section 3.1: The maximum operator is applied to them, and the aggregated value is again mapped to the building color, as shown in Fig. 4.",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Field Aggregation (Fluid)",
+              "ID": 3,
+              "PaperDescription": "Aggregates fluid properties like height, velocity, and pressure across ensemble simulations using operators like max and standard deviation.",
+              "Inputs": [
+                "Fluid field data from multiple simulation states"
+              ],
+              "Outputs": [
+                "Aggregated 2D/3D grids for fluid properties"
+              ],
+              "ReferenceCitation": "Section 3.2: The height of the fluid is aggregated with the maximum operator, producing an aggregated rendering that uses one of the input states as context. The color red signifies the highest water level reached by the river, while green signifies the lowest significant level of water. (Fig. 5)",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Instance Aggregation (Bags and Cars)",
+              "ID": 4,
+              "PaperDescription": "Aggregates the positions and movements of individual sandbags and cars to visualize their stability and movement patterns across simulations.",
+              "Inputs": [
+                "Bag and car instances from multiple simulation states"
+              ],
+              "Outputs": [
+                "Aggregated instance representations with movement encoded in color and transparency"
+              ],
+              "ReferenceCitation": "Section 3.3: As a result, the bags are displayed with a slight ghosting effect, showing their movement while the color encodes the aggregated value. The effect can be seen in Fig. 6.",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Caching",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Incremental Data Caching",
+              "ID": 15,
+              "PaperDescription": "Manages incremental updates and caching of simulation state data to speed up aggregation recalculation when parameters change.",
+              "Inputs": [
+                "Simulation states",
+                "User interaction (filtering, steering)"
+              ],
+              "Outputs": [
+                "Cached intermediate results reused in aggregation phases"
+              ],
+              "ReferenceCitation": "Section 7: All of the intermediate results such as simulation states or extracted information are stored. If possible, these results are reused.",
+              "FeedsInto": [
+                2,
+                3,
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 6,
+              "PaperDescription": "Displays 3D visualization of the flooding scenario, including buildings, barriers, cars, and fluid with aggregated renderings.",
+              "Inputs": [
+                "Aggregated building damage data",
+                "Aggregated field data",
+                "Aggregated instances of barriers and cars",
+                "3D geometries"
+              ],
+              "Outputs": [
+                "3D scene with aggregated visualization overlays"
+              ],
+              "ReferenceCitation": "Section 3.1: Instead, we visualize aggregations within the existing 3D view. Fig. 3 illustrates the phases of the aggregated rendering process, including embedding into 3D views.",
+              "FeedsInto": [
+                12,
+                5,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Aggregate Embedding",
+              "ID": 14,
+              "PaperDescription": "Combines aggregated simulation data with the context of a selected simulation state to produce a comprehensive rendering for 3D visualization.",
+              "Inputs": [
+                "Aggregated object/field/instance data",
+                "Selected context simulation state"
+              ],
+              "Outputs": [
+                "Combined rendering for display in the 3D scene"
+              ],
+              "ReferenceCitation": "Section 3.1: The final aggregate rendering is created as a combination of the state rendering and the aggregate representations.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 7,
+              "PaperDescription": "Displays temporal trends such as car movement over time or building damage progression in simulation states.",
+              "Inputs": [
+                "Selected simulation data (time series of car movements or damages)"
+              ],
+              "Outputs": [
+                "Line chart of temporal simulation data"
+              ],
+              "ReferenceCitation": "Section 5.1: The line graph (Fig. 9a) embeds additional temporal and input parameter-space information by drawing different parameters as different time-dependent lines.",
+              "FeedsInto": [
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Histogram",
+              "ID": 8,
+              "PaperDescription": "Displays distributions of variables such as barrier stability across simulation states for comparative analysis.",
+              "Inputs": [
+                "Selected simulation data (e.g., barrier stability values)"
+              ],
+              "Outputs": [
+                "Histogram visualizing value distributions"
+              ],
+              "ReferenceCitation": "Section 5.1: The histogram (Fig. 9b) shows distributions for comparative analysis of variables across states.",
+              "FeedsInto": [
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 9,
+              "PaperDescription": "Displays relationships between two variables, supporting brushing and highlighting of simulation states.",
+              "Inputs": [
+                "Selected simulation data (e.g., car movement vs. barrier failure)"
+              ],
+              "Outputs": [
+                "Scatter plot visualization with brushing"
+              ],
+              "ReferenceCitation": "Section 5.1: Two dimensions can be handled by a scatterplot (Fig. 9c). Both the scatterplot and parallel coordinates support missing values.",
+              "FeedsInto": [
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Parallel Coordinates Plot",
+              "ID": 10,
+              "PaperDescription": "Displays multi-dimensional simulation data for finding correlations between variables.",
+              "Inputs": [
+                "Selected multi-dimensional simulation data"
+              ],
+              "Outputs": [
+                "Parallel coordinates visualization"
+              ],
+              "ReferenceCitation": "Section 5.1: For cases where more dimensions should be shown, a parallel coordinates view (Fig. 9d) is available.",
+              "FeedsInto": [
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "World Lines",
+              "ID": 11,
+              "PaperDescription": "Displays simulation runs as branching tracks over time, enabling interactive steering and exploration of ensemble simulations.",
+              "Inputs": [
+                "Simulation run data",
+                "User interactions (filtering, steering)"
+              ],
+              "Outputs": [
+                "World Lines visualization of simulation run tree"
+              ],
+              "ReferenceCitation": "Section 1: The steering is done using World Lines. Fig. 2 shows tracks and states as part of World Lines exploration.",
+              "FeedsInto": [
+                12,
+                13
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Brushing and Linking",
+              "ID": 12,
+              "PaperDescription": "Supports brushing in visualization views to filter simulation states and update aggregates in real-time.",
+              "Inputs": [
+                "User brush actions in visualization views (scatter plot, parallel coordinates)"
+              ],
+              "Outputs": [
+                "Filtered simulation states for aggregation and visualization updates"
+              ],
+              "ReferenceCitation": "Section 5.2: World Lines maintains two brushes—the aggregation brush of all the states used in the aggregation, and the brush of filtered states.",
+              "FeedsInto": [
+                2,
+                3,
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Selection",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Point of Interest Selection",
+              "ID": 5,
+              "PaperDescription": "Enables selection of points of interest (buildings, spatial positions, objects) in aggregated renderings for detailed analysis.",
+              "Inputs": [
+                "User selection (click on aggregated rendering)"
+              ],
+              "Outputs": [
+                "Selected simulation data for analysis in info visualization views"
+              ],
+              "ReferenceCitation": "Section 4: By clicking on the aggregated rendering, the user can specify points of interest. In the rendering, these are represented as floating icons, visible in Fig. 7.",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Simulation Steering (World Lines)",
+              "ID": 13,
+              "PaperDescription": "Enables dynamic exploration of parameter space by interactively spawning new simulation runs from any state in World Lines.",
+              "Inputs": [
+                "User-defined new parameters",
+                "Existing simulation states"
+              ],
+              "Outputs": [
+                "New simulation runs added to the World Lines tree"
+              ],
+              "ReferenceCitation": "Section 1: The steering is done using World Lines. Section 5.2: At any point, new parameters can be introduced, and additional data can be generated on the fly.",
+              "FeedsInto": [
+                2,
+                3,
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

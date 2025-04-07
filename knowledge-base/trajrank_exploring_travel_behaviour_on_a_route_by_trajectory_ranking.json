@@ -1,0 +1,305 @@
+{
+  "PaperTitle": "TrajRank: Exploring Travel Behaviour on a Route by Trajectory Ranking",
+  "Year": 2015,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 1,
+              "PaperDescription": "Loads GPS trajectory data of 28,519 taxis recorded in Beijing, with preprocessing including map-matching to the road network and filtering to only include trajectories with passengers.",
+              "Inputs": [
+                "Raw taxi GPS trajectories",
+                "Beijing road network data"
+              ],
+              "Outputs": [
+                "Processed trajectories matched to the road network"
+              ],
+              "ReferenceCitation": "Section 3.2 Data: Following the preprocessing steps in an existing paper [28], we clean both GPS dataset and road network dataset, and perform map matching to map the trajectories to the road network.",
+              "FeedsInto": [
+                2,
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filtering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory Filtering",
+              "ID": 2,
+              "PaperDescription": "Filters trajectories by spatial-temporal conditions such as origin and destination defined via interactive lenses and temporal filtering by days of week and time of day.",
+              "Inputs": [
+                "Processed taxi trajectories",
+                "User-defined spatial lenses and temporal filters"
+              ],
+              "Outputs": [
+                "Filtered trajectories passing a user-defined route"
+              ],
+              "ReferenceCitation": "Section 5.1 Trajectory Filtering: Similar to TrajectoryLenses [18], users can dynamically extract trajectories by dragging circular shaped lenses.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Segmentation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Route Segmentation",
+              "ID": 3,
+              "PaperDescription": "Segments the most frequently passed route into road segments, allowing users to adjust the number and boundaries of segments interactively.",
+              "Inputs": [
+                "Filtered trajectories on the selected route"
+              ],
+              "Outputs": [
+                "Segmented route divided into road segments"
+              ],
+              "ReferenceCitation": "Section 5.2 Route Segmentation: Route segmentation can be fine tuned by users, as Figure 8 shows.",
+              "FeedsInto": [
+                4,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Travel Time Clustering",
+              "ID": 4,
+              "PaperDescription": "Clusters trajectories on each road segment based on their travel times, using hierarchical clustering with a distance threshold Dmin.",
+              "Inputs": [
+                "Segmented route and travel times of trajectories"
+              ],
+              "Outputs": [
+                "Clustered trajectory groups per road segment"
+              ],
+              "ReferenceCitation": "Section 4.1 Ranking: We use a hierarchical clustering algorithm [12, Chapter 14.3.12]. Such an algorithm requires a distance threshold Dmin.",
+              "FeedsInto": [
+                5,
+                10,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Ranking",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory Ranking Score Computation",
+              "ID": 5,
+              "PaperDescription": "Calculates an overall ranking score for each trajectory based on its cluster memberships across all road segments, weighted by the interquartile range (IQR).",
+              "Inputs": [
+                "Clustered trajectory groups and travel times"
+              ],
+              "Outputs": [
+                "Ranking scores for each trajectory"
+              ],
+              "ReferenceCitation": "Section 4.1 Ranking: We further propose a score S to evaluate the overall ranking of trajectory xi.",
+              "FeedsInto": [
+                7,
+                8,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 6,
+              "PaperDescription": "Displays a 2D map with the segmented route and road segments, where bands on segments encode travel time statistics: inner blue band represents median travel time, outer gray band represents IQR.",
+              "Inputs": [
+                "Segmented route data",
+                "Travel time statistics"
+              ],
+              "Outputs": [
+                "2D map with statistical overlays on routes"
+              ],
+              "ReferenceCitation": "Section 4.4 Modified Box-plot View: Additionally, as Figure 1E shows, we also encode the same information on the map. The median travel time corresponds to the width of inner blue band, and IQR corresponds to the width of outer gray band.",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Trajectories)",
+              "ID": 7,
+              "PaperDescription": "Overlays individual or grouped trajectories on the 2D map to provide spatial context and support interactive filtering and animation playback of selected trajectories.",
+              "Inputs": [
+                "Filtered trajectories",
+                "User selection (brushing)"
+              ],
+              "Outputs": [
+                "Trajectories drawn on 2D map, updated by user interaction"
+              ],
+              "ReferenceCitation": "Section 5.3 Brushing and Linking: Besides, in the spatial view, users can play an animation to recover the movement of selected taxi trajectories, with start time aligned together.",
+              "FeedsInto": [
+                6,
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Parallel Coordinates Plot",
+              "ID": 8,
+              "PaperDescription": "Displays trajectory ranking over road segments as polylines on parallel axes, where trajectory groups are merged into bands to reduce clutter and emphasize ranking changes.",
+              "Inputs": [
+                "Trajectory ranking scores",
+                "Clustered groups per segment"
+              ],
+              "Outputs": [
+                "Ranking diagram showing spatial variation of travel time"
+              ],
+              "ReferenceCitation": "Section 4.2 Ranking Diagram: Ranking diagram visualizes trajectories' rankings over road segments. Specifically, road segments are represented as axes, trajectories by polylines with vertices on axes.",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Histogram (Temporal Distribution)",
+              "ID": 9,
+              "PaperDescription": "Displays the temporal distribution of trajectories over a day in a histogram, supporting different granularities and weekday/weekend comparison.",
+              "Inputs": [
+                "Trajectory occurrence times",
+                "Trajectory groups"
+              ],
+              "Outputs": [
+                "Temporal distribution histograms showing group frequencies"
+              ],
+              "ReferenceCitation": "Section 4.3 Occurrence Temporal Distribution View: The occurrence temporal distribution view visualizes the travel behaviour with respect to trips' occurrence time.",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Box Plot",
+              "ID": 10,
+              "PaperDescription": "Displays box-plots of travel time distribution per road segment, showing median, IQR, and jittered outliers to summarize travel time statistics.",
+              "Inputs": [
+                "Travel time statistics on road segments"
+              ],
+              "Outputs": [
+                "Box plots per road segment for visual comparison"
+              ],
+              "ReferenceCitation": "Section 4.4 Modified Box-plot View: We use box-plots to give a statistics summary of travel time on each road segment.",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Histogram (Box Plot)",
+              "ID": 11,
+              "PaperDescription": "Displays histograms overlaid on the box plots, representing the distribution of trajectory groups on each road segment, color-coded by group.",
+              "Inputs": [
+                "Trajectory group data per segment",
+                "Box plot data"
+              ],
+              "Outputs": [
+                "Histograms overlaid on box plots for trajectory group distribution"
+              ],
+              "ReferenceCitation": "Section 4.4 Modified Box-plot View: To correlate it with the ranking diagram, a distribution histogram can be covered over the box-plot, whose color is consistent with the ranking diagram.",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory Selection",
+              "ID": 12,
+              "PaperDescription": "Supports interactive filtering of trajectories by spatial lenses (origin/destination) and time selection (day/week, weekday/weekend), enabling focused analysis.",
+              "Inputs": [
+                "User-defined spatial lenses",
+                "Temporal filter input (days, hours)"
+              ],
+              "Outputs": [
+                "Subset of filtered trajectories for analysis"
+              ],
+              "ReferenceCitation": "Section 5.1 Trajectory Filtering: Temporally, trajectories can be filtered by days, as shown on the top of Figure 1A.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Segmentation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Interactive Route Segmentation",
+              "ID": 13,
+              "PaperDescription": "Allows users to interactively adjust route segmentation granularity by merging, splitting, or adjusting nodes between road segments.",
+              "Inputs": [
+                "User actions (dragging nodes, merging, splitting)"
+              ],
+              "Outputs": [
+                "Updated segmented route for analysis"
+              ],
+              "ReferenceCitation": "Section 5.2 Route Segmentation: Route segmentation can be fine tuned by users, as Figure 8 shows.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Brushing and Linking",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Brushing and Linking Across Views",
+              "ID": 14,
+              "PaperDescription": "Enables users to select trajectories or groups in one view (e.g., ranking diagram, temporal distribution view) and highlight or filter them in linked views (map, ranking, distribution).",
+              "Inputs": [
+                "User selections from views"
+              ],
+              "Outputs": [
+                "Synchronized selection across all coordinated views"
+              ],
+              "ReferenceCitation": "Section 5.3 Brushing and Linking: Users can make selections in different views. For example, in the ranking view, users can select trajectories by clicking on a trajectory band or a cell in color legend.",
+              "FeedsInto": [
+                7,
+                8,
+                9,
+                10,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

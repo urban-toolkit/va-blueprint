@@ -1,0 +1,193 @@
+{
+  "PaperTitle": "Visualizing Social Media Sentiment in Disaster Scenarios",
+  "Year": 2015,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Geo-located Twitter Dataset",
+              "ID": 1,
+              "PaperDescription": "Loads Twitter data filtered by the keyword 'ebola', including tweets with geographical location information.",
+              "Inputs": [
+                "Raw Twitter data collected via Twitter Search API using the keyword 'ebola'"
+              ],
+              "Outputs": [
+                "Geo-located Twitter dataset with tweets and metadata (time, location, content)"
+              ],
+              "ReferenceCitation": "Section 2: To test our sentiment analysis method and visual analytics framework, we carried out an experiment on Ebola Twitter dataset, which has been collected using the Twitter Search API with keyword 'ebola'.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Sentiment Classification",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Sentiment Classifiers",
+              "ID": 2,
+              "PaperDescription": "Applies three sentiment classifiers (SentiWordNet, SentiStrength, and CoreNLP) to each tweet to determine its sentiment category (positive, negative, neutral).",
+              "Inputs": [
+                "Geo-located Twitter dataset"
+              ],
+              "Outputs": [
+                "Sentiment labels from each classifier for each tweet"
+              ],
+              "ReferenceCitation": "Section 2.1: The disagreement among multiple sentiment classifiers is shown from a primary study on the Ebola dataset using three well-known sentiment analysis classifiers.",
+              "FeedsInto": [
+                3,
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Committee Vote Sentiment Classification",
+              "ID": 3,
+              "PaperDescription": "Combines sentiment labels from multiple classifiers using a majority vote to assign a final sentiment label to each tweet.",
+              "Inputs": [
+                "Sentiment labels from each classifier"
+              ],
+              "Outputs": [
+                "Final sentiment labels (positive, negative, neutral) for each tweet"
+              ],
+              "ReferenceCitation": "Section 2.1: In this paper, we take the majority of the committee's predictions as the final label to increase confidence.",
+              "FeedsInto": [
+                5,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Uncertainty Calculation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Vote Entropy Calculation",
+              "ID": 4,
+              "PaperDescription": "Calculates vote entropy for each tweet to quantify the disagreement (uncertainty) among different sentiment classifiers.",
+              "Inputs": [
+                "Sentiment labels from each classifier"
+              ],
+              "Outputs": [
+                "Uncertainty score (vote entropy) for each tweet"
+              ],
+              "ReferenceCitation": "Section 2.1: Since entropy is a well defined metric for measuring the level of disagreement, we define an uncertainty measure using vote entropy to gauge the disagreement among multiple classifiers.",
+              "FeedsInto": [
+                5,
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D (Geo-comparison Dual Map)",
+              "ID": 5,
+              "PaperDescription": "Displays two side-by-side maps for spatial comparison of positive and negative sentiment tweet distributions. Tweets are visualized as translucent color-coded circles, with blurring representing high uncertainty.",
+              "Inputs": [
+                "Final sentiment labels per tweet",
+                "Uncertainty score per tweet",
+                "Geo-located Twitter dataset"
+              ],
+              "Outputs": [
+                "Two synchronized maps showing the spatial distribution of positive and negative tweets"
+              ],
+              "ReferenceCitation": "Section 2.2: The geo-comparison dual map is designed for displaying the geographical sentiment distribution of Tweets. It has two maps centering on the same region and displaying positive and negative Tweets synchronously.",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 6,
+              "PaperDescription": "Generates kernel density estimation (KDE) heatmaps for positive and negative sentiment distributions, enabling visualization of sentiment density hotspots over geographic regions.",
+              "Inputs": [
+                "Geo-located tweets with sentiment labels (positive/negative)"
+              ],
+              "Outputs": [
+                "KDE-based heatmap overlays on the dual maps"
+              ],
+              "ReferenceCitation": "Section 2.2: The sentiment KDE is obtained by first splitting the sample Tweets into positive and negative groups and then calculating the fixed bandwidth KDE.",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Entropy Sentiment River",
+              "ID": 7,
+              "PaperDescription": "Displays temporal trends in positive and negative sentiment tweet volumes, with opacity indicating uncertainty levels (higher uncertainty is shown with lower opacity).",
+              "Inputs": [
+                "Time-series aggregated tweet volumes by sentiment",
+                "Average uncertainty scores over time intervals"
+              ],
+              "Outputs": [
+                "Stream graph showing sentiment polarity and uncertainty over time"
+              ],
+              "ReferenceCitation": "Section 2.2: The entropy sentiment river is designed to reveal the uncertainty of sentiment classification over time. A lower opacity is used when the Tweets have a high average uncertainty in a particular time chunk.",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 8,
+              "PaperDescription": "Allows users to select a region on the geo-comparison maps (via circle, rectangle, or polygon) to filter tweets displayed in both maps and in the top Tweets list.",
+              "Inputs": [
+                "User-drawn region selection on the map"
+              ],
+              "Outputs": [
+                "Filtered subset of geo-located tweets within the selected region"
+              ],
+              "ReferenceCitation": "Section 2.2: Our geo-comparison view also supports circle, rectangle and polygon selection by which only Tweets in the user defined area are displayed.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 9,
+              "PaperDescription": "Enables users to select a time range, updating the geo-comparison maps and the top Tweets list accordingly.",
+              "Inputs": [
+                "User-selected time range"
+              ],
+              "Outputs": [
+                "Filtered subset of tweets within the selected time range"
+              ],
+              "ReferenceCitation": "Section 2.2: The top Tweet list is linked with time and area selection to show the most popular Tweets.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

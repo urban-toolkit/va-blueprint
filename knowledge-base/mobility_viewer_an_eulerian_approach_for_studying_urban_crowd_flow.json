@@ -1,0 +1,347 @@
+{
+  "PaperTitle": "Mobility Viewer: An Eulerian Approach for Studying Urban Crowd Flow",
+  "Year": 2016,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Cell Tower Profiles",
+              "ID": 1,
+              "PaperDescription": "Loads cell tower metadata, including Location Area Code (LAC), Cell ID, coordinates, and semantic function types, to identify and categorize each tower in the dataset.",
+              "Inputs": [
+                "Cell tower metadata (LAC, Cell ID, coordinates, function types)"
+              ],
+              "Outputs": [
+                "Structured cell tower dataset"
+              ],
+              "ReferenceCitation": "Section III-A: The dataset contains three parts: cell tower profiles, trajectory records, and call detailed records (CDRs). The cell tower profile is listed in Table I.",
+              "FeedsInto": [
+                3,
+                4,
+                5,
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 2,
+              "PaperDescription": "Loads trajectory data from mobile phone users, including timestamps and associated Cell IDs, which represent user transitions between cell tower areas.",
+              "Inputs": [
+                "Mobile phone trajectory records (user ID, timestamp, Cell ID)"
+              ],
+              "Outputs": [
+                "Time-stamped user location transitions"
+              ],
+              "ReferenceCitation": "Section III-A: The trajectory data comprises a unique mobile phone user ID, a timestamp and a Cell ID. A record is stored once a mobile phone user enters the cover range of a cell tower.",
+              "FeedsInto": [
+                3,
+                4,
+                5,
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Call Detail Record",
+              "ID": 3,
+              "PaperDescription": "Loads call records including timestamps, caller/callee IDs, and connected Cell IDs, used to derive social ties between mobile phone users.",
+              "Inputs": [
+                "CDR records (timestamp, calling user ID, called user ID, connected Cell IDs)"
+              ],
+              "Outputs": [
+                "Social interaction data between users"
+              ],
+              "ReferenceCitation": "Section III-A: The CDRs contain a timestamp, a calling user ID, a called user ID and the connected Cell IDs of the two mobile phone users when the phone call starts.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Preprocessing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Ping-Pong Effect Removal",
+              "ID": 4,
+              "PaperDescription": "Cleans trajectory data by detecting and eliminating ping-pong effects where mobile phones switch rapidly between nearby towers, producing redundant records.",
+              "Inputs": [
+                "Trajectory records (user ID, timestamp, Cell ID)"
+              ],
+              "Outputs": [
+                "Cleaned trajectory records without ping-pong artifacts"
+              ],
+              "ReferenceCitation": "Section IV: Our idea of detecting and removing the ping-pong effects is inspired by the n-gram representation for text analysis. We sort the trajectory records by timestamp and line up the cell tower of each record to form a sequence of Cell IDs.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Flow Computation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Crowd Flow Volume Calculation",
+              "ID": 5,
+              "PaperDescription": "Computes flow volumes by aggregating inward and outward transitions at each cell tower over defined time intervals.",
+              "Inputs": [
+                "Cleaned trajectory records",
+                "Cell tower profiles"
+              ],
+              "Outputs": [
+                "Flow volumes per cell tower per time interval"
+              ],
+              "ReferenceCitation": "Section III-A: From the trajectory records, the flow volume of a specified cell tower can be derived by simply calculating the summation of inward and outward transitions of the tower.",
+              "FeedsInto": [
+                7,
+                8,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Community Detection",
+              "ID": 6,
+              "PaperDescription": "Detects social communities among mobile phone users by analyzing CDRs to form a weighted graph of cell towers, incorporating both call volume and population data.",
+              "Inputs": [
+                "Call Detail Records (CDRs)",
+                "Cell tower profiles",
+                "Trajectory records (population at t')"
+              ],
+              "Outputs": [
+                "Communities of cell towers representing social groups"
+              ],
+              "ReferenceCitation": "Section V-D: We adopt an enhanced community detection algorithm that incorporates the call records between cell towers and the population on each cell tower.",
+              "FeedsInto": [
+                10,
+                15
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Flow Clustering",
+              "ID": 7,
+              "PaperDescription": "Clusters cell towers based on the similarity of their temporal flow volume sequences using Pearson correlation and spectral clustering.",
+              "Inputs": [
+                "Flow volumes per cell tower per time interval"
+              ],
+              "Outputs": [
+                "Clusters of cell towers with similar temporal flow patterns"
+              ],
+              "ReferenceCitation": "Section V-C: We first conduct clustering of these time sequences and then visualize the clusters on the map.",
+              "FeedsInto": [
+                9,
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 18,
+              "PaperDescription": "Displays the 2D map of the city area, serving as the base layer for geospatial visualizations including overlays of flow links, heatmaps, communities, and user trajectories.",
+              "Inputs": [
+                "Spatial data (cell tower coordinates, base map imagery)"
+              ],
+              "Outputs": [
+                "Interactive 2D map for spatial visualization of flow and community data"
+              ],
+              "ReferenceCitation": "Section V: A street map provides the base for the flow link visualizations, heatmaps, and community distributions, as shown in Figures 6, 7(b), and 8.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 8,
+              "PaperDescription": "Displays a heatmap overlay of flow densities between cell towers on a 2D map, updated dynamically over time intervals.",
+              "Inputs": [
+                "Flow volumes and positions of users (interpolated from trajectory records)"
+              ],
+              "Outputs": [
+                "Animated density maps of crowd flows"
+              ],
+              "ReferenceCitation": "Section V-B: Once the positions of users are calculated, a density map is rendered onto a street map based on the kernel density estimation result of the positions.",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Flow Links)",
+              "ID": 14,
+              "PaperDescription": "Displays directional flow links between pairs of cell towers, showing time-varying flow volumes with density-based visualization and clustering support.",
+              "Inputs": [
+                "Flow exchanges between cell towers",
+                "Cell tower spatial coordinates"
+              ],
+              "Outputs": [
+                "Directional flow link visualization over the map"
+              ],
+              "ReferenceCitation": "Section V-B: We employ a density map-based trajectory visualization method to deliver an intuitive view of the exchange patterns.",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Choropleth)",
+              "ID": 15,
+              "PaperDescription": "Displays community distributions as Voronoi regions on the map, where each community is colored distinctly to visualize spatial groupings.",
+              "Inputs": [
+                "Community detection results",
+                "Cell tower locations"
+              ],
+              "Outputs": [
+                "Choropleth map representing spatial communities"
+              ],
+              "ReferenceCitation": "Section V-D: To visualize the communities of the cell towers, the map is partitioned into Voronoi regions based on the location of cell towers, and the regions in the same community are painted with the same color (Fig. 8(a)).",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (3D Terrain)",
+              "ID": 9,
+              "PaperDescription": "Visualizes flow volumes as heights on a 3D terrain surface, computed using kernel density estimation, with filtering for low values.",
+              "Inputs": [
+                "Flow volumes per cell tower per time interval"
+              ],
+              "Outputs": [
+                "3D terrain visualization of crowd flows"
+              ],
+              "ReferenceCitation": "Section V-A: In this view the flow volumes are represented by the height of the peaks over the cell towers on a street map.",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Sunburst)",
+              "ID": 10,
+              "PaperDescription": "Displays inflow, outflow, and directional distributions for selected cell towers using a glyph-based sunburst diagram.",
+              "Inputs": [
+                "Flow volumes per cell tower per time interval",
+                "Flow directions (in/out)"
+              ],
+              "Outputs": [
+                "Sunburst glyphs representing flow characteristics"
+              ],
+              "ReferenceCitation": "Section V-A: Sunburst View: A cell tower is visually presented as a sunburst glyph shown in Fig. 5(a).",
+              "FeedsInto": [
+                18
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 11,
+              "PaperDescription": "Displays time series of flow volumes for selected cell towers, supporting comparison between clusters or locations.",
+              "Inputs": [
+                "Temporal flow volumes for selected cell towers"
+              ],
+              "Outputs": [
+                "Time series line charts of flow volumes"
+              ],
+              "ReferenceCitation": "Section V-C: In the time sequence view (Fig. 7(c)), a line chart of the average flow volume sequence is displayed as a dash line presenting a summary of the cluster.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Radial Chart",
+              "ID": 12,
+              "PaperDescription": "Displays the distribution of semantic cell tower types (e.g., Residential Area, Business District) for selected clusters or communities in a radar/pie chart layout.",
+              "Inputs": [
+                "Clustered cell towers",
+                "Cell tower semantic types"
+              ],
+              "Outputs": [
+                "Radial distribution chart showing types of regions in a cluster"
+              ],
+              "ReferenceCitation": "Section V-C: In the radar chart it can be found that most of the cell towers lie in living districts and transportation districts (Fig. 7(a)).",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 13,
+              "PaperDescription": "Allows users to select time intervals for dynamic updates of flow visualizations, including density maps and line charts.",
+              "Inputs": [
+                "User-defined time interval selection"
+              ],
+              "Outputs": [
+                "Filtered flow data for visual updates"
+              ],
+              "ReferenceCitation": "Section V-B: Within a selected range of time, the density maps are generated in each consecutive 10-minute time interval and rendered frame by frame dynamically.",
+              "FeedsInto": [
+                8,
+                9,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Cluster Selection",
+              "ID": 16,
+              "PaperDescription": "Enables selection of clusters of cell towers in the temporal pattern analysis, updating the map and sequence views for detailed investigation.",
+              "Inputs": [
+                "User selection of clusters"
+              ],
+              "Outputs": [
+                "Filtered clusters and their visual representations"
+              ],
+              "ReferenceCitation": "Section V-C: The analyst can select a cluster in the list, and in the map view (Fig. 7(b)) the cell towers that in the selected cluster will be highlighted.",
+              "FeedsInto": [
+                9,
+                11,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Community Selection",
+              "ID": 17,
+              "PaperDescription": "Allows users to select detected communities of cell towers for exploration of social and physical movement correlations, including difference maps and flow diagrams.",
+              "Inputs": [
+                "User selection of communities"
+              ],
+              "Outputs": [
+                "Highlighted communities and updated flow links"
+              ],
+              "ReferenceCitation": "Section V-D: The analyst can select two time intervals [t1, t'1], [t2, t'2], and the corresponding Voronoi regions of cell towers in different communities are highlighted.",
+              "FeedsInto": [
+                14,
+                15
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

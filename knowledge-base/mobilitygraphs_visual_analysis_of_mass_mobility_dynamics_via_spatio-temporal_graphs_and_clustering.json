@@ -1,0 +1,262 @@
+{
+  "PaperTitle": "MobilityGraphs: Visual Analysis of Mass Mobility Dynamics via Spatio-Temporal Graphs and Clustering",
+  "Year": 2016,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Features",
+              "ID": 1,
+              "PaperDescription": "Loads geospatial locations of places (regions) that form the nodes of the mobility graph.",
+              "Inputs": [
+                "Geospatial place locations (regions)"
+              ],
+              "Outputs": [
+                "List of geospatial places"
+              ],
+              "ReferenceCitation": "Section 3 DEFINITIONS: We have a discrete set of spatial locations, a.k.a. places P = {p1, ..., pN}.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Origin-Destination Movement",
+              "ID": 2,
+              "PaperDescription": "Loads time-varying flows (origin-destination movement data) between regions across a time interval.",
+              "Inputs": [
+                "Time-series flow data (OD flows)"
+              ],
+              "Outputs": [
+                "Spatio-temporal flow data"
+              ],
+              "ReferenceCitation": "Section 3 DEFINITIONS: The time-varying flow data set can be formally represented as <P,L,T,W(P,T),M(L,T)>.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatial Aggregation",
+              "ID": 3,
+              "PaperDescription": "Performs spatial clustering of regions (places) by proximity and flow strength, producing aggregated spatial regions to reduce visual clutter.",
+              "Inputs": [
+                "2D Features",
+                "Time Series Flow Data"
+              ],
+              "Outputs": [
+                "Aggregated spatial regions (clusters)"
+              ],
+              "ReferenceCitation": "Section 4.1.1 Spatial Simplification: Our algorithm groups spatially close places with high flow magnitudes into regions.",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Feature Vector Generation",
+              "ID": 14,
+              "PaperDescription": "Generates feature vectors from the simplified flows between aggregated spatial regions, used as input for temporal clustering.",
+              "Inputs": [
+                "Aggregated spatial regions and simplified flows"
+              ],
+              "Outputs": [
+                "Feature vectors representing spatial situations"
+              ],
+              "ReferenceCitation": "Section 4.1.2 Temporal Simplification: The similarity of spatial situations is determined by feature vectors that uniquely characterize spatial situations by flow magnitudes.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Clustering",
+              "ID": 4,
+              "PaperDescription": "Groups time steps into temporal clusters based on the similarity of spatial flow situations, reducing the number of situations for analysis.",
+              "Inputs": [
+                "Feature vectors representing spatial situations"
+              ],
+              "Outputs": [
+                "Temporal clusters of similar spatial situations"
+              ],
+              "ReferenceCitation": "Section 4.1.2 Temporal Simplification: Temporal simplification groups the time steps by the similarity of the corresponding (previously simplified) spatial situations.",
+              "FeedsInto": [
+                5,
+                6,
+                7,
+                8,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 5,
+              "PaperDescription": "Displays aggregated spatial regions and flow connections on a 2D map, showing nodes (regions) and edges (flows) with size and color encoding.",
+              "Inputs": [
+                "Aggregated spatial regions and flows",
+                "Temporal clusters"
+              ],
+              "Outputs": [
+                "Rendered 2D map with nodes and edges"
+              ],
+              "ReferenceCitation": "Section 4.2 Visual Data Exploration: The underlying map supports a geographic understanding of the flow graph.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Heatmap",
+              "ID": 6,
+              "PaperDescription": "Displays a calendar heatmap that shows the occurrence of temporal clusters over days and hours, highlighting patterns in daily and weekly mobility.",
+              "Inputs": [
+                "Temporal clusters"
+              ],
+              "Outputs": [
+                "Calendar visualization of temporal cluster distribution"
+              ],
+              "ReferenceCitation": "Section 4.2 Visual Data Exploration: Calendar view of temporal clusters shows in which time steps the temporal clusters occur.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Graph (Node-Link Diagram)",
+              "ID": 7,
+              "PaperDescription": "Displays node-link diagrams for each temporal cluster showing nodes (regions) and edges (flows) with size and color representing presence counts and flow magnitudes.",
+              "Inputs": [
+                "Aggregated spatial regions and flows for each temporal cluster"
+              ],
+              "Outputs": [
+                "Node-link diagrams for temporal clusters"
+              ],
+              "ReferenceCitation": "Section 4.2 Visual Data Exploration: Cluster thumbnails show the average graph of a spatio-temporal simplification; node size and edge width encode people and flows.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Scatter Plot (MDS Layout)",
+              "ID": 8,
+              "PaperDescription": "Displays a scatter plot (using multidimensional scaling) where each point represents a temporal cluster, positioned by similarity to facilitate visual comparison.",
+              "Inputs": [
+                "Temporal clusters",
+                "Graph similarity measures"
+              ],
+              "Outputs": [
+                "MDS scatter plot of temporal clusters"
+              ],
+              "ReferenceCitation": "Section 4.2 Visual Data Exploration: The so-called distance-based positioning uses multidimensional scaling (MDS) to position the thumbnails according to their similarity.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Graph (Node-Link Diagram with Delta Encoding)",
+              "ID": 9,
+              "PaperDescription": "Displays the difference between two selected temporal clusters as a node-link diagram, color-coded to show increases or decreases in presence counts and flow magnitudes.",
+              "Inputs": [
+                "Two selected temporal clusters"
+              ],
+              "Outputs": [
+                "Difference node-link diagram showing mobility changes"
+              ],
+              "ReferenceCitation": "Section 4.2 Visual Data Exploration: The graph representation shows the difference of the two spatial situations; both the spatial distribution of persons and flow magnitudes are shown.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Heatmap (Parameter Quality Indicators)",
+              "ID": 12,
+              "PaperDescription": "Displays a heatmap of quality indicators for different combinations of connectivity and distance thresholds used in clustering. Helps users select optimal parameters.",
+              "Inputs": [
+                "Quality metrics from spatial and temporal clustering runs"
+              ],
+              "Outputs": [
+                "Visualized quality metrics per parameter pair"
+              ],
+              "ReferenceCitation": "Section 4.2 Visual Data Exploration: We calculate several quality values (e.g., within region flows and average distance) for regularly sampled combinations of connectivity and distance thresholds. The quality values are shown in a heatmap (Fig. 7).",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Clustering Parameter Adjustment",
+              "ID": 10,
+              "PaperDescription": "Allows the user to interactively adjust the spatial and temporal clustering parameters, influencing the level of aggregation and temporal clustering granularity.",
+              "Inputs": [
+                "User-defined clustering parameters (distance, connectivity)"
+              ],
+              "Outputs": [
+                "Updated spatial and temporal clusters",
+                "Updated quality measures (flow, distance, region size)"
+              ],
+              "ReferenceCitation": "Section 4.2 Visual Data Exploration: The user can employ the interactive features for steering the spatio-temporal simplification. By varying the parameters, she can examine the impact on simplified situations.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Parameter Selection",
+              "ID": 13,
+              "PaperDescription": "Enables users to select clustering parameter combinations by clicking cells in the quality heatmap, triggering new clustering computations.",
+              "Inputs": [
+                "User-selected connectivity and distance thresholds"
+              ],
+              "Outputs": [
+                "Updated clustering parameters for spatial and temporal simplification"
+              ],
+              "ReferenceCitation": "Section 4.2 Visual Data Exploration: The user chooses suitable parameters and fine tunes them in the main window, based on the quality heatmap (Fig. 7).",
+              "FeedsInto": [
+                10
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Comparison",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Cluster Comparison Selection",
+              "ID": 11,
+              "PaperDescription": "Allows the user to select two temporal clusters from the calendar or scatter plot for detailed comparison, visualized as a difference node-link diagram.",
+              "Inputs": [
+                "User-selected temporal clusters"
+              ],
+              "Outputs": [
+                "Triggered difference visualization between temporal clusters"
+              ],
+              "ReferenceCitation": "Section 4.2 Visual Data Exploration: The user can click on two thumbnails for seeing their detailed comparison in a so-called difference view.",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

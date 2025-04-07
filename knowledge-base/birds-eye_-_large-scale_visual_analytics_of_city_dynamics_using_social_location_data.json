@@ -1,0 +1,317 @@
+{
+  "PaperTitle": "Bird's-Eye - Large-Scale Visual Analytics of City Dynamics using Social Location Data",
+  "Year": 2019,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Social Location (Foursquare)",
+              "ID": 1,
+              "PaperDescription": "Records social location data from Foursquare, including venues and check-in data, storing them with spatial and temporal metadata.",
+              "Inputs": [
+                "Foursquare venue data",
+                "Foursquare check-in data"
+              ],
+              "Outputs": [
+                "Venue records with check-in frequencies and categories",
+                "City stats documents with timestamps and user check-in lists"
+              ],
+              "ReferenceCitation": "Section 4.1 Scalable Data Monitoring Back-end: From Foursquare's API we collect information about venues (places) and consecutive checked-in users.",
+              "FeedsInto": [
+                3,
+                4,
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Social Location (Twitter)",
+              "ID": 2,
+              "PaperDescription": "Collects Twitter messages associated with Foursquare check-ins to infer user movement transitions between locations.",
+              "Inputs": [
+                "Twitter Streaming API data linked with Foursquare check-ins"
+              ],
+              "Outputs": [
+                "Transition data with user movement patterns and place connections"
+              ],
+              "ReferenceCitation": "Section 4.1 Scalable Data Monitoring Back-end: Because many users have linked their Foursquare account with their Twitter account, we overcome this issue by collecting Foursquare-related messages from the Twitter Streaming API.",
+              "FeedsInto": [
+                3,
+                6,
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Aggregation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Pre-Aggregation Scheme",
+              "ID": 3,
+              "PaperDescription": "Implements hierarchical pre-aggregation of check-in data into hourly, daily, and monthly chunks to enable fast querying for visual exploration.",
+              "Inputs": [
+                "Raw check-in data from city stats collection"
+              ],
+              "Outputs": [
+                "Pre-aggregated check-in counts by venue and time period"
+              ],
+              "ReferenceCitation": "Section 4.1 Aggregation and Retrieval: Drawing on ideas from recent research, we developed a hierarchical pre-aggregation scheme to accelerate queries.",
+              "FeedsInto": [
+                7,
+                8,
+                11,
+                12,
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "DBSCAN Clustering",
+              "ID": 4,
+              "PaperDescription": "Performs DBSCAN clustering to detect spatial clusters of venues, representing functional city zones such as shopping areas or food districts.",
+              "Inputs": [
+                "Venue location data",
+                "Check-in frequencies"
+              ],
+              "Outputs": [
+                "Clusters of venues representing functional geographic zones"
+              ],
+              "ReferenceCitation": "Section 4.3.2 Cluster-based Activity Aggregation: First, we run DBSCAN clustering to find groups of spatially related venues (visited places) that match the natural breaks in the geographic distribution.",
+              "FeedsInto": [
+                9,
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Kernel Density Estimation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Check-in-based Kernel Density Estimation",
+              "ID": 5,
+              "PaperDescription": "Applies a custom kernel density estimation algorithm on venues to compute smoothed density values that inform the heatmap visualization of activity hotspots.",
+              "Inputs": [
+                "Venue locations",
+                "Check-in counts"
+              ],
+              "Outputs": [
+                "Density values per venue for heatmap visualization"
+              ],
+              "ReferenceCitation": "Section 4.3.1 Check-in-based Kernel Density Estimation: Bird's-Eye offers a heatmap that renders the general spatial distribution and corresponding check-in densities using a kernel-density-based splatting algorithm.",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Detection",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Adaptive Outlier Detection",
+              "ID": 6,
+              "PaperDescription": "Detects spatial and temporal outliers by identifying check-in counts that deviate from the mean by a user-defined number of standard deviations.",
+              "Inputs": [
+                "Pre-aggregated check-in data"
+              ],
+              "Outputs": [
+                "Anomalous places and time periods flagged as outliers"
+              ],
+              "ReferenceCitation": "Section 4.3.3 Adaptive Outlier Detection: Our outlier detection method finds unusually high or low numbers of check-ins for top-level venue categories that deviate from the usual.",
+              "FeedsInto": [
+                7,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 7,
+              "PaperDescription": "Displays an interactive 2D geographic map showing venues and clusters, with support for zooming and category-based filtering.",
+              "Inputs": [
+                "Venue locations",
+                "Cluster data",
+                "Heatmap density values"
+              ],
+              "Outputs": [
+                "Interactive 2D map visualization with overlays"
+              ],
+              "ReferenceCitation": "Section 4.2 Interactive Visual Analytics Interface: The interactive map enables geographic analysis. It can be zoomed in and out and explored like in typical web-based GIS systems.",
+              "FeedsInto": [
+                14,
+                15
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 8,
+              "PaperDescription": "Renders a heatmap overlay on the map, showing spatial distributions of check-in activity with color gradients representing density levels.",
+              "Inputs": [
+                "Kernel density values"
+              ],
+              "Outputs": [
+                "Color-encoded heatmap layer on the map"
+              ],
+              "ReferenceCitation": "Section 4.3.1 Check-in-based Kernel Density Estimation: Bird's-Eye offers a heatmap that renders the general spatial distribution and corresponding check-in densities using a kernel-density-based splatting algorithm.",
+              "FeedsInto": [
+                7,
+                14,
+                15
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Clusters with Concave Hulls)",
+              "ID": 9,
+              "PaperDescription": "Displays concave hull polygons on the map, enclosing clustered areas and color-coded by dominant venue category to show functional zones.",
+              "Inputs": [
+                "Cluster data",
+                "Concave hull geometries"
+              ],
+              "Outputs": [
+                "Overlay of functional zones on the 2D map"
+              ],
+              "ReferenceCitation": "Section 4.3.2 Cluster-based Activity Aggregation: To visually indicate the DBSCAN clusters, we determine their concave hulls using an algorithm by Emil Rosén et al.",
+              "FeedsInto": [
+                7,
+                14,
+                15
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Mobility Graph)",
+              "ID": 10,
+              "PaperDescription": "Displays aggregated mobility patterns between clusters as a node-link diagram on the map, with link thickness representing movement volume.",
+              "Inputs": [
+                "User movement transitions between venues",
+                "Cluster data"
+              ],
+              "Outputs": [
+                "Node-link diagram of mobility flows overlaid on the map"
+              ],
+              "ReferenceCitation": "Section 4.4 Features for Mobility Analysis: To reveal geographic mobility patterns we overlay our map with a node-link diagram.",
+              "FeedsInto": [
+                7,
+                14,
+                15
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Stacked Area Chart",
+              "ID": 11,
+              "PaperDescription": "Displays the temporal distribution of check-ins across categories as a stacked area chart, allowing for temporal filtering and selection.",
+              "Inputs": [
+                "Pre-aggregated check-in data by category and time"
+              ],
+              "Outputs": [
+                "Time series visualization of check-in activity by category"
+              ],
+              "ReferenceCitation": "Section 4.2 Interactive Visual Analytics Interface: The temporal distribution of check-ins by category can be visualized in a stacked area chart.",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Alluvial Diagram",
+              "ID": 12,
+              "PaperDescription": "Shows transitions of users between different venue categories over time, enabling the exploration of temporal mobility flows.",
+              "Inputs": [
+                "Pre-aggregated transition data between categories over time"
+              ],
+              "Outputs": [
+                "Alluvial diagram showing temporal category transitions"
+              ],
+              "ReferenceCitation": "Section 4.4 Features for Mobility Analysis: To explore temporal transitions of Foursquare users between categories in time, the stacked area chart can be changed to an alluvial diagram.",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Radial Area Chart",
+              "ID": 13,
+              "PaperDescription": "Displays hourly or weekly patterns of check-in counts for a selected cluster as a radial area chart, helping to compare temporal activity trends across clusters.",
+              "Inputs": [
+                "Clustered venue check-in data over time"
+              ],
+              "Outputs": [
+                "Radial chart of temporal patterns per cluster"
+              ],
+              "ReferenceCitation": "Section 4.3.2 Cluster-based Activity Aggregation: Clicking on the clusters reveals a radial area chart that shows check-in category activities over time for the venues in this cluster.",
+              "FeedsInto": [
+                14,
+                15
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Filter",
+              "ID": 14,
+              "PaperDescription": "Enables users to interactively select time ranges in the stacked area chart to update the spatial map and mobility visualizations accordingly.",
+              "Inputs": [
+                "User-selected time range from stacked area chart"
+              ],
+              "Outputs": [
+                "Filtered check-in and mobility data for the selected time range"
+              ],
+              "ReferenceCitation": "Section 4.2 Interactive Visual Analytics Interface: The user can select a sub-range of the loaded time span to drill-down. Each action synchronizes the visualizations in the map.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Attribute Selection",
+              "ID": 15,
+              "PaperDescription": "Allows users to enable or disable specific venue categories in both the stacked area chart and the map, refining the focus of the analysis.",
+              "Inputs": [
+                "User-selected categories from category list panel"
+              ],
+              "Outputs": [
+                "Filtered venue data and visual updates in map and timeline"
+              ],
+              "ReferenceCitation": "Section 4.2 Interactive Visual Analytics Interface: A color-coded list of the Foursquare top-level categories serves as a legend and can also be used to filter the data by categories.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

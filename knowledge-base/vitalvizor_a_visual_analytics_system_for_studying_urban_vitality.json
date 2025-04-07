@@ -1,0 +1,316 @@
+{
+  "PaperTitle": "VitalVizor: A Visual Analytics System for Studying Urban Vitality",
+  "Year": 2018,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Features",
+              "ID": 1,
+              "PaperDescription": "The network consists of 2D lines read from a shape file. The lines are modeled as an undirected graph G = (N, E) where N is the set of nodes representing intersections in the street network, and E is the set of edges connecting neighboring nodes and representing streets in the street network.",
+              "Inputs": [
+                "Street network shapefile",
+                "Blocks shapefile"
+              ],
+              "Outputs": [
+                "Undirected graph of streets and intersections",
+                "2D polygons of blocks"
+              ],
+              "ReferenceCitation": "PHYSICAL ENTITIES AND URBAN DESIGN METRICS: The network consists of 2D lines read from a shape file. The lines are modeled as an undirected graph G = (N, E) where N is the set of nodes representing intersections in the street network, and E is the set of edges connecting neighboring nodes and representing streets in the street network.",
+              "FeedsInto": [
+                4,
+                5,
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "3D Geometries",
+              "ID": 2,
+              "PaperDescription": "A building is made up of a footprint and floor numbers of housing, working, and amenity functions. Similar to blocks, building footprints are represented as 2D polygons in a shape file.",
+              "Inputs": [
+                "Buildings shapefile with function attributes"
+              ],
+              "Outputs": [
+                "2D polygons of building footprints with floor data"
+              ],
+              "ReferenceCitation": "PHYSICAL ENTITIES AND URBAN DESIGN METRICS: A building is made up of a footprint and floor numbers of housing, working, and amenity functions. Similar to blocks, building footprints are represented as 2D polygons in a shape file.",
+              "FeedsInto": [
+                5,
+                6,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Metrics Computation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Street Accessibility",
+              "ID": 4,
+              "PaperDescription": "We adopt angular betweenness, which is a widely accepted measurement by space syntax experts to measure street accessibility.",
+              "Inputs": [
+                "Reduced graph of street network"
+              ],
+              "Outputs": [
+                "Local and global accessibility values"
+              ],
+              "ReferenceCitation": "Urban Design Metrics: We adopt angular betweenness, which is a widely accepted measurement by space syntax experts to measure street accessibility.",
+              "FeedsInto": [
+                7,
+                8,
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Density and Typology",
+              "ID": 5,
+              "PaperDescription": "GSI for a block is measured as the sum of all building footprint areas divided by the area of the block, while FSI is measured as the sum of all building floor areas divided by the area of the block.",
+              "Inputs": [
+                "Blocks",
+                "Buildings"
+              ],
+              "Outputs": [
+                "GSI and FSI metrics for each block"
+              ],
+              "ReferenceCitation": "Urban Design Metrics: GSI for bk can be measured as the sum of all building footprint areas divided by the area of bk, while FSI for bk can be measured as the sum of all building floor areas divided by the area of bk.",
+              "FeedsInto": [
+                7,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Function Mixture",
+              "ID": 6,
+              "PaperDescription": "For each building in a block, we compute the ratio R of each individual functionality (housing, working, amenity), then derive the MXI type.",
+              "Inputs": [
+                "Blocks",
+                "Buildings"
+              ],
+              "Outputs": [
+                "MXI classification for each block"
+              ],
+              "ReferenceCitation": "Urban Design Metrics: For each building bd in a block bk, we know the number of floors used for housing, working, and amenity functionalities. We can compute the ratio R of each individual functionality.",
+              "FeedsInto": [
+                7,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Urban Vitality Metric",
+              "ID": 7,
+              "PaperDescription": "Urban vitality is implied by three categories of metrics, including street accessibility, density and typology, and function mixture.",
+              "Inputs": [
+                "Street accessibility",
+                "Density and typology",
+                "Function mixture"
+              ],
+              "Outputs": [
+                "Urban vitality score for each block"
+              ],
+              "ReferenceCitation": "Data Characterization and Abstraction: Urban vitality is implied by three categories of metrics, while each category itself is a metric and is further implied by two or more metrics.",
+              "FeedsInto": [
+                8,
+                10,
+                11,
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 8,
+              "PaperDescription": "Map View supports rendering components of 2D lines for street networks and 2D polygons for blocks.",
+              "Inputs": [
+                "Street networks with accessibility metrics",
+                "Blocks with vitality metrics"
+              ],
+              "Outputs": [
+                "2D map visualization with colored blocks and streets"
+              ],
+              "ReferenceCitation": "Map View: Map View supports rendering of street networks (left), blocks (middle), and buildings (right).",
+              "FeedsInto": [
+                12,
+                13,
+                15,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 9,
+              "PaperDescription": "Buildings are rendered as compositions of floors colored in accordance to function types in the 3D map view.",
+              "Inputs": [
+                "Buildings with function mixture attributes"
+              ],
+              "Outputs": [
+                "3D rendered buildings with color-coded floors"
+              ],
+              "ReferenceCitation": "Map View: Buildings are rendered as compositions of floors colored in accordance to function types.",
+              "FeedsInto": [
+                12,
+                13,
+                15,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 14,
+              "PaperDescription": "The blocks are colored according to their urban-vitality values, while street networks are colored according to street-accessibility values.",
+              "Inputs": [
+                "Urban vitality metrics",
+                "Street accessibility metrics"
+              ],
+              "Outputs": [
+                "Heatmap overlays of vitality and accessibility on blocks and streets"
+              ],
+              "ReferenceCitation": "Map View: The blocks are colored according to their urban-vitality values, while street networks are colored according to street-accessibility values.",
+              "FeedsInto": [
+                8,
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Tree Diagram",
+              "ID": 10,
+              "PaperDescription": "The view integrates a tree diagram to reveal hierarchical relationships among all metrics.",
+              "Inputs": [
+                "Hierarchy of urban design metrics"
+              ],
+              "Outputs": [
+                "Tree diagram showing metric hierarchy"
+              ],
+              "ReferenceCitation": "Metric View: The view integrates a tree diagram to reveal hierarchical relationships among all metrics.",
+              "FeedsInto": [
+                12,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Parallel Coordinates Plot",
+              "ID": 11,
+              "PaperDescription": "A parallel coordinate plot (PCP) presents correlations of explicit metrics.",
+              "Inputs": [
+                "Explicit urban design metrics"
+              ],
+              "Outputs": [
+                "Parallel coordinate plot for metric correlation analysis"
+              ],
+              "ReferenceCitation": "Metric View: The view integrates a tree diagram to reveal hierarchical relationships among all metrics, as well as a PCP to present correlations of explicit metrics.",
+              "FeedsInto": [
+                12,
+                13
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 12,
+              "PaperDescription": "Users can specify an area of interest with District, Rect, or Lasso buttons in the Filter panel overlaid on top of Map View.",
+              "Inputs": [
+                "User-defined spatial selection (district, rectangle, lasso)"
+              ],
+              "Outputs": [
+                "Filtered subset of streets, blocks, and buildings"
+              ],
+              "ReferenceCitation": "User Interactions: Spatial filter. Users can specify an area of interest with District, Rect, or Lasso buttons in the Filter panel overlaid on top of Map View.",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Metric Focus",
+              "ID": 13,
+              "PaperDescription": "Users can select a set of metric bins as a focus, with others as context, in Metric View.",
+              "Inputs": [
+                "User selection of metric bins"
+              ],
+              "Outputs": [
+                "Focused subset of blocks for detailed analysis"
+              ],
+              "ReferenceCitation": "User Interactions: Metric focus. Users can select a set of metric bins as a focus, with others as context, in Metric View.",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "View Manipulation",
+              "ID": 15,
+              "PaperDescription": "Basic map navigations, such as panning and rotating, are supported through mouse interactions.",
+              "Inputs": [
+                "User pan/rotate interaction"
+              ],
+              "Outputs": [
+                "Updated 2D/3D map view perspective"
+              ],
+              "ReferenceCitation": "Map View: Basic map navigations, such as panning and rotating, are supported through mouse interactions.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Comparison",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Export Scenario",
+              "ID": 16,
+              "PaperDescription": "VitalVizor allows for exporting the view, such that users can visually compare multiple scenarios.",
+              "Inputs": [
+                "User-selected scenario for export"
+              ],
+              "Outputs": [
+                "Exported visualization snapshot for scenario comparison"
+              ],
+              "ReferenceCitation": "User Interactions: VitalVizor allows for exporting the view, such that users can visually compare multiple scenarios.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

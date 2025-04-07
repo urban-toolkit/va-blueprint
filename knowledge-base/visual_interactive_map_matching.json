@@ -1,0 +1,271 @@
+{
+  "PaperTitle": "Visual Interactive Map Matching",
+  "Year": 2018,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 1,
+              "PaperDescription": "The map matching process starts by loading a movement dataset into the system. Movement data usually contain a set of moving objects, where each object holds a set of trajectories.",
+              "Inputs": [
+                "Raw trajectory data"
+              ],
+              "Outputs": [
+                "Structured movement dataset with spatio-temporal attributes"
+              ],
+              "ReferenceCitation": "Section 4.1 Data Selection: The map matching process starts by loading a movement dataset into the system.",
+              "FeedsInto": [
+                3,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Street Network",
+              "ID": 2,
+              "PaperDescription": "The user needs to load a road network that the trajectories will be mapped to. The prototype implementation can handle graphs in the Open Street Maps graph format (.osm files).",
+              "Inputs": [
+                "Road network files (.osm)"
+              ],
+              "Outputs": [
+                "Structured road network graph"
+              ],
+              "ReferenceCitation": "Section 4.1 Data Selection: Also, the user needs to load a road network that the trajectories will be mapped to.",
+              "FeedsInto": [
+                4,
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Preprocessing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory Data Cleaning",
+              "ID": 3,
+              "PaperDescription": "The system provides filtering options to clean trajectory data, such as defining a maximal distance between measurements (distmax) and a minimal number of measurements (nmin) within a trip.",
+              "Inputs": [
+                "Raw trajectory data"
+              ],
+              "Outputs": [
+                "Cleaned trajectory data"
+              ],
+              "ReferenceCitation": "Section 4.2 Raw Data Inspection and Cleansing: The system provides filtering options. The user can control two cutting thresholds.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Map Matching",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "ST-Matching Algorithm",
+              "ID": 4,
+              "PaperDescription": "After the data is loaded, cleaned, and prefiltered it can be registered to the road system using the ST-matching algorithm. The algorithm computes candidates, features, and matches trajectories to the road network.",
+              "Inputs": [
+                "Cleaned trajectory data",
+                "Road network graph"
+              ],
+              "Outputs": [
+                "Matched trajectories",
+                "Error reports",
+                "Uncertainty scores"
+              ],
+              "ReferenceCitation": "Section 4.3 ST-Matching: After the data is loaded, cleaned, and prefiltered it can be registered to the road system using the ST-matching algorithm.",
+              "FeedsInto": [
+                6,
+                7,
+                8,
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Graph Editing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Road Network Editing",
+              "ID": 5,
+              "PaperDescription": "The visual interface allows users to manually add, delete, and adjust nodes and edges of the road network to correct errors and improve the matching results.",
+              "Inputs": [
+                "Road network graph",
+                "User editing actions"
+              ],
+              "Outputs": [
+                "Edited road network graph"
+              ],
+              "ReferenceCitation": "Section 4.5.2 Graph Editing: When the graph is loaded into the system, the users can visually investigate and edit the graph.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 6,
+              "PaperDescription": "The interactive map view shows the relative amounts of matched trips per road segment, matching errors (no candidates, path length errors), and matching uncertainties with overlays and color coding.",
+              "Inputs": [
+                "Matched trajectories",
+                "Error reports",
+                "Uncertainty scores",
+                "Road network graph"
+              ],
+              "Outputs": [
+                "2D map visualization with overlays and error highlights"
+              ],
+              "ReferenceCitation": "Section 4.4 Result Exploration: After the raw trajectory data is registered (matched) to the road network, users visually explore the results in the interactive map view.",
+              "FeedsInto": [
+                11,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 7,
+              "PaperDescription": "Kernel density estimation is used to compute a smooth density field for map matching errors and uncertainties, providing aggregated error and uncertainty visualizations on the map.",
+              "Inputs": [
+                "Error reports",
+                "Uncertainty scores"
+              ],
+              "Outputs": [
+                "Heatmap overlays of errors and uncertainties on the map"
+              ],
+              "ReferenceCitation": "Section 4.4 Result Exploration: Visualizing the errors and uncertainties is not trivial because we have to deal with hundreds of overlapping trajectory segments. To address this issue, we apply kernel density estimation.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 8,
+              "PaperDescription": "Aggregated matching statistics show the percentage of trajectories for which the matching failed, the average uncertainty per trip, and the average runtime consumed per trip in milliseconds over time.",
+              "Inputs": [
+                "Matching error statistics",
+                "Uncertainty scores",
+                "Runtime statistics"
+              ],
+              "Outputs": [
+                "Line charts showing error rates, uncertainty scores, and performance metrics over iterative matching runs"
+              ],
+              "ReferenceCitation": "Section 4.5 Iterative Optimization: The panel to the right provides aggregated matching statistics. It shows the percentage of trajectories for which the matching failed split by error type, the average uncertainty per trip, and the average runtime time consumed per trip in milliseconds.",
+              "FeedsInto": [
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Table",
+              "ID": 9,
+              "PaperDescription": "A table lists the errors in descending order for a selectable error type and allows quickly focusing on grid cells with error hotspots, providing guidance for local editing or parameter tuning.",
+              "Inputs": [
+                "Error reports",
+                "Uncertainty scores"
+              ],
+              "Outputs": [
+                "Tabular list of error hotspots and their severity"
+              ],
+              "ReferenceCitation": "Section 4.4 Result Exploration: To support the user in spotting the most significant errors, a table can be opened that lists hotspots in descending order of severity for both error types.",
+              "FeedsInto": [
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory Selection",
+              "ID": 10,
+              "PaperDescription": "Users can apply filters to exclude unreliable trajectory data based on thresholds like maximum distance between points and minimum number of measurements.",
+              "Inputs": [
+                "User-defined filter thresholds",
+                "Raw trajectory data"
+              ],
+              "Outputs": [
+                "Cleaned trajectory data"
+              ],
+              "ReferenceCitation": "Section 4.2 Raw Data Inspection and Cleansing: The user can control two cutting thresholds. The first threshold (distmax) defines the maximal distance between two measurements allowed.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map Navigation",
+              "ID": 11,
+              "PaperDescription": "Users can navigate the map by zooming and panning to investigate different regions of the road network and trajectory data.",
+              "Inputs": [
+                "User interactions (zoom, pan)"
+              ],
+              "Outputs": [
+                "Updated map view with appropriate level of detail and focus region"
+              ],
+              "ReferenceCitation": "Section 4.4 Result Exploration: Using a fixed pixel size for the kernel results in a stronger aggregation when zoomed out and allows for a drill down by zooming in.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Edit",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Graph Editing",
+              "ID": 12,
+              "PaperDescription": "The system provides suggestions for fixing road network issues by adding nodes or adjusting edges based on error detection, which users can accept or decline.",
+              "Inputs": [
+                "Error reports",
+                "Road network graph",
+                "User interaction (accept/reject suggestion)"
+              ],
+              "Outputs": [
+                "Edited road network graph"
+              ],
+              "ReferenceCitation": "Section 4.5.2 Graph Editing: By clicking on the error region, the system then gives further explanation about the error and suggests fixes.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

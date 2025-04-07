@@ -1,0 +1,351 @@
+{
+  "PaperTitle": "StreamExplorer: A Multi-Stage System for Visually Exploring Events in Social Streams",
+  "Year": 2018,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Social Media",
+              "ID": 1,
+              "PaperDescription": "Loads social stream datasets, including Twitter and Weibo posts, for event analysis.",
+              "Inputs": [
+                "Raw social stream data (tweets, posts, timestamps, user metadata)"
+              ],
+              "Outputs": [
+                "Structured social stream dataset"
+              ],
+              "ReferenceCitation": "Section 4.1: The system loads social streams (e.g., tweets) from data repositories.",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Querying",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Event Query",
+              "ID": 2,
+              "PaperDescription": "Filters social stream data based on user-defined query constraints including keywords, time ranges, and geospatial regions.",
+              "Inputs": [
+                "Structured social stream dataset",
+                "User-defined query constraints"
+              ],
+              "Outputs": [
+                "Filtered event dataset"
+              ],
+              "ReferenceCitation": "Section 4.2: Users can specify constraints to filter the data, such as keywords, time ranges, and locations.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Event Extraction",
+              "ID": 3,
+              "PaperDescription": "Identifies potential events from filtered social stream data using burst detection algorithms.",
+              "Inputs": [
+                "Filtered event dataset"
+              ],
+              "Outputs": [
+                "Detected event candidates"
+              ],
+              "ReferenceCitation": "Section 4.3: We detect events by identifying bursts of activity in the data stream.",
+              "FeedsInto": [
+                4,
+                5,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Entity Extraction",
+              "ID": 4,
+              "PaperDescription": "Extracts entities (e.g., people, organizations, locations) from detected event text data.",
+              "Inputs": [
+                "Detected event candidates"
+              ],
+              "Outputs": [
+                "Entities linked to events"
+              ],
+              "ReferenceCitation": "Section 4.4: Named entities are extracted from event data, including people, locations, and organizations.",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Timeline Extraction",
+              "ID": 7,
+              "PaperDescription": "Generates event timelines from categorized events dataset, ordered by time of occurrence.",
+              "Inputs": [
+                "Categorized events dataset"
+              ],
+              "Outputs": [
+                "Chronological event timeline"
+              ],
+              "ReferenceCitation": "Section 5.2: Events are arranged along a timeline based on their occurrence time for chronological exploration.",
+              "FeedsInto": [
+                8,
+                10
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Classification",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Event Categorization",
+              "ID": 5,
+              "PaperDescription": "Classifies detected events into predefined categories (e.g., natural disaster, social event).",
+              "Inputs": [
+                "Detected event candidates"
+              ],
+              "Outputs": [
+                "Categorized events dataset"
+              ],
+              "ReferenceCitation": "Section 4.4: Events are categorized based on their textual descriptions and metadata.",
+              "FeedsInto": [
+                6,
+                7,
+                12,
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Graph Construction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Graph Entity-event Construction",
+              "ID": 6,
+              "PaperDescription": "Constructs entity-event graphs where nodes represent entities and events, and edges represent relationships between them.",
+              "Inputs": [
+                "Entities linked to events",
+                "Categorized events dataset"
+              ],
+              "Outputs": [
+                "Entity-event graph data"
+              ],
+              "ReferenceCitation": "Section 5.3: An entity-event graph is constructed where entities and events are connected by relationships.",
+              "FeedsInto": [
+                9,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 8,
+              "PaperDescription": "Displays the spatial distribution of events on an interactive 2D map.",
+              "Inputs": [
+                "Chronological event timeline"
+              ],
+              "Outputs": [
+                "Interactive 2D map showing event locations"
+              ],
+              "ReferenceCitation": "Section 5.2: The map view shows detected events spatially distributed over a geographic map (Fig. 4).",
+              "FeedsInto": [
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 9,
+              "PaperDescription": "Displays a heatmap overlay on the 2D map to represent event density.",
+              "Inputs": [
+                "Entity-event graph data"
+              ],
+              "Outputs": [
+                "Heatmap visualization overlay"
+              ],
+              "ReferenceCitation": "Section 5.2: A heatmap overlays the map to indicate areas with high event densities (Fig. 4).",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Timeline",
+              "ID": 10,
+              "PaperDescription": "Visualizes events over time using a timeline view with interactive brushing.",
+              "Inputs": [
+                "Chronological event timeline"
+              ],
+              "Outputs": [
+                "Interactive timeline chart"
+              ],
+              "ReferenceCitation": "Section 5.2: Events are plotted along a timeline for users to explore temporal trends (Fig. 5).",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Graph",
+              "ID": 11,
+              "PaperDescription": "Displays the entity-event graph showing relationships between entities and events.",
+              "Inputs": [
+                "Entity-event graph data"
+              ],
+              "Outputs": [
+                "Interactive node-link graph visualization"
+              ],
+              "ReferenceCitation": "Section 5.3: The entity-event graph view visualizes relationships between entities and events (Fig. 6).",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Word Cloud",
+              "ID": 12,
+              "PaperDescription": "Visualizes frequently occurring keywords associated with selected events.",
+              "Inputs": [
+                "Categorized events dataset"
+              ],
+              "Outputs": [
+                "Word cloud visualization"
+              ],
+              "ReferenceCitation": "Section 5.3: A word cloud displays the most frequent keywords extracted from the events (Fig. 7).",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Table",
+              "ID": 13,
+              "PaperDescription": "Displays event details in a tabular format for detailed inspection.",
+              "Inputs": [
+                "Categorized events dataset"
+              ],
+              "Outputs": [
+                "Tabular view of event metadata"
+              ],
+              "ReferenceCitation": "Section 5.3: The event detail view presents information about events in a table (Fig. 7).",
+              "FeedsInto": [
+                18
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 14,
+              "PaperDescription": "Allows users to filter events by selecting time ranges on the timeline.",
+              "Inputs": [
+                "User interaction on timeline"
+              ],
+              "Outputs": [
+                "Filtered chronological event timeline"
+              ],
+              "ReferenceCitation": "Section 5.2: Users can brush on the timeline to filter events based on their occurrence times (Fig. 5).",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Attribute Selection (Category)",
+              "ID": 15,
+              "PaperDescription": "Allows users to filter events by category through the interface.",
+              "Inputs": [
+                "User selection of categories"
+              ],
+              "Outputs": [
+                "Filtered categorized events dataset"
+              ],
+              "ReferenceCitation": "Section 5.3: Users can select event categories to focus on specific event types (Fig. 6).",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 16,
+              "PaperDescription": "Allows users to select a spatial region on the map to filter events.",
+              "Inputs": [
+                "User-drawn region on map"
+              ],
+              "Outputs": [
+                "Filtered chronological event timeline"
+              ],
+              "ReferenceCitation": "Section 5.2: Users can select spatial regions on the map to focus on events in specific areas (Fig. 4).",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Attribute Selection (Entity)",
+              "ID": 17,
+              "PaperDescription": "Allows users to click on an entity node in the entity-event graph to filter events related to that entity.",
+              "Inputs": [
+                "User click on entity node"
+              ],
+              "Outputs": [
+                "Filtered events linked to selected entity"
+              ],
+              "ReferenceCitation": "Section 5.3: Users can select an entity node to view related events (Fig. 6).",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Comparison",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Multi-Event Comparison",
+              "ID": 18,
+              "PaperDescription": "Enables comparison between multiple events by juxtaposing their metadata and timelines.",
+              "Inputs": [
+                "User-selected events"
+              ],
+              "Outputs": [
+                "Comparative event view"
+              ],
+              "ReferenceCitation": "Section 5.4: Multiple events can be compared through side-by-side views (Fig. 6).",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

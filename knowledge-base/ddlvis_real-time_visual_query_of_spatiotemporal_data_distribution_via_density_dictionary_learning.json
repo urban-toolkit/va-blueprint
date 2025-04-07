@@ -1,0 +1,297 @@
+{
+  "PaperTitle": "DDLVis: Real-time Visual Query of Spatiotemporal Data Distribution via Density Dictionary Learning",
+  "Year": 2022,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatiotemporal Sensor Data",
+              "ID": 1,
+              "PaperDescription": "Loads air pollution and urban mobility sensor data for analysis",
+              "Inputs": [
+                "Sensor readings (PM2.5, CO, NO2, SO2, vehicle locations)",
+                "timestamps",
+                "GPS locations"
+              ],
+              "Outputs": [
+                "Indexed spatiotemporal dataset"
+              ],
+              "ReferenceCitation": "Section 3: Spatiotemporal data are increasingly produced in real-time by physical sensors, such as vehicles, mobile phones, and climate monitors.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "KDE",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatiotemporal Events",
+              "ID": 2,
+              "PaperDescription": "Computes density maps by estimating distributions of sensor readings over space & time",
+              "Inputs": [
+                "Raw spatiotemporal data (sensor readings, GPS)"
+              ],
+              "Outputs": [
+                "Density maps with varying kernel sizes"
+              ],
+              "ReferenceCitation": "Section 4: The peak-based kernel density estimation (PKDE) approach is presented...",
+              "FeedsInto": [
+                3,
+                4,
+                5,
+                6,
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Compression",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Density Maps",
+              "ID": 3,
+              "PaperDescription": "Reduces memory usage by compressing density maps while preserving trends",
+              "Inputs": [
+                "Density maps over time"
+              ],
+              "Outputs": [
+                "Compressed sparse-coded density maps"
+              ],
+              "ReferenceCitation": "Section 5: We present a novel learning method, density dictionary learning (DDL)...",
+              "FeedsInto": [
+                8,
+                10,
+                11,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Density Maps Features",
+              "ID": 4,
+              "PaperDescription": "Generates sparse-coded representations of density maps to highlight important patterns",
+              "Inputs": [
+                "Density maps"
+              ],
+              "Outputs": [
+                "Compressed sparse-coded density patterns"
+              ],
+              "ReferenceCitation": "Section 5.3: ASC method guarantees high accuracy of sparse representation...",
+              "FeedsInto": [
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "TSG on Density Maps",
+              "ID": 5,
+              "PaperDescription": "Identifies representative density maps to train the dictionary model efficiently",
+              "Inputs": [
+                "Density maps"
+              ],
+              "Outputs": [
+                "Clustered representative training dataset"
+              ],
+              "ReferenceCitation": "Section 5.1: We select representative density maps as the training set...",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Tracking",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Pixel Density Evolution",
+              "ID": 6,
+              "PaperDescription": "Captures temporal density variations by tracking pixel trends",
+              "Inputs": [
+                "Sequential density maps"
+              ],
+              "Outputs": [
+                "Time-series representation of pixel variations"
+              ],
+              "ReferenceCitation": "Section 5.4: We define the pixel in the same 2D position on sequential density maps as a pixel chain...",
+              "FeedsInto": [
+                10,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Detection",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Direction & Magnitude Changes Density Maps",
+              "ID": 7,
+              "PaperDescription": "Computes spatial variation fields by detecting shifts in density patterns over time",
+              "Inputs": [
+                "Consecutive density maps"
+              ],
+              "Outputs": [
+                "Direction & magnitude variation maps"
+              ],
+              "ReferenceCitation": "Section 5.5: We generate the spatial variation field for each pair of adjacent density maps...",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Map",
+              "ID": 8,
+              "PaperDescription": "Displays density distributions of spatiotemporal data using color gradients",
+              "Inputs": [
+                "2D Layer"
+              ],
+              "Outputs": [
+                "2D map view"
+              ],
+              "ReferenceCitation": "Section 4: PKDE ensures the performance of density map generation...",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 9,
+              "PaperDescription": "Visualizes spatial variation fields between density maps using arrows & color-coding",
+              "Inputs": [
+                "Spatial density variation data"
+              ],
+              "Outputs": [
+                "Directional arrows",
+                "color-coded magnitude map"
+              ],
+              "ReferenceCitation": "Section 5.5: We convert the spatial variation field into a direction map and an absolute map...",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Stream Graph",
+              "ID": 10,
+              "PaperDescription": "Represents temporal variations in density data over time",
+              "Inputs": [
+                "Temporal density dataset"
+              ],
+              "Outputs": [
+                "Stream graph with trend visualization"
+              ],
+              "ReferenceCitation": "Section 6.5: The stream view is a stream-based design to show the data evolution in a period...",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Area Chart",
+              "ID": 11,
+              "PaperDescription": "Displays aggregated density trends over time",
+              "Inputs": [
+                "Temporal density dataset"
+              ],
+              "Outputs": [
+                "Area chart showing cumulative trends"
+              ],
+              "ReferenceCitation": "Section 6.5: The statistical view visualizes density distributions over different time ranges...",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 12,
+              "PaperDescription": "Displays statistical summaries of density variations as horizontal bars",
+              "Inputs": [
+                "Query results"
+              ],
+              "Outputs": [
+                "Horizontal bar chart with mean and max values"
+              ],
+              "ReferenceCitation": "Section 6.5: We design a new statistical bar that can present the maximum and mean values...",
+              "FeedsInto": [
+                13
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 13,
+              "PaperDescription": "Lets users refine queries by selecting a specific time period to analyze density distributions.",
+              "Inputs": [
+                "User-selected time range"
+              ],
+              "Outputs": [
+                "Filtered density maps"
+              ],
+              "ReferenceCitation": "Section 6: The query period indicates the time range...",
+              "FeedsInto": [
+                2
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 14,
+              "PaperDescription": "Allows users to interactively select a specific geographic area for focused analysis.",
+              "Inputs": [
+                "User-selected region"
+              ],
+              "Outputs": [
+                "Filtered dataset & updated visualization"
+              ],
+              "ReferenceCitation": "Section 6: Spatial query means the operation is applied on a geographical map...",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

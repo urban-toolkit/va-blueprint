@@ -1,0 +1,339 @@
+{
+  "PaperTitle": "Voila: Visual Anomaly Detection and Monitoring with Streaming Spatiotemporal Data",
+  "Year": 2018,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 1,
+              "PaperDescription": "Loads the New York City taxi-trip data collected in 2014 and 2015, partitioned into grids of 311 equal-sized regions and processed into a time series of tensors to simulate streaming input.",
+              "Inputs": [
+                "NYC taxi-trip data (2014-2015)"
+              ],
+              "Outputs": [
+                "Time series of tensors capturing in-coming and out-going taxi flows for regions"
+              ],
+              "ReferenceCitation": "Section 4.1 Data Model and Transformation: The New York City taxi-trip data collected in 2014 and 2015. We extracted a subset of the taxi-trip data containing over 100 million taxi trips within the Manhattan area. We partitioned the area into grids of 311 equal-sized regions. The data were first processed offline using parallel Spark clusters and were converted into a time series of tensors to simulate the streaming input.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Streaming Data Handling",
+              "ID": 2,
+              "PaperDescription": "Handles the real-time streaming spatiotemporal data and incrementally adds new tensors capturing data in later time epochs for analysis.",
+              "Inputs": [
+                "Streaming spatiotemporal data from sensors"
+              ],
+              "Outputs": [
+                "Incrementally updated tensor time series"
+              ],
+              "ReferenceCitation": "Section 3 System Overview: As illustrated in Fig. 3, new tensors capturing data in the later time epochs can be incrementally added into the series of tensors for analysis. This streaming pipeline facilitates the online monitoring and analysis.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Construction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Tensor Time Series",
+              "ID": 3,
+              "PaperDescription": "Transforms the spatiotemporal data from a streaming data source into a tensor time series, with each tensor representing multifaceted data for a given time epoch.",
+              "Inputs": [
+                "Raw streaming spatiotemporal data (taxi-trip data)"
+              ],
+              "Outputs": [
+                "Series of multi-way tensors representing region-feature-time data"
+              ],
+              "ReferenceCitation": "Section 4.1 Data Model and Transformation: The first step is to transform the spatiotemporal data from a streaming data source into a tensor time series as shown in Fig. 4(b).",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Tensor Decomposition",
+              "ID": 4,
+              "PaperDescription": "Performs tensor decomposition on the tensor time series to extract expected latent patterns from the historical data.",
+              "Inputs": [
+                "Tensor time series"
+              ],
+              "Outputs": [
+                "Expected latent patterns matrix (B*)"
+              ],
+              "ReferenceCitation": "Section 4.2 Extracting Expected Patterns: Given spatiotemporal data stored in a tensor, we derive the expected, latent patterns from the data through tensor decomposition.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Detection",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Regional Anomaly Scores",
+              "ID": 5,
+              "PaperDescription": "Calculates regional anomaly scores by comparing the observed patterns against expected patterns using local outlier factor (LOF) for each region and time.",
+              "Inputs": [
+                "Tensor decomposition factor matrices",
+                "Expected latent patterns (B*)"
+              ],
+              "Outputs": [
+                "Anomaly scores for regions"
+              ],
+              "ReferenceCitation": "Section 4.4 Extracting Anomalous Patterns: We calculate an anomaly score si for each region ri at a given time t by examining the changes of the patterns' occurrence-likelihoods in ri.",
+              "FeedsInto": [
+                6,
+                7,
+                10,
+                12,
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 6,
+              "PaperDescription": "Displays a geographical map overlaid with equal-size grids representing spatial anomaly scores, offering an overview and context for spatial analysis.",
+              "Inputs": [
+                "Anomaly scores for regions",
+                "Expected patterns (B*)"
+              ],
+              "Outputs": [
+                "2D map with heatmap visualization of anomaly scores"
+              ],
+              "ReferenceCitation": "Section 5.3 Macro Map View: The macro map view presents a geographical map overlaid with equal-size grids... It provides an overview of the anomalous information in the form of a heatmap.",
+              "FeedsInto": [
+                11,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 7,
+              "PaperDescription": "Overlays statistical anomaly scores on the macro map as a heatmap to visualize anomaly intensities across different regions.",
+              "Inputs": [
+                "Anomaly scores for regions"
+              ],
+              "Outputs": [
+                "Heatmap overlays on 2D map"
+              ],
+              "ReferenceCitation": "Section 5.3.2 Context Mode: The context mode of the macro map shows the statistical information derived either from the raw data or the tensor analysis.",
+              "FeedsInto": [
+                6,
+                11,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Glyph)",
+              "ID": 14,
+              "PaperDescription": "Encodes anomaly score likelihood and detection difficulty as color and size glyphs in the macro map view to guide user attention.",
+              "Inputs": [
+                "Anomaly scores",
+                "Difficulty of finding anomaly (q values)"
+              ],
+              "Outputs": [
+                "Glyph overlays representing anomaly likelihood and inspection difficulty"
+              ],
+              "ReferenceCitation": "Section 5.3.1 Anomaly Detection Mode: We design an anomaly glyph to show visual cues for the context-guided inspection.",
+              "FeedsInto": [
+                6,
+                11,
+                16
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 8,
+              "PaperDescription": "Displays the anomaly scores of a focal region over time as a time-series chart in the history view.",
+              "Inputs": [
+                "Anomaly scores over time for selected region"
+              ],
+              "Outputs": [
+                "Time-series line chart of anomaly scores"
+              ],
+              "ReferenceCitation": "Section 5.4 Micro Map View and History View: The history view shows the anomaly scores of the focal region over time as a time-series chart.",
+              "FeedsInto": [
+                15,
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Small Multiples Chart",
+              "ID": 9,
+              "PaperDescription": "Displays temporal distributions of dynamic latent patterns over the current and preceding epochs as small multiple charts.",
+              "Inputs": [
+                "Temporal factor matrices (Ct)"
+              ],
+              "Outputs": [
+                "Temporal pattern visualizations"
+              ],
+              "ReferenceCitation": "Section 5.5 Temporal Pattern View: The temporal pattern view visualizes the temporal distribution of the dynamic latent patterns derived from the tensor analysis.",
+              "FeedsInto": [
+                15,
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Ranking List",
+              "ID": 10,
+              "PaperDescription": "Displays a ranked list of suspicious regions based on anomaly scores to support user selection.",
+              "Inputs": [
+                "Anomaly scores for regions"
+              ],
+              "Outputs": [
+                "Interactive ranked list of regions"
+              ],
+              "ReferenceCitation": "Section 5.2 User Interface: The ranking panel orders the suspicious regions according to their anomaly scores updated based on the tensor analysis and user feedback.",
+              "FeedsInto": [
+                13,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 12,
+              "PaperDescription": "Displays the similarity among regions in terms of their sharing similar expected patterns using MDS projection to reveal clusters.",
+              "Inputs": [
+                "Expected pattern distributions (At)"
+              ],
+              "Outputs": [
+                "Scatter plot showing region similarity clusters"
+              ],
+              "ReferenceCitation": "Section 5.6 Other Views: Feature Inspection View shows the similarity among regions in terms of sharing similar expected patterns.",
+              "FeedsInto": [
+                15
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 11,
+              "PaperDescription": "Allows users to select a region on the macro map for detailed inspection, triggering updates in micro map and history views.",
+              "Inputs": [
+                "User selection on macro map"
+              ],
+              "Outputs": [
+                "Selected region for further inspection"
+              ],
+              "ReferenceCitation": "Section 5.2 User Interface: Mike first investigates the highly anomalous regions identified by the system; he picks such regions from the macro map view and ranking panel.",
+              "FeedsInto": [
+                8,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Ranking List Selection",
+              "ID": 13,
+              "PaperDescription": "Allows users to select regions from the ranking list for focused inspection in the visualization views.",
+              "Inputs": [
+                "User selection in ranking list"
+              ],
+              "Outputs": [
+                "Selected region for inspection"
+              ],
+              "ReferenceCitation": "Section 5.2 User Interface: The ranking panel orders the suspicious regions according to their anomaly scores updated based on the tensor analysis and user feedback.",
+              "FeedsInto": [
+                8,
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Annotation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Anomaly Labeling",
+              "ID": 15,
+              "PaperDescription": "Allows users to label regions as anomalous or not, triggering Bayesian updates to anomaly scores and guiding further inspection.",
+              "Inputs": [
+                "User-labeled anomaly status for selected region"
+              ],
+              "Outputs": [
+                "Updated anomaly scores using Bayesian updates"
+              ],
+              "ReferenceCitation": "Section 5.3.1 Anomaly Detection Mode: After inspection, the user labels the region based on their judgments to indicate whether the region indeed contains an anomaly or not. To achieve this goal, we propose a Bayesian approach to update regions' anomaly scores by incorporating human judgment in real time.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Snapshot & Bookmark",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Snapshot Panel",
+              "ID": 16,
+              "PaperDescription": "Allows users to record suspicious regions for later retrieval and further examination by capturing them into the snapshot panel.",
+              "Inputs": [
+                "User-selected regions marked for snapshots"
+              ],
+              "Outputs": [
+                "Saved snapshots of regions for review"
+              ],
+              "ReferenceCitation": "Section 5.2 User Interface: Alternatively, if he finds suspicious regions that warrant further examination, he captures them into the snapshot panel.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Anomaly Panel",
+              "ID": 17,
+              "PaperDescription": "Captures confirmed anomaly regions labeled by the user for ongoing anomaly investigation in the anomaly panel.",
+              "Inputs": [
+                "User-confirmed anomaly regions"
+              ],
+              "Outputs": [
+                "Stored confirmed anomaly regions for further analysis"
+              ],
+              "ReferenceCitation": "Section 5.2 User Interface: When he confirms that certain regions are indeed anomalous, he clicks and marks those regions, and the system automatically captures those regions into the anomaly panel.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

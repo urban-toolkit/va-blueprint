@@ -1,0 +1,235 @@
+{
+  "PaperTitle": "Urban Mosaic: Visual Exploration of Streetscapes Using Large-Scale Image Data",
+  "Year": 2020,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Street-Level Image Dataset",
+              "ID": 1,
+              "PaperDescription": "We employ a subset of the full data, covering the boroughs of Manhattan and Brooklyn between April 2016 to April 2017, and totaling 7.77 million images.",
+              "Inputs": [
+                "Raw street-level images from Carmera",
+                "Metadata including time, location, and camera orientation"
+              ],
+              "Outputs": [
+                "Structured dataset of images and metadata"
+              ],
+              "ReferenceCitation": "Introducing Urban Mosaic section: We employ a subset of the full data, covering the boroughs of Manhattan and Brooklyn between April 2016 to April 2017, and totaling 7.77 million images.",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Feature Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Image Feature Embedding",
+              "ID": 2,
+              "PaperDescription": "We compute a feature vector of size 4096 for each image region in a 2x2 and a 4x4 grid. Each image is represented by 20 4096-sized feature vectors in total.",
+              "Inputs": [
+                "Street-level image dataset"
+              ],
+              "Outputs": [
+                "Feature vectors (512-d for clustering, 4096-d for similarity search)"
+              ],
+              "ReferenceCitation": "System Architecture section: We compute a feature vector of size 4096 for each image region in a 2x2 and a 4x4 grid. Each image is represented by 20 4096-sized feature vectors in total.",
+              "FeedsInto": [
+                4,
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Indexing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Feature Index",
+              "ID": 3,
+              "PaperDescription": "We overcome this by trading off accuracy for speed using a locality sensitive hashing (LSH) scheme to encode the feature vectors, and performing the query using the hashed data.",
+              "Inputs": [
+                "Feature vectors"
+              ],
+              "Outputs": [
+                "Hashed index of image features"
+              ],
+              "ReferenceCitation": "Efficient Image Similarity Computation section: We overcome this by trading off accuracy for speed using a locality sensitive hashing (LSH) scheme to encode the feature vectors, and performing the query using the hashed data.",
+              "FeedsInto": [
+                4,
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Querying",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Image Similarity Search",
+              "ID": 4,
+              "PaperDescription": "Two images are said to be similar if the similarity measure between at least one pair of feature vectors from the two images is below a given threshold.",
+              "Inputs": [
+                "Feature index",
+                "Query image"
+              ],
+              "Outputs": [
+                "Ranked list of similar images"
+              ],
+              "ReferenceCitation": "Efficient Image Similarity Computation section: Two images are said to be similar if the similarity measure between at least one pair of feature vectors from the two images is below a given threshold.",
+              "FeedsInto": [
+                7,
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Image Clustering",
+              "ID": 5,
+              "PaperDescription": "This produces a feature vector that coarsely captures general aspects of the scene, to assess overall image similarity and group images into relevant clusters.",
+              "Inputs": [
+                "Feature index"
+              ],
+              "Outputs": [
+                "Image clusters"
+              ],
+              "ReferenceCitation": "System Architecture section: This produces a feature vector that coarsely captures general aspects of the scene, to assess overall image similarity and group images into relevant clusters.",
+              "FeedsInto": [
+                7,
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Image Mosaic",
+              "ID": 7,
+              "PaperDescription": "The image mosaic clusters the image query result and visualizes these clusters. The clusters, in this instance, are sorted based on their size.",
+              "Inputs": [
+                "Image clusters",
+                "Similar images"
+              ],
+              "Outputs": [
+                "Interactive image mosaic view"
+              ],
+              "ReferenceCitation": "Urban Mosaic User Interface section: The image mosaic clusters the image query result and visualizes these clusters. The clusters, in this instance, are sorted based on their size.",
+              "FeedsInto": [
+                10
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 8,
+              "PaperDescription": "Users can also visualize the spatial distribution of one or more selected clusters on the map, enabling them to more quickly identify locations where images are found with similar attributes.",
+              "Inputs": [
+                "Spatial metadata from image clusters or query results",
+                "Urban data sets (e.g., census, weather)"
+              ],
+              "Outputs": [
+                "Interactive 2D map view"
+              ],
+              "ReferenceCitation": "Urban Mosaic User Interface section: Users can also visualize the spatial distribution of one or more selected clusters on the map, enabling them to more quickly identify locations where images are found with similar attributes.",
+              "FeedsInto": [
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 9,
+              "PaperDescription": "Urban data sets can be visualized as heatmaps at different spatial resolutions, e.g., neighbourhood, block, street or as a high resolution grid.",
+              "Inputs": [
+                "Urban data sets"
+              ],
+              "Outputs": [
+                "Heatmap overlay on 2D map"
+              ],
+              "ReferenceCitation": "Urban Data Interface section: Urban data sets can be visualized as heatmaps at different spatial resolutions, e.g., neighbourhood, block, street or as a high resolution grid.",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Image Query Widget",
+              "ID": 10,
+              "PaperDescription": "This widget allows users to compose image query constraints. Users can either upload images of interest or use the images already in the underlying database.",
+              "Inputs": [
+                "Query images"
+              ],
+              "Outputs": [
+                "Image query constraints"
+              ],
+              "ReferenceCitation": "Urban Mosaic User Interface section: This widget allows users to compose image query constraints. Users can either upload images of interest or use the images already in the underlying database.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 11,
+              "PaperDescription": "Based on their exploration of these urban data sets, users can select regions of interest over the map.",
+              "Inputs": [
+                "User-selected regions"
+              ],
+              "Outputs": [
+                "Spatial constraints for query and visualization"
+              ],
+              "ReferenceCitation": "Urban Data Interface section: Based on their exploration of these urban data sets, users can select regions of interest over the map.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 12,
+              "PaperDescription": "Urban data sets can be visualized as heatmaps at different spatial resolutions, e.g., neighbourhood, block, street or as a high resolution grid.",
+              "Inputs": [
+                "User-selected temporal constraints"
+              ],
+              "Outputs": [
+                "Temporal constraints for query and visualization"
+              ],
+              "ReferenceCitation": "Urban Data Interface section: Urban data sets can be visualized as heatmaps at different spatial resolutions, e.g., neighbourhood, block, street or as a high resolution grid.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

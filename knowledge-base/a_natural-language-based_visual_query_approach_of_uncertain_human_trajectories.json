@@ -1,0 +1,307 @@
+{
+  "PaperTitle": "A Natural-language-based Visual Query Approach of Uncertain Human Trajectories",
+  "Year": 2020,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Mobile Trajectories",
+              "ID": 1,
+              "PaperDescription": "Loads mobile phone trajectory data, which includes anonymized user IDs, timestamps, and base station IDs, to represent spatially uncertain human movement.",
+              "Inputs": [
+                "Raw mobile phone trajectory records (User ID, timestamp, base station ID)"
+              ],
+              "Outputs": [
+                "Uncertain trajectory dataset partitioned into PSR (Possible Spatial Regions)"
+              ],
+              "ReferenceCitation": "Section 3.1 Uncertain Trajectory Documentation and Indexing: Using human mobile trajectory data as an example, given the distribution of base stations, the urban space can be partitioned into PSR regions.",
+              "FeedsInto": [
+                2
+              ]
+            },
+            {
+              "GranularBlockName": "POI",
+              "ID": 2,
+              "PaperDescription": "Loads POI datasets, including names, types, and descriptions, which are used to enrich PSRs for indexing and query processing.",
+              "Inputs": [
+                "Raw POI datasets (names, types, descriptions)"
+              ],
+              "Outputs": [
+                "Semantic context information of PSRs"
+              ],
+              "ReferenceCitation": "Section 3.1 Uncertain Trajectory Documentation and Indexing: Each city POI uniquely belongs to a certain PSR region, and each region contains multiple POIs.",
+              "FeedsInto": [
+                3,
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Documentation and Indexing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Uncertain Trajectory Documentation",
+              "ID": 3,
+              "PaperDescription": "Transforms uncertain trajectory points into text documents by encoding PSR info and related POIs, then stores them in a text database.",
+              "Inputs": [
+                "Uncertain trajectory dataset partitioned into PSRs",
+                "Semantic context information of PSRs"
+              ],
+              "Outputs": [
+                "Trajectory documents stored in text database"
+              ],
+              "ReferenceCitation": "Section 3.1 Uncertain Trajectory Documentation and Indexing: Then this information of all sample points on a trajectory forms a trajectory document.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal-Textual-Trajectory Index",
+              "ID": 4,
+              "PaperDescription": "Builds a temporal and textual inverted index for trajectory documents, enabling efficient keyword and time-based querying.",
+              "Inputs": [
+                "Trajectory documents stored in text database"
+              ],
+              "Outputs": [
+                "Temporal-textual-trajectory index for fast querying"
+              ],
+              "ReferenceCitation": "Section 3.1 Uncertain Trajectory Documentation and Indexing: We build an inverted index for trajectory documents in the same data partition.",
+              "FeedsInto": [
+                5,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Natural Language Query",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Constraint Extraction",
+              "ID": 5,
+              "PaperDescription": "Processes natural language input using lexical analysis and word embeddings to extract temporal and spatial constraints from sentences.",
+              "Inputs": [
+                "User-specified natural language query"
+              ],
+              "Outputs": [
+                "Temporal constraints and spatial constraint keywords"
+              ],
+              "ReferenceCitation": "Section 3.2 Natural Language Processing and Constraints Extraction: The THU Lexical Analyzer (THULAC) [42] is employed to split a query sentence into words.",
+              "FeedsInto": [
+                6,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Relevance Quantification",
+              "ID": 6,
+              "PaperDescription": "Computes the relevance score between extracted constraints and indexed POIs using BM25 and enhances it with region functional topics using LDA topic modeling.",
+              "Inputs": [
+                "Temporal constraints and spatial constraint keywords",
+                "Temporal-textual-trajectory index"
+              ],
+              "Outputs": [
+                "Ranked top-K POIs based on relevance score"
+              ],
+              "ReferenceCitation": "Section 3.3.2 Step 2: Enriching POI Relevance with Regional Topics: We adopt a similar topic modeling algorithm to compute regional functions (i.e., topics) in each PSR region for the uncertain trajectories.",
+              "FeedsInto": [
+                7,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Trajectory Retrieval",
+              "ID": 7,
+              "PaperDescription": "Retrieves trajectory documents matching the top-K POIs and temporal constraints, ranks them by relevance score for user exploration.",
+              "Inputs": [
+                "Ranked top-K POIs based on relevance score"
+              ],
+              "Outputs": [
+                "Ranked list of matching trajectories"
+              ],
+              "ReferenceCitation": "Section 3.3.3 Step 3: Retrieving Matched Trajectories: The top-K POIs ranked by Equation 5 are extracted and used to query the trajectory document database.",
+              "FeedsInto": [
+                8,
+                9,
+                10,
+                11,
+                12,
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 8,
+              "PaperDescription": "Displays queried trajectories and POIs as polylines and markers overlaid on a 2D map, with interactive widgets to control visualization properties.",
+              "Inputs": [
+                "Ranked list of matching trajectories",
+                "Relevant POI locations"
+              ],
+              "Outputs": [
+                "Interactive 2D map view"
+              ],
+              "ReferenceCitation": "Section 4.2 Trajectory Visual Exploration: The Map View visualizes the result trajectories as polylines in a geographical map (Figure 1 (e)).",
+              "FeedsInto": [
+                15,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 9,
+              "PaperDescription": "Displays a heatmap overlay highlighting the density distribution of queried trajectories across city regions.",
+              "Inputs": [
+                "Trajectory density information"
+              ],
+              "Outputs": [
+                "Heatmap overlay on the map"
+              ],
+              "ReferenceCitation": "Section 5.1 Examining Tourist Traffic Pattern: The heatmap shows that the queried trajectories are mainly distributed in the northwest, the middle, and the east of the city (Figure 1 (e)).",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Trajectories)",
+              "ID": 10,
+              "PaperDescription": "Overlays individual trajectories as polylines on the map view for spatial analysis of human movement patterns.",
+              "Inputs": [
+                "Ranked list of matching trajectories"
+              ],
+              "Outputs": [
+                "Trajectory polylines on 2D map"
+              ],
+              "ReferenceCitation": "Section 4.2 Trajectory Visual Exploration: The Map View visualizes the result trajectories as polylines in a geographical map (Figure 1 (e)).",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (POIs)",
+              "ID": 11,
+              "PaperDescription": "Displays relevant POIs as markers on the map view, highlighting key locations used in query results.",
+              "Inputs": [
+                "Relevant POI locations"
+              ],
+              "Outputs": [
+                "POI markers on 2D map"
+              ],
+              "ReferenceCitation": "Section 4.2 Trajectory Visual Exploration: Meanwhile, the relevant POIs used to query these trajectories are displayed as markers on the map.",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Timeline",
+              "ID": 12,
+              "PaperDescription": "Visualizes temporal aspects of queried trajectories on a timeline, representing time periods and allowing zoom and focus on specific intervals.",
+              "Inputs": [
+                "Trajectory timestamps",
+                "Temporal metadata"
+              ],
+              "Outputs": [
+                "Interactive timeline view"
+              ],
+              "ReferenceCitation": "Section 4.2 Trajectory Visual Exploration: The Temporal Graph View visualizes trajectories as colored bars over a time axis (Figure 1 (i)).",
+              "FeedsInto": [
+                15
+              ]
+            },
+            {
+              "GranularBlockName": "Relevance Tree",
+              "ID": 13,
+              "PaperDescription": "Displays extracted spatial constraint keywords and their relevance to POIs in a hierarchical tree structure.",
+              "Inputs": [
+                "Spatial constraint keywords",
+                "Relevance scores of POIs"
+              ],
+              "Outputs": [
+                "Relevance tree visualization"
+              ],
+              "ReferenceCitation": "Section 4.1 Query Condition Specification: The relevance tree visualizes the extracted spatial constraint keywords and their relevant POIs (Figure 4 (b).",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Topic Hexagon",
+              "ID": 14,
+              "PaperDescription": "Displays trajectories projected into a region functional topic space, where each vertex represents a topic and trajectory points are arranged based on topic relevance.",
+              "Inputs": [
+                "Trajectory functional topic data"
+              ],
+              "Outputs": [
+                "Topic space projection of trajectories"
+              ],
+              "ReferenceCitation": "Section 4.2 Trajectory Visual Exploration: The Semantics View visualizes the trajectories as polylines inside a topic hexagon (Figure 5).",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 15,
+              "PaperDescription": "Allows users to filter trajectories by specific time periods within the temporal graph view and map view.",
+              "Inputs": [
+                "User-defined time period"
+              ],
+              "Outputs": [
+                "Filtered trajectories displayed in views"
+              ],
+              "ReferenceCitation": "Section 4.2 Trajectory Visual Exploration: A time slider is used on the time axis to adjust the width and position of each segment.",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 16,
+              "PaperDescription": "Allows users to draw regions on the map view to filter and display trajectories passing through selected areas.",
+              "Inputs": [
+                "User-defined region"
+              ],
+              "Outputs": [
+                "Filtered trajectories in selected area"
+              ],
+              "ReferenceCitation": "Section 4.2 Trajectory Visual Exploration: Furthermore, users can directly draw regions on the map so that the trajectories passing it are filtered and displayed.",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

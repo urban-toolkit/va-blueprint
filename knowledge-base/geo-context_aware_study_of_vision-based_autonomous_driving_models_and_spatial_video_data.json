@@ -1,0 +1,348 @@
+{
+  "PaperTitle": "Geo-Context Aware Study of Vision-Based Autonomous Driving Models and Spatial Video Data",
+  "Year": 2022,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Video Dataset",
+              "ID": 1,
+              "PaperDescription": "Downloads and loads spatial video data from the BDDV repository, including video trips with GPS, speed, and time data.",
+              "Inputs": [
+                "Raw spatial video datasets (BDDV repository)"
+              ],
+              "Outputs": [
+                "Clips of video trips with metadata (TripID, speed, GPS locations, timestamps, altitude, etc.)"
+              ],
+              "ReferenceCitation": "Section 4.1 Video Trips and Data Extraction: We download raw spatial video datasets from the public BDDV repository. In our prototype, we use the videos covering New York City (NYC) and its suburban area.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Preprocessing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "TFRecords Generation",
+              "ID": 2,
+              "PaperDescription": "Transforms raw video data into TFRecords optimized for Tensorflow computing, combining multiple data types for DL networks.",
+              "Inputs": [
+                "Raw spatial video data",
+                "Extracted frame images"
+              ],
+              "Outputs": [
+                "TFRecords files optimized for DL predictions"
+              ],
+              "ReferenceCitation": "Section 4.2 Data Processing and Transformation: To make efficient visual analysis, we transform raw data into TFRecords optimized for Tensorflow computing.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Prediction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "ADM Predictions",
+              "ID": 3,
+              "PaperDescription": "Generates driver action predictions for each frame using CNN-LSTM, FCN-LSTM, and TCNN1 models.",
+              "Inputs": [
+                "TFRecords data",
+                "Pre-trained DL networks (CNN-LSTM, FCN-LSTM, TCNN1)"
+              ],
+              "Outputs": [
+                "Predicted driver actions with probability vectors for each frame"
+              ],
+              "ReferenceCitation": "Section 4.2 Data Processing and Transformation: CNN-LSTM, FCN-LSTM, and TCNN1 networks are used to generate predictions of driver actions at each frame of these video trips.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Evaluation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Accuracy and Perplexity Computation",
+              "ID": 4,
+              "PaperDescription": "Computes accuracy and perplexity metrics for each frame and aggregates them over trips and geographical regions.",
+              "Inputs": [
+                "ADM predictions",
+                "Actual driver actions"
+              ],
+              "Outputs": [
+                "Accuracy and perplexity values linked to spatial locations"
+              ],
+              "ReferenceCitation": "Section 4.2 Data Processing and Transformation: The accuracy and perplexity values are finally computed for each frame image and link to the corresponding location as well.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Integration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map Matching",
+              "ID": 5,
+              "PaperDescription": "Matches prediction locations to geographical objects (street segments, zipcode regions) for spatial analysis.",
+              "Inputs": [
+                "Prediction locations",
+                "OSM road network geometry",
+                "Zipcode region geometries"
+              ],
+              "Outputs": [
+                "Spatially linked prediction data"
+              ],
+              "ReferenceCitation": "Section 4.3 Map Matching and Spatial Database: Each video trip is processed while each location with prediction results is mapped to a street segment and a zipcode region it resides in.",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Spatial Database Storage",
+              "ID": 6,
+              "PaperDescription": "Stores spatially linked data in a NoSQL spatial database for efficient queries and interactive visualization.",
+              "Inputs": [
+                "Spatially linked prediction data",
+                "Video and image files"
+              ],
+              "Outputs": [
+                "Indexed spatial database (MongoDB) entries for ADM predictions and videos"
+              ],
+              "ReferenceCitation": "Section 4.3 Map Matching and Spatial Database: A NoSQL database is used specifically for the ADM and video data, instead of using a traditional relational database.",
+              "FeedsInto": [
+                7,
+                9,
+                10,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 7,
+              "PaperDescription": "Displays a 2D interactive map with layers for region heatmaps, video trip trajectories, and critical prediction locations.",
+              "Inputs": [
+                "Spatial database query results",
+                "Prediction performance metrics"
+              ],
+              "Outputs": [
+                "Interactive 2D map with overlays for ADM metrics and video data"
+              ],
+              "ReferenceCitation": "Section 5.2 Visualization Design: Geo-environment is visualized together with model performance and video data. Users can overview the whole city and can also select an arbitrarily sized region of interest.",
+              "FeedsInto": [
+                8,
+                16,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 8,
+              "PaperDescription": "Displays overlays on the map, including heatmaps for ADM accuracy/perplexity, video trip density, and critical prediction points.",
+              "Inputs": [
+                "Prediction performance metrics (accuracy, perplexity)",
+                "Video trip trajectories",
+                "Critical location points"
+              ],
+              "Outputs": [
+                "Map overlays with visual encodings for performance and spatial context"
+              ],
+              "ReferenceCitation": "Section 5.2 Visualization Design: Region heatmap: Zipcode regions are color-coded by one of the three ADM attributes including the density of locations where ADM predictions are made, ADM accuracy, and ADM perplexity.",
+              "FeedsInto": [
+                7,
+                16
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 9,
+              "PaperDescription": "Shows ADM prediction performance (accuracy, perplexity) across spatial conditions like street type, weather, and time of day.",
+              "Inputs": [
+                "Aggregated prediction performance metrics"
+              ],
+              "Outputs": [
+                "Bar charts for comparative performance analysis"
+              ],
+              "ReferenceCitation": "Section 5.2 Visualization Design: Users can select to check the accuracy or perplexity values of these models aggregated with respect to street type, weather, time of day.",
+              "FeedsInto": [
+                13,
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Bar Chart (Trip Distribution)",
+              "ID": 10,
+              "PaperDescription": "Displays distribution charts of video trips and their associated ADM performance metrics for filtering and comparison.",
+              "Inputs": [
+                "Trip selection criteria (spatial conditions or performance metrics)"
+              ],
+              "Outputs": [
+                "Bar charts showing distribution of accuracy and perplexity values"
+              ],
+              "ReferenceCitation": "Section 5.2 Visualization Design: Trip Distribution Charts show the histograms of those trips satisfying the conditions.",
+              "FeedsInto": [
+                13,
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Table",
+              "ID": 11,
+              "PaperDescription": "Displays actual and predicted driver actions from multiple ADMs in a comparative table format.",
+              "Inputs": [
+                "Filtered ADM prediction data",
+                "Actual driver actions"
+              ],
+              "Outputs": [
+                "Comparative model prediction view for analysis"
+              ],
+              "ReferenceCitation": "Section 5.2 Visualization Design: In this view, four columns represent actual driver action, and predicted actions from the three models.",
+              "FeedsInto": [
+                15
+              ]
+            },
+            {
+              "GranularBlockName": "Street View Thumbnails",
+              "ID": 12,
+              "PaperDescription": "Shows street-view thumbnails at selected critical locations, enabling inspection of video frames corresponding to model predictions.",
+              "Inputs": [
+                "Critical location points",
+                "Linked video frame data"
+              ],
+              "Outputs": [
+                "Thumbnail images of street-view scenes at key locations"
+              ],
+              "ReferenceCitation": "Section 5.2 Visualization Design: Visual contents of the critical locations are shown in the thumbnail view. Users can click to enlarge the image which is also linked to its position on the map.",
+              "FeedsInto": [
+                17
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatial Conditions Filter",
+              "ID": 13,
+              "PaperDescription": "Allows users to filter video trips and prediction data by spatial conditions such as weather, street type, and time of day.",
+              "Inputs": [
+                "User-defined spatial conditions"
+              ],
+              "Outputs": [
+                "Filtered dataset for visualization and analysis"
+              ],
+              "ReferenceCitation": "Section 5.2 Visualization Design: Users can choose video trips based on spatial conditions in the Spatial Conditions Filter as shown in Fig. 1C.",
+              "FeedsInto": [
+                7,
+                10,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Metrics Filter",
+              "ID": 14,
+              "PaperDescription": "Allows users to filter video trips by ADM performance metrics such as accuracy and perplexity values.",
+              "Inputs": [
+                "User-defined performance thresholds"
+              ],
+              "Outputs": [
+                "Filtered video trips based on model performance metrics"
+              ],
+              "ReferenceCitation": "Section 5.2 Visualization Design: Users can also choose to use Model Metrics Filter to select trips based on the accuracy and/or perplexity values.",
+              "FeedsInto": [
+                7,
+                10,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Prediction Filter",
+              "ID": 15,
+              "PaperDescription": "Allows users to filter and compare ADM predictions at locations where models agree or disagree with actual driver actions.",
+              "Inputs": [
+                "User-selected prediction agreement/disagreement criteria"
+              ],
+              "Outputs": [
+                "Filtered prediction locations and data for analysis"
+              ],
+              "ReferenceCitation": "Section 5.2 Visualization Design: Users can study and compare different model predictions results. In this view, four columns represent actual driver action, and predicted actions from the three models.",
+              "FeedsInto": [
+                7,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 16,
+              "PaperDescription": "Enables users to draw polygonal regions on the map to focus the analysis on a subset of trips or locations.",
+              "Inputs": [
+                "User-defined geographic region selection"
+              ],
+              "Outputs": [
+                "Subset of video trips and prediction data for selected region"
+              ],
+              "ReferenceCitation": "Section 5.2 Visualization Design: Users can overview the whole city and can also select an arbitrarily sized region of interest.",
+              "FeedsInto": [
+                9,
+                13,
+                14,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Thumbnail Selection",
+              "ID": 17,
+              "PaperDescription": "Enables users to select individual thumbnails to explore specific frames and linked model predictions in detail.",
+              "Inputs": [
+                "User-selected thumbnail images"
+              ],
+              "Outputs": [
+                "Focused view of video content and prediction details"
+              ],
+              "ReferenceCitation": "Section 5.2 Visualization Design: Users can click to enlarge the image which is also linked to its position on the map.",
+              "FeedsInto": [
+                15
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

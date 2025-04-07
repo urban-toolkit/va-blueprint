@@ -1,0 +1,288 @@
+{
+  "PaperTitle": "EcoLens: visual analysis of ecological regions in urban contexts using traffic data",
+  "Year": 2020,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 1,
+              "PaperDescription": "Loads New York City taxi trip dataset and processes it into matrix time series with features for spatial and temporal analysis.",
+              "Inputs": [
+                "Raw taxi trip records (origin, destination, timestamp)"
+              ],
+              "Outputs": [
+                "Structured taxi trip data for preprocessing"
+              ],
+              "ReferenceCitation": "Section 4.1 Feature extraction: Our prototype system employs the public New York City taxi trip dataset to capture the change of regional mobility patterns.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Preprocessing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Taxi Trip Data Cleaning",
+              "ID": 2,
+              "PaperDescription": "Cleans and transforms raw taxi-trip data into matrix time series representing regional mobility features.",
+              "Inputs": [
+                "Structured taxi trip data"
+              ],
+              "Outputs": [
+                "Matrix time series capturing mobility patterns in each region over time"
+              ],
+              "ReferenceCitation": "Section 3 System overview: The preprocessing module is designed to clean the raw data (i.e., the taxi-trips in our case) and transform them into the matrix time series with desired features.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Segmentation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Dynamic Region Segmentation",
+              "ID": 3,
+              "PaperDescription": "Performs dynamic latent region detection using a nonnegative matrix factorization (NMF)-based algorithm smoothed over spatial and temporal dimensions to capture mobility patterns.",
+              "Inputs": [
+                "Matrix time series capturing mobility patterns"
+              ],
+              "Outputs": [
+                "Latent region patterns (Wt)",
+                "Region distribution matrix (Ht)",
+                "Pattern transition probability (Mt)"
+              ],
+              "ReferenceCitation": "Section 4.2 Dynamic region segmentation: We propose a context preserving algorithm based on nonnegative matrix factorization (NMF) to analyze the regional dynamics of the taxi trips captured in the aforementioned feature matrix time series.",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Detection",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Anomaly Detection",
+              "ID": 4,
+              "PaperDescription": "Identifies abnormal mobility patterns by detecting outliers in the temporal evolution of mobility features.",
+              "Inputs": [
+                "Feature matrix time series",
+                "Segmentation results"
+              ],
+              "Outputs": [
+                "Flagged time intervals and regions with abnormal patterns"
+              ],
+              "ReferenceCitation": "Section 6.2.2 Anomaly detection: EcoLens was also used to detect anomalous situations. Fig. 11 illustrates an overview of the mobility patterns at different timestamps, revealing an outlier for July 4th.",
+              "FeedsInto": [
+                5,
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 5,
+              "PaperDescription": "Displays segmentation results of latent regions on an interactive 2D map, where grids are color-coded by their primary mobility pattern, and regions are outlined by boundaries.",
+              "Inputs": [
+                "Region distribution matrix (Ht)"
+              ],
+              "Outputs": [
+                "Rendered 2D map with latent region boundaries and grid segmentation"
+              ],
+              "ReferenceCitation": "Section 5.2 Map view: We overlay the segmentation analysis results on a map to illustrate its spatial context.",
+              "FeedsInto": [
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Glyph)",
+              "ID": 6,
+              "PaperDescription": "Displays flow-glyphs summarizing raw traffic flows inside each grid, showing direction and magnitude of inflow and outflow traffic for each region.",
+              "Inputs": [
+                "Raw traffic data per grid"
+              ],
+              "Outputs": [
+                "Glyph visualization encoding flow direction and magnitude"
+              ],
+              "ReferenceCitation": "Section 5.2 Map view: We introduce a novel flow-glyph design in the map view as shown in Fig. 5.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 7,
+              "PaperDescription": "Displays temporal evolution trends of latent regions in the global view, plotting region transitions across time intervals with periodical patterns.",
+              "Inputs": [
+                "Feature matrix time series",
+                "Segmentation result summaries"
+              ],
+              "Outputs": [
+                "Line chart showing segmentation and traffic flow evolution over time"
+              ],
+              "ReferenceCitation": "Section 5.1 Global view: The global view provides an overview of the segmentation results in time series whose design is inspired by van den Elzen et al. (2016).",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Heatmap (Pattern View)",
+              "ID": 8,
+              "PaperDescription": "Displays the mobility features of each latent region as a heatmap, where colors encode the difference between incoming and outgoing flow probabilities for grids.",
+              "Inputs": [
+                "Latent region patterns (Wt)"
+              ],
+              "Outputs": [
+                "Heatmap visualization per latent region"
+              ],
+              "ReferenceCitation": "Section 5.4 Pattern view: The pattern view shows a list of mobility patterns for each latent region.",
+              "FeedsInto": [
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Heatmap (Grid View)",
+              "ID": 9,
+              "PaperDescription": "Presents detailed mobility statistics for each grid in a latent region, showing traffic flow amounts in a heatmap representation.",
+              "Inputs": [
+                "Grid-level mobility feature vectors"
+              ],
+              "Outputs": [
+                "Heatmap showing total traffic flow in grids"
+              ],
+              "ReferenceCitation": "Section 5.4 Grid view: The grid view further reveals the detailed mobility patterns of grids that compose a certain latent region selected in the pattern view.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Scatter Plot (Distribution View)",
+              "ID": 10,
+              "PaperDescription": "Visualizes the distribution of different regions and patterns in a barycentric coordinate system based on the probability distribution matrix (Ht).",
+              "Inputs": [
+                "Region distribution matrix (Ht)"
+              ],
+              "Outputs": [
+                "Scatter plot visualizing probability distribution of patterns over regions"
+              ],
+              "ReferenceCitation": "Section 5.4 Distribution view: The distribution view reveals relationship among mobility patterns and the regions by visualizing the details of the matrix Ht.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Sankey Diagram (Evolution View)",
+              "ID": 11,
+              "PaperDescription": "Visualizes the transition dynamics of latent regions over time, using strips to represent the flow of grids between regions across time intervals.",
+              "Inputs": [
+                "Pattern transition probability (Mt)",
+                "Region distribution matrix (Ht)"
+              ],
+              "Outputs": [
+                "Sankey diagram illustrating transitions of latent regions over time"
+              ],
+              "ReferenceCitation": "Section 5.3 Evolution view: The evolution view illustrates the temporal transition trend of the latent regions.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Snapshot View",
+              "ID": 12,
+              "PaperDescription": "Allows users to take and compare snapshots of segmentation results at different time intervals to analyze regional transitions and evolution.",
+              "Inputs": [
+                "User-triggered snapshot selections"
+              ],
+              "Outputs": [
+                "Stored snapshots of map view and segmentation results for later retrieval and comparison"
+              ],
+              "ReferenceCitation": "Section 5 Visualization: (7) snapshot view that allows users to take a snapshot of the segmentation results shown in the map view for later retrieval and further analysis.",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 13,
+              "PaperDescription": "Allows users to filter data and update visualizations by selecting specific time intervals within the global view or evolution view.",
+              "Inputs": [
+                "User-selected time range"
+              ],
+              "Outputs": [
+                "Filtered data and updated visualizations in map view, evolution view, and others"
+              ],
+              "ReferenceCitation": "Section 5.1 Global view: A circular brush tool is also designed in the view to facilitate the selection of a time range and the corresponding points.",
+              "FeedsInto": [
+                5,
+                7,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Comparison",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Snapshot Comparison",
+              "ID": 14,
+              "PaperDescription": "Allows users to compare snapshots of segmentation results at different time intervals to analyze regional transitions and evolution.",
+              "Inputs": [
+                "User-selected snapshots"
+              ],
+              "Outputs": [
+                "Comparison view highlighting changes in latent region segmentation over time"
+              ],
+              "ReferenceCitation": "Section 5 Visualization: (7) snapshot view that allows users to take a snapshot of the segmentation results shown in the map view for later retrieval and further analysis.",
+              "FeedsInto": [
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

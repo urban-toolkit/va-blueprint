@@ -1,0 +1,264 @@
+{
+  "PaperTitle": "IF-City: Intelligible Fair City Planning to Measure, Explain and Mitigate Inequality",
+  "Year": 2024,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Geometries",
+              "ID": 1,
+              "PaperDescription": "Map and building data are used to extract building function types and their existing locations.",
+              "Inputs": [
+                "Map data",
+                "Building data"
+              ],
+              "Outputs": [
+                "Building function types",
+                "Building locations"
+              ],
+              "ReferenceCitation": "Fig. 3. System overview of data preparation and calculations. Map and building data (1a) are used to extract building function types (1b) and their existing locations.",
+              "FeedsInto": [
+                3,
+                4,
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Resident Type",
+              "ID": 2,
+              "PaperDescription": "User trajectories are extracted from location-based social media data and clustered to identify resident types and their average preferences for different building functions.",
+              "Inputs": [
+                "Location-based social media data"
+              ],
+              "Outputs": [
+                "Resident types",
+                "Preferences for building functions"
+              ],
+              "ReferenceCitation": "Fig. 3. System overview of data preparation and calculations. User trajectories (2a) are extracted from location-based social media data and clustered (2b) to identify resident types (2c) and their average preferences for different building functions (2d).",
+              "FeedsInto": [
+                3,
+                4,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Simulation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Resident Allocation Simulation",
+              "ID": 3,
+              "PaperDescription": "Simulates the migration and allocation of residents into the designed city based on their preferences and building functions.",
+              "Inputs": [
+                "Resident types",
+                "Preferences for building functions",
+                "Building function types",
+                "Building locations"
+              ],
+              "Outputs": [
+                "Resident allocation to buildings"
+              ],
+              "ReferenceCitation": "Fig. 3. System overview of data preparation and calculations. The resident allocation (3) simulates the migration of residents into the designed city.",
+              "FeedsInto": [
+                4,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Calculation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Benefit and Accessibility Calculation",
+              "ID": 4,
+              "PaperDescription": "Calculates benefits for residents by type and location based on their preferences and accessibility to amenities.",
+              "Inputs": [
+                "Resident allocation to buildings",
+                "Building function types",
+                "Building locations",
+                "Preferences for building functions"
+              ],
+              "Outputs": [
+                "Benefits by resident type",
+                "Benefits by location"
+              ],
+              "ReferenceCitation": "Fig. 3. System overview of data preparation and calculations. The benefits for the population are calculated by resident type (4a) and location (4b).",
+              "FeedsInto": [
+                5,
+                6,
+                7,
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Inequality Index Calculation",
+              "ID": 5,
+              "PaperDescription": "Calculates inequality indicators using the Generalized Entropy Index, including between-group and within-group inequality components.",
+              "Inputs": [
+                "Benefits by resident type",
+                "Benefits by location"
+              ],
+              "Outputs": [
+                "Inequality indicators (total, between-group, within-group)"
+              ],
+              "ReferenceCitation": "Fig. 3. System overview of data preparation and calculations. The group inequality for each resident type (4c) is calculated.",
+              "FeedsInto": [
+                6,
+                8,
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 6,
+              "PaperDescription": "Interactive 3D map view showing building types, resident allocations, and inequality indicators, allowing navigation and assessment of the urban plan.",
+              "Inputs": [
+                "Building function types",
+                "Building locations",
+                "Resident allocation to buildings",
+                "Inequality indicators"
+              ],
+              "Outputs": [
+                "Interactive 3D map visualization of city layout"
+              ],
+              "ReferenceCitation": "Fig. 1. Dashboard user interface of IF-City for fair urban planning with main 3D map view, side bar with several indicators, and pop-up controls.",
+              "FeedsInto": [
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 7,
+              "PaperDescription": "Heatmap visualizing relative benefits and inequalities by location using color-coded ground areas and 3D cylinders for building-level benefits.",
+              "Inputs": [
+                "Benefits by location",
+                "Resident allocation to buildings"
+              ],
+              "Outputs": [
+                "Heatmap visualization of relative benefits and inequalities"
+              ],
+              "ReferenceCitation": "Fig. 6(b). Inequality Attribution by Location: Relative benefit of each block and building as a Heatmap (green, red, white for above-, below-, average, respectively; darker colors for farther from average; colored ground areas for block-level benefits, 3D cylinders for building-level benefits with height for number of occupants).",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 8,
+              "PaperDescription": "Charts showing group benefits and inequality scores by resident type, including mean benefits, standard deviation, and inequality indices.",
+              "Inputs": [
+                "Benefits by resident type",
+                "Inequality indicators"
+              ],
+              "Outputs": [
+                "Bar charts of benefits and inequality scores by resident type"
+              ],
+              "ReferenceCitation": "Fig. 6(a). Inequality Attribution by Resident Type: Benefits by resident type showing group benefit mean (bars) and standard deviation (error bar) and global mean (horizontal line). Inequality by resident type (red diamond) calculated as Generalized Entropy Index decomposable into between- (dark red bars) and within-group (pink bars) inequalities per group.",
+              "FeedsInto": [
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 9,
+              "PaperDescription": "Allows users to add, edit, or delete buildings on the 3D map by modifying parameters such as height, floor area, and building function to explore impact on fairness.",
+              "Inputs": [
+                "User interaction with 3D map",
+                "Existing urban plan data"
+              ],
+              "Outputs": [
+                "Updated urban plan data"
+              ],
+              "ReferenceCitation": "Fig. 5. Basic features of IF-City for urban design. Users can add, edit, or delete buildings on the 3D map. Users can navigate around the city by zooming, panning, and rotating the 3D visualization.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Recommendation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Planning Recommendation",
+              "ID": 10,
+              "PaperDescription": "Provides recommendations for which blocks to edit and how much floor area to change to optimize fairness, constrained by budgets and priorities.",
+              "Inputs": [
+                "Urban plan data",
+                "Inequality indicators",
+                "Constraints (budgets, height limits, priorities)"
+              ],
+              "Outputs": [
+                "Recommended changes to the urban plan"
+              ],
+              "ReferenceCitation": "Fig. 7(b). Planning Recommendation to Mitigate Inequality: Request recommendation for which blocks to edit and how much floor area to change for each function type to reduce inequality.",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Timeline Navigation",
+              "ID": 11,
+              "PaperDescription": "Enables users to compare between saved urban plan design iterations using a timeline, showing changes in inequality and planning indicators.",
+              "Inputs": [
+                "Saved design iterations",
+                "Planning indicators",
+                "Inequality metrics"
+              ],
+              "Outputs": [
+                "Timeline view of design iterations and indicators"
+              ],
+              "ReferenceCitation": "Fig. 8. Intelligibility fairness feature of IF-City Timeline View: Clicking a time point opens the saved design for detailed comparison.",
+              "FeedsInto": [
+                3,
+                4,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

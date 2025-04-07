@@ -1,0 +1,277 @@
+{
+  "PaperTitle": "Visual Analysis of Place Connectedness by Public Transport",
+  "Year": 2020,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Public Transportation",
+              "ID": 1,
+              "PaperDescription": "Loads public transport data in GTFS format, including stops, routes, trips, stop times, and frequencies, and prepares data for generating trajectories and performing quality checks.",
+              "Inputs": [
+                "GTFS files: stops.txt, routes.txt, trips.txt, stop_times.txt, calendar.txt, calendar_dates.txt, frequencies.txt, transfers.txt"
+              ],
+              "Outputs": [
+                "Validated and structured public transport network data"
+              ],
+              "ReferenceCitation": "Section III-A: Given a date, the following steps need to be done for generating trajectories from a collection of GTFS files: 1) Find the available services and their respective service_id's for the given date in the calendar.txt and calendar_dates.txt files. 2) If there is a file frequencies.txt, which defines the frequencies of services for different time intervals, reconstruct the trips (i.e., stop sequences) and stop times of the services from these data. 3) A file trips.txt may specify additional trips not covered by frequencies.txt, or the latter may be absent. Use the service_id's to extract all trips and their respective trip_id's from the trips.txt; then use the trip_id's to extract the stop times from the file stop_times.txt. 4) Extract the coordinates of the stops from the file stops.txt.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Path Generation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Optimal Path Computation",
+              "ID": 2,
+              "PaperDescription": "Computes optimal (e.g., fastest) paths through the public transport network between the target places and other places, based on the generated trajectories from GTFS data.",
+              "Inputs": [
+                "Validated public transport network data",
+                "Target place(s)",
+                "Travel direction (to/from)",
+                "Time of departure or arrival",
+                "Constraints (max waiting time, max walking time)"
+              ],
+              "Outputs": [
+                "Optimal paths with detailed time and mode information"
+              ],
+              "ReferenceCitation": "Section IV-C: The first step in connectedness analysis is generation of optimal (e.g., fastest) paths through the given transport network between the target places and the other places involved in the analysis.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Aggregation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Connectedness Indicator Computation",
+              "ID": 3,
+              "PaperDescription": "Derives connectedness indicators for places and characteristics of the use of nodes and links of the network from the computed optimal paths.",
+              "Inputs": [
+                "Optimal paths with detailed time and mode information"
+              ],
+              "Outputs": [
+                "Connectedness indicators for places and links",
+                "Aggregated statistics (travel durations, waiting times, link usage)"
+              ],
+              "ReferenceCitation": "Section IV-C: From these paths, connectedness indicators for places and characteristics of the use of the nodes and links of the network are derived.",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Map",
+              "ID": 4,
+              "PaperDescription": "Displays the spatial layout of places and links as a geographic base map, which provides context for visualizing connectedness indicators and flows.",
+              "Inputs": [
+                "Spatial coordinates of places and links"
+              ],
+              "Outputs": [
+                "Base 2D map visualization for overlays and flow maps"
+              ],
+              "ReferenceCitation": "Section V-B and Figure 3: The map view displays place connectedness and indicators such as travel time, waiting time, and walking time, using appropriate symbols and color coding.",
+              "FeedsInto": [
+                12,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Connectedness Indicators)",
+              "ID": 5,
+              "PaperDescription": "Displays spatial distribution of connectedness indicators over a geographic area, including travel times, link usage, and waiting times using color coding, symbol sizes, or pie charts.",
+              "Inputs": [
+                "Connectedness indicators for places and links",
+                "Spatial coordinates of places and links"
+              ],
+              "Outputs": [
+                "Color-coded overlays on 2D maps for connectedness analysis"
+              ],
+              "ReferenceCitation": "Section V-B: Place attributes include the connectedness indicators and statistical summaries derived from time series of indicators. The attributes are numeric; the values can be represented on a map using techniques suitable for numeric attributes.",
+              "FeedsInto": [
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Flow Map",
+              "ID": 6,
+              "PaperDescription": "Aggregates and displays flows between places on a map where line width encodes the number of paths and color represents the transportation mode used on the link.",
+              "Inputs": [
+                "Aggregated path data including origin-destination flows and transportation modes"
+              ],
+              "Outputs": [
+                "Visualized OD flow map with link usage intensity"
+              ],
+              "ReferenceCitation": "Section V-D.2 and Figure 1 (right): The map represents the link-based aggregates derived from the subset of the paths with the durations below 30 minutes; this is a result of dynamic update of link attributes.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Space-Time Cube",
+              "ID": 7,
+              "PaperDescription": "Displays optimal paths in a 3D space-time cube where the vertical axis represents time and path segments are colored by transportation mode; waiting times are shown as black vertical lines.",
+              "Inputs": [
+                "Generated optimal paths with time and mode information"
+              ],
+              "Outputs": [
+                "3D space-time visualization of travel paths"
+              ],
+              "ReferenceCitation": "Section V-A and Figure 1: A set of paths originating from a single place is shown in a space-time cube; the vertical axis directed upwards represents time. The colors of the path segments correspond to transportation modes; black vertical lines signify waiting at interchange nodes.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 8,
+              "PaperDescription": "Displays temporal variation of connectedness indicators (e.g., travel times) over a time interval for a selected place using a decile graph or time series lines.",
+              "Inputs": [
+                "Time series of connectedness indicators for places"
+              ],
+              "Outputs": [
+                "Line chart or decile graph showing temporal variations"
+              ],
+              "ReferenceCitation": "Section V-C and Figure 6 (top): The display consists of two sections, a decile graph (top) and a temporal histogram (bottom), with a shared horizontal axis representing time.",
+              "FeedsInto": [
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Histogram",
+              "ID": 9,
+              "PaperDescription": "Represents statistical distributions of connectedness indicators, such as travel durations or waiting times, using histograms for overall or subset analysis.",
+              "Inputs": [
+                "Connectedness indicators for places or links"
+              ],
+              "Outputs": [
+                "Histogram showing the distribution of indicators"
+              ],
+              "ReferenceCitation": "Section V-B: The dot plot on the right allows the analyst to spot extreme values and see how far they are from the others. Another possible representation with similar capabilities could be a frequency histogram.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Pie Chart",
+              "ID": 10,
+              "PaperDescription": "Displays proportions of waiting and walking times in total travel duration for places, supporting comparison of different connectedness attributes in the same map.",
+              "Inputs": [
+                "Connectedness indicators: total travel time, waiting time, walking time"
+              ],
+              "Outputs": [
+                "Pie charts showing proportions of different travel components"
+              ],
+              "ReferenceCitation": "Section V-B and Figure 3: A suitable representation that can simultaneously show the total durations and the proportions is a map with pie charts.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 11,
+              "PaperDescription": "Allows users to filter and analyze connectedness at different departure or arrival times over a specified time interval, supporting temporal variation analysis.",
+              "Inputs": [
+                "User-defined time intervals",
+                "Connectedness data over time"
+              ],
+              "Outputs": [
+                "Filtered connectedness indicators for selected times"
+              ],
+              "ReferenceCitation": "Section V-C: For studying how place connectedness varies over time (i.e., for synoptic tasks with respect to time), the path generation process is performed multiple times.",
+              "FeedsInto": [
+                2
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 12,
+              "PaperDescription": "Allows users to interactively select specific places or regions on the map for focused analysis of connectedness indicators or path details.",
+              "Inputs": [
+                "User interaction on 2D map or flow map"
+              ],
+              "Outputs": [
+                "Filtered subset of places or paths for detailed analysis"
+              ],
+              "ReferenceCitation": "Section V-A: The selection of target places can be supported in two ways. First, the analyst can select places by direct interaction on a map display, e.g., by clicking or dragging.",
+              "FeedsInto": [
+                2
+              ]
+            },
+            {
+              "GranularBlockName": "Point Selection",
+              "ID": 13,
+              "PaperDescription": "Allows users to specify target place(s) for which the connectedness analysis is conducted by interacting with map displays or attribute filters.",
+              "Inputs": [
+                "User interaction on map or filter tools"
+              ],
+              "Outputs": [
+                "Selected target places for path computation and analysis"
+              ],
+              "ReferenceCitation": "Section IV-E: The selection of target places can be supported in two ways. First, the analyst can select places by direct interaction on a map display, e.g., by clicking or dragging. Second, places can also be selected using tools for interactive filtering, e.g., based on attribute values.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Configuration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Constraint Configuration",
+              "ID": 14,
+              "PaperDescription": "Enables users to configure constraints such as maximal waiting time and maximal time or distance of walking for path generation.",
+              "Inputs": [
+                "User-defined constraint settings"
+              ],
+              "Outputs": [
+                "Updated parameters for optimal path computation"
+              ],
+              "ReferenceCitation": "Section IV-E: specify the setup, i.e., the target place(s), travel direction, and departure or arrival time, as well as constraints, such as the maximal waiting time for the next connection and the maximal time or distance of walking that can be involved in a path;",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

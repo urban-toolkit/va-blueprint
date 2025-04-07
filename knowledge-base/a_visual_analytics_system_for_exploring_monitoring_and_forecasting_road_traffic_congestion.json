@@ -1,0 +1,306 @@
+{
+  "PaperTitle": "A Visual Analytics System for Exploring, Monitoring, and Forecasting Road Traffic Congestion",
+  "Year": 2020,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Features",
+              "ID": 1,
+              "PaperDescription": "Loads vehicle detector locations (DSRC and loop sensors) from the ITS server for the city of Ulsan, South Korea.",
+              "Inputs": [
+                "Public ITS server data (road name, speed [km/h], road start and end locations)"
+              ],
+              "Outputs": [
+                "Vehicle detector geospatial features"
+              ],
+              "ReferenceCitation": "Section 4 Data Pre-processing and Model Training: The city maintains a public ITS server that updates information every minute (data format: road name, speed [km/h], road start and end locations).",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Traffic Volume and Speed",
+              "ID": 2,
+              "PaperDescription": "Loads and aggregates loop sensor data (volume and speed) and DSRC data for forecasting and visualization.",
+              "Inputs": [
+                "Loop sensor data (volume, speed)",
+                "DSRC data (real-time speed)"
+              ],
+              "Outputs": [
+                "Processed traffic volume and speed dataset"
+              ],
+              "ReferenceCitation": "Section 4 Data Pre-processing and Model Training: There are 201 inductive loop sensors installed in the city... data format: road name, start and end locations, direction, speed [km/h], volume.",
+              "FeedsInto": [
+                3,
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Preprocessing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatiotemporal Speed Matrix Construction",
+              "ID": 3,
+              "PaperDescription": "Constructs spatiotemporal speed matrices using road segments, intersections, and DSRC vehicle detector locations for LSTM training.",
+              "Inputs": [
+                "Processed traffic speed data"
+              ],
+              "Outputs": [
+                "Spatiotemporal speed matrix for LSTM input"
+              ],
+              "ReferenceCitation": "Section 4 Data Pre-processing and Model Training: We extract road segments from intersections and DSRC vehicle detector locations and build spatiotemporal speed matrices for target roads.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Embedding",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Road Network Similarity Embedding",
+              "ID": 4,
+              "PaperDescription": "Embeds road network structures into a low-dimensional vector space using DeepWalk to capture road similarity features.",
+              "Inputs": [
+                "Road network graph"
+              ],
+              "Outputs": [
+                "Road similarity feature vectors"
+              ],
+              "ReferenceCitation": "Section 4 Data Pre-processing and Model Training: We employ DeepWalk with road nodes and links as inputs... We extract five network features for each road from DeepWalk.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Prediction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "LSTM-Based Congestion Forecasting",
+              "ID": 5,
+              "PaperDescription": "Uses an LSTM model trained on spatiotemporal speed matrices, road similarity features, and rush hour indicators to forecast road speed and congestion conditions.",
+              "Inputs": [
+                "Spatiotemporal speed matrices",
+                "Road similarity feature vectors",
+                "Rush hour indicators"
+              ],
+              "Outputs": [
+                "Predicted road speed",
+                "Predicted congestion conditions"
+              ],
+              "ReferenceCitation": "Section 4 Data Pre-processing and Model Training: We merge the speed and road similarity feature matrices into the final spatiotemporal matrix... We refer to this model as LSTM (S,T,R).",
+              "FeedsInto": [
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 6,
+              "PaperDescription": "Displays a 2D map with congestion visualization using Volume-Speed Rivers (VSRivers) and Propagation Arrows (PropArrows).",
+              "Inputs": [
+                "Processed traffic data",
+                "Predicted congestion data"
+              ],
+              "Outputs": [
+                "Interactive 2D map with congestion overlays"
+              ],
+              "ReferenceCitation": "Section 5.2 Visual Interfaces: Our system utilizes multiple-coordinated views to represent the spatiotemporal aspects of the congestion data... Volume-Speed Rivers visualization and Propagation Arrows visualization.",
+              "FeedsInto": [
+                14,
+                15
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Volume-Speed Rivers)",
+              "ID": 7,
+              "PaperDescription": "Overlays congestion conditions on the map by encoding traffic volume as river thickness and speed as color.",
+              "Inputs": [
+                "Traffic volume and speed data",
+                "Predicted congestion data"
+              ],
+              "Outputs": [
+                "Congestion condition overlays on roads"
+              ],
+              "ReferenceCitation": "Section 5.2.1 StreamView: Volume-Speed Rivers visualization that embeds traffic volume and speed attributes into maps.",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Propagation Arrows)",
+              "ID": 8,
+              "PaperDescription": "Overlays arrows on the map to indicate congestion propagation directions and severity, with color representing duration.",
+              "Inputs": [
+                "Congestion propagation events",
+                "Congestion severity weights"
+              ],
+              "Outputs": [
+                "Propagation arrows on congested roads"
+              ],
+              "ReferenceCitation": "Section 5.2.2 PropagationView: Propagation Arrows visualization... The color of the arrow represents the duration of the congestion.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Clock View",
+              "ID": 9,
+              "PaperDescription": "Displays hourly-averaged speeds and volumes using colored segments (green: unimpeded, orange: slow, red: congested) and radius for volume.",
+              "Inputs": [
+                "Hourly-aggregated speed and volume data"
+              ],
+              "Outputs": [
+                "Radial visualization of temporal congestion patterns"
+              ],
+              "ReferenceCitation": "Section 5.2 Visual Interfaces: The clock view shows hourly-averaged speeds with different colors and volumes with radii.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Calendar View",
+              "ID": 10,
+              "PaperDescription": "Displays daily-aggregated speed and volume data on a calendar layout, with bars for week/day comparisons.",
+              "Inputs": [
+                "Daily-aggregated congestion data"
+              ],
+              "Outputs": [
+                "Calendar heatmap with congestion information"
+              ],
+              "ReferenceCitation": "Section 5.2 Visual Interfaces: The calendar view shows both upstream and downstream daily-aggregated speed and volume data.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "DetectorVis",
+              "ID": 11,
+              "PaperDescription": "Visualizes speed data from detectors using a pixel-based display where the x-axis represents hours and y-axis represents different dates.",
+              "Inputs": [
+                "Sensor speed data"
+              ],
+              "Outputs": [
+                "Pixel-based temporal congestion visualization"
+              ],
+              "ReferenceCitation": "Section 5.2 Visual Interfaces: We incorporated a pixel visualization and provide DetectorVis to visualize speed data from sensors with the x-axis representing hours and the y-axis representing different dates.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Table",
+              "ID": 12,
+              "PaperDescription": "Displays a sortable table listing roads with estimated travel times, average speeds, and volumes, supporting ranking and selection.",
+              "Inputs": [
+                "Aggregated road statistics (ETT, speed, volume)"
+              ],
+              "Outputs": [
+                "Tabular road list for selection and comparison"
+              ],
+              "ReferenceCitation": "Section 5.2 Visual Interfaces: The table view presents a road list, where roads can be sorted by speed, volume, and estimated travel time per road.",
+              "FeedsInto": [
+                13,
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Datetime and Weather Filter",
+              "ID": 13,
+              "PaperDescription": "Filters congestion data by date ranges, day of the week, traffic volume, traffic speed, hour, and weather conditions (sunny, rain, snow, cloudy).",
+              "Inputs": [
+                "User-defined filter settings"
+              ],
+              "Outputs": [
+                "Filtered congestion data subset"
+              ],
+              "ReferenceCitation": "Section 5.2 Visual Interfaces: In the analysis mode, users can load congestion data for retrospective analysis and filter by date, time, day of week, weather, speed, and volume.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 14,
+              "PaperDescription": "Allows users to select an area on the map; selected roads are kept in the snapshot view for monitoring groups of roads in real-time.",
+              "Inputs": [
+                "User-defined geographic selection"
+              ],
+              "Outputs": [
+                "Selected roads for snapshot monitoring"
+              ],
+              "ReferenceCitation": "Section 5.2 Visual Interfaces: A user can select an area, and its roads are kept in the snapshot view for monitoring groups of roads in real-time.",
+              "FeedsInto": [
+                6,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "CCTV Stream Selection",
+              "ID": 15,
+              "PaperDescription": "Allows users to click a CCTV icon on the map and view live CCTV streams for individual road monitoring.",
+              "Inputs": [
+                "User selection of CCTV icon"
+              ],
+              "Outputs": [
+                "Live CCTV video stream"
+              ],
+              "ReferenceCitation": "Section 5.2 Visual Interfaces: A user can click a CCTV icon on a map and watch individual CCTV streams.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

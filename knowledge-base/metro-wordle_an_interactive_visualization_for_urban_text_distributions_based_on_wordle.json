@@ -1,0 +1,215 @@
+{
+  "PaperTitle": "Metro-Wordle: An Interactive Visualization for Urban Text Distributions Based on Wordle",
+  "Year": 2018,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Urban Text",
+              "ID": 1,
+              "PaperDescription": "Loads geotagged urban textual datasets from various sources, including news, social media, and review data, for visual analysis in the Metro-Wordle system.",
+              "Inputs": [
+                "Urban textual data with geotags (news, reviews, social media, etc.)"
+              ],
+              "Outputs": [
+                "Processed text dataset associated with spatial locations"
+              ],
+              "ReferenceCitation": "Section 3.1: The data comes from a news corpus containing news articles in Chinese, from January 2015 to October 2017. Each news record has a title, category, location, and publication time.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Keyword Extraction",
+              "ID": 2,
+              "PaperDescription": "Performs keyword extraction and relevance computation on the urban text dataset, extracting key terms for visualization in word clouds.",
+              "Inputs": [
+                "Processed urban text dataset"
+              ],
+              "Outputs": [
+                "Keywords with relevance scores for each spatial unit"
+              ],
+              "ReferenceCitation": "Section 3.1: We perform a word frequency analysis to extract key terms of the urban text dataset. We adopt the TF-IDF method to identify the importance of each word in a location.",
+              "FeedsInto": [
+                3,
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatial Grid Clustering",
+              "ID": 3,
+              "PaperDescription": "Divides the city map into spatial grids based on an adjustable grid resolution, assigning text distributions to each cell for analysis and visualization.",
+              "Inputs": [
+                "Keywords with relevance scores",
+                "Spatial locations"
+              ],
+              "Outputs": [
+                "Clustered spatial units with associated keyword distributions"
+              ],
+              "ReferenceCitation": "Section 3.2: We divide the map into a grid, where each cell represents a region. The size of the grid can be adjusted by the user, depending on the analysis requirement.",
+              "FeedsInto": [
+                4,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 4,
+              "PaperDescription": "Displays a 2D map of the city where spatial grids are arranged, providing a geospatial context for the Metro-Wordle visualization.",
+              "Inputs": [
+                "Clustered spatial units with keyword distributions"
+              ],
+              "Outputs": [
+                "2D map visualization with spatial grid layout"
+              ],
+              "ReferenceCitation": "Section 3.2: We arrange all these regions on a map in a grid-based layout. Fig. 4 shows the Metro-Wordle visualization for a news dataset.",
+              "FeedsInto": [
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Boundary Lines)",
+              "ID": 5,
+              "PaperDescription": "Overlays additional layers on the 2D map, such as spatial boundaries or background maps, providing contextual information for the word clouds.",
+              "Inputs": [
+                "Base map",
+                "Spatial grid layout",
+                "Boundary data"
+              ],
+              "Outputs": [
+                "Enhanced map visualization with contextual overlays"
+              ],
+              "ReferenceCitation": "Section 4.1: The Metro-Wordle is overlaid on a map layout, providing spatial context to the word clouds displayed in each region. Fig. 4 shows this layout.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Word Cloud",
+              "ID": 6,
+              "PaperDescription": "Generates word clouds within each spatial grid cell, representing the keyword distribution for that region, with word size corresponding to importance.",
+              "Inputs": [
+                "Keywords with relevance scores for each spatial grid cell"
+              ],
+              "Outputs": [
+                "Word clouds embedded in the grid cells on the map"
+              ],
+              "ReferenceCitation": "Section 3.2: We use word clouds to represent the keywords of each region. The size of the words in the word cloud reflects their relevance. Fig. 4 shows the Metro-Wordle layout.",
+              "FeedsInto": [
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Histogram",
+              "ID": 7,
+              "PaperDescription": "Displays the frequency distribution of keyword relevance scores or term frequencies, enabling users to understand the statistical distribution of keywords across the spatial units.",
+              "Inputs": [
+                "Keywords with relevance scores",
+                "Term frequency data"
+              ],
+              "Outputs": [
+                "Histogram visualization of keyword frequency distributions"
+              ],
+              "ReferenceCitation": "Section 4.3: Fig. 7 shows the distribution of keyword frequency in the selected region, helping users understand the relative importance of each keyword.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Grid Resolution Adjustment",
+              "ID": 8,
+              "PaperDescription": "Allows users to interactively adjust the grid resolution of the spatial clustering, which dynamically updates the visualization granularity.",
+              "Inputs": [
+                "User-defined grid size"
+              ],
+              "Outputs": [
+                "Updated spatial grid clustering and visualization"
+              ],
+              "ReferenceCitation": "Section 4.2: The grid resolution is adjustable by the user, and this influences the granularity of the spatial aggregation in the visualization.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 9,
+              "PaperDescription": "Enables users to select specific spatial regions (grid cells) on the 2D map to explore their keyword distributions in detail.",
+              "Inputs": [
+                "User selection on map regions"
+              ],
+              "Outputs": [
+                "Highlighted spatial unit and detailed keyword distribution"
+              ],
+              "ReferenceCitation": "Section 4.2: Users can click on a region in the grid to view details on demand, such as keyword information and distribution. Fig. 6 shows this interaction.",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Configuration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Keyword Filter Configuration",
+              "ID": 10,
+              "PaperDescription": "Enables users to configure keyword filtering options such as threshold for keyword relevance or term frequency, which updates the displayed word clouds.",
+              "Inputs": [
+                "User-defined keyword filtering parameters"
+              ],
+              "Outputs": [
+                "Filtered keywords for word cloud generation"
+              ],
+              "ReferenceCitation": "Section 4.3: Users can filter out less important keywords by adjusting thresholds, which affects the display of word clouds. Fig. 7 shows the filtered result.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

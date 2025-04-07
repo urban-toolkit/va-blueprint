@@ -1,0 +1,199 @@
+{
+  "PaperTitle": "Visual Analytics of Trajectories with RoseTrajVis",
+  "Year": 2020,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Taxi Trajectory",
+              "ID": 1,
+              "PaperDescription": "Loads GPS Exchange Format (GPX) trajectory data, including GPS coordinates of taxi trips, into the system for analysis.",
+              "Inputs": [
+                "GPX files containing taxi trajectory data"
+              ],
+              "Outputs": [
+                "Structured trajectory dataset in geographic database"
+              ],
+              "ReferenceCitation": "Section 3.3 System architecture: The web services support the web application, offering functionalities such as reading GPS Exchange Format (GPX) file trajectories, loading data to the geographic database, and selecting data.",
+              "FeedsInto": [
+                2,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Aggregation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory Aggregation (Rose Diagram)",
+              "ID": 2,
+              "PaperDescription": "Aggregates trajectories near a selected map location by direction and speed, creating data structures for rose diagram visualization.",
+              "Inputs": [
+                "Structured trajectory dataset in geographic database",
+                "User-defined aggregation radius"
+              ],
+              "Outputs": [
+                "Aggregated trajectory data by direction and speed"
+              ],
+              "ReferenceCitation": "Section 3.4 Web application: When a marker is placed on the map, the web application selects the trajectories that intersect the gray circle of the rose aggregation area. To know which petal a trajectory belongs to, the angle between the first point of intersection and the center of the aggregation circle is calculated.",
+              "FeedsInto": [
+                3,
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 3,
+              "PaperDescription": "Displays the interactive map where users can place markers and generate rose diagrams at different locations.",
+              "Inputs": [
+                "Aggregated trajectory data by direction and speed",
+                "Geographic map layers"
+              ],
+              "Outputs": [
+                "Interactive map with markers and overlays"
+              ],
+              "ReferenceCitation": "Section 3.4 Web application: The application interface is dominated by a map with the previously selected trajectories, and the user can choose points in the map where s/he wants to create rose diagrams to aggregate and analyze the trajectories that are near those points.",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Rose Diagram)",
+              "ID": 4,
+              "PaperDescription": "Visualizes the aggregated trajectory data using rose diagrams, including petals representing directions, lengths representing the number of trajectories, and colors representing speed ranges.",
+              "Inputs": [
+                "Aggregated trajectory data by direction and speed"
+              ],
+              "Outputs": [
+                "Rose diagram overlays on the map"
+              ],
+              "ReferenceCitation": "Section 3.4 Web application: Each petal drawn in the rose represents three distinct characteristics: Direction, Length, and Speed. The outer border of the rose diagram contains arrows representing the direction of origin and destination of each trajectory.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Trajectories)",
+              "ID": 9,
+              "PaperDescription": "Displays individual trajectories as lines on the map to provide additional spatial context and detailed movement paths.",
+              "Inputs": [
+                "Structured trajectory dataset in geographic database"
+              ],
+              "Outputs": [
+                "Line visualization of trajectories on the map"
+              ],
+              "ReferenceCitation": "Section 3.4 Web application: The application interface is dominated by a map with the previously selected trajectories, and the user can choose points in the map where s/he wants to create rose diagrams to aggregate and analyze the trajectories that are near those points.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Table",
+              "ID": 5,
+              "PaperDescription": "Displays aggregated statistics for each rose diagram, including number of paths, aggregation radius, time intervals, distances to origin/destination, and average speed.",
+              "Inputs": [
+                "Aggregated trajectory data by direction and speed",
+                "User-defined filters"
+              ],
+              "Outputs": [
+                "Tabular summary of rose diagram statistics"
+              ],
+              "ReferenceCitation": "Section 3.4 Web application: The footer of the rose diagram has information about the aggregated trajectories. The first three fields, paths, radius and hours, show the total number of trajectories that intersect the rose aggregation area, the radius of aggregation and the possible time intervals allowed in the visualization, respectively.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatiotemporal Selection",
+              "ID": 6,
+              "PaperDescription": "Enables users to apply filters on distance to origin/destination, time intervals, and speed ranges, updating rose diagrams accordingly.",
+              "Inputs": [
+                "User input (distance, time intervals, speed ranges)"
+              ],
+              "Outputs": [
+                "Filtered aggregated trajectory data and updated rose diagrams"
+              ],
+              "ReferenceCitation": "Section 3.4 Web application: The filter panel is located on the right side of the RoseTrajVis interface, as shown in Fig. 3, and allows to set the time, speed and distance to origin/destination filters and adjust the aggregation radius.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map Navigation (Pan/Zoom)",
+              "ID": 7,
+              "PaperDescription": "Supports panning and zooming the map to explore different locations where rose diagrams can be created.",
+              "Inputs": [
+                "User navigation interaction (pan/zoom)"
+              ],
+              "Outputs": [
+                "Updated map view and marker placement context"
+              ],
+              "ReferenceCitation": "Section 3.2 Design requirements: Interactive map: the analysis work should be carried out on a map, to provide context, and users should see overlaid information in response to actions executed at locations s/he considers relevant.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Manipulation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Marker and Rose Diagram Manipulation",
+              "ID": 8,
+              "PaperDescription": "Allows users to move markers and rose diagrams on the map, updating the corresponding aggregation and visualizations dynamically.",
+              "Inputs": [
+                "User interaction (dragging markers and rose diagrams)"
+              ],
+              "Outputs": [
+                "Updated aggregated trajectory data and rose diagrams"
+              ],
+              "ReferenceCitation": "Section 3.4 Web application: Additionally, to increase work efficiency, the marker is movable to a new point in the map and the corresponding rose diagram is automatically updated.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

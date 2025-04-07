@@ -1,0 +1,252 @@
+{
+  "PaperTitle": "CrimAnalyzer: Understanding Crime Sao Paulo",
+  "Year": 2021,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Crime Data",
+              "ID": 1,
+              "PaperDescription": "Loads crime records (with timestamps, locations, and crime types) from the provided dataset to create a structured input for analysis.",
+              "Inputs": [
+                "Crime records (spatial, temporal, and type attributes)"
+              ],
+              "Outputs": [
+                "An indexed and structured crime dataset ready for analysis"
+              ],
+              "ReferenceCitation": "Section 5.2 (Map View): Users visually query the data set by interacting with a map and selecting a region of interest.",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Aggregation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Crime Trends",
+              "ID": 2,
+              "PaperDescription": "Aggregates crime events over time to reveal overall trends such as seasonality and near-repeat victimization patterns.",
+              "Inputs": [
+                "Time-stamped crime events"
+              ],
+              "Outputs": [
+                "Time-series statistics that quantify crime occurrence over time"
+              ],
+              "ReferenceCitation": "Section 3.3 (Analytical Tasks) & Section 6.3: Dynamic of crimes over time and Seasonality and Near Repeat Victimization are straightforward to be observed with CrimAnalyzer.",
+              "FeedsInto": [
+                6,
+                7,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Crime Hotspot Detection",
+              "ID": 3,
+              "PaperDescription": "Applies Non-Negative Matrix Factorization (NMF) to decompose a matrix (with rows as spatial sites and columns as time slices) in order to identify hotspots based on crime frequency and temporal intensity patterns.",
+              "Inputs": [
+                "Crime data organized as a sites vs time slices matrix"
+              ],
+              "Outputs": [
+                "Identified hotspots as clusters (with spatial grouping and corresponding temporal profiles)"
+              ],
+              "ReferenceCitation": "Section 4.2 (Hotspot Identification Model): We rely on Non-Negative Matrix Factorization to detect hotspots; the entries in the columns of W highlight sites with high crime prevalence.",
+              "FeedsInto": [
+                5,
+                9,
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Map",
+              "ID": 4,
+              "PaperDescription": "Implements a 2D map",
+              "Inputs": [
+                "2D layer"
+              ],
+              "Outputs": [
+                "A 2D map"
+              ],
+              "ReferenceCitation": "Section 5.2 (Map View): This view is comprised of a geographical map and a choropleth map to encode the number of crimes committed at each site.",
+              "FeedsInto": [
+                11,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Multi-Panel 2D Maps",
+              "ID": 5,
+              "PaperDescription": "Presents several small 2D maps—one for each detected hotspot—to facilitate spatial comparison among areas with different crime behaviors.",
+              "Inputs": [
+                "Hotspot clusters (from the NMF-based detection)"
+              ],
+              "Outputs": [
+                "Multiple 2D maps, each depicting the spatial distribution of a single hotspot"
+              ],
+              "ReferenceCitation": "Section 5.3 (Hotspots View): In this view, we use multiple maps to represent the spatial distribution of each hotspot.",
+              "FeedsInto": [
+                11,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Choropleth)",
+              "ID": 9,
+              "PaperDescription": "Implements a 2D choropleth map that color-codes regions based on the density of crimes, providing an immediate spatial overview of crime intensity",
+              "Inputs": [
+                "Geospatial crime data (site locations and crime counts)"
+              ],
+              "Outputs": [
+                "A 2D map with a choropleth overlay indicating crime intensity by region"
+              ],
+              "ReferenceCitation": "Section 5.2 (Map View): This view is comprised of a geographical map and a choropleth map to encode the number of crimes committed at each site",
+              "FeedsInto": [
+                4,
+                5,
+                11,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 6,
+              "PaperDescription": "Uses a line chart (with an area fill) to illustrate the overall temporal evolution of crime counts, allowing users to perceive trends and fluctuations over continuous time.",
+              "Inputs": [
+                "Aggregated crime counts over time"
+              ],
+              "Outputs": [
+                "A line chart showing the evolution of crime intensity across time"
+              ],
+              "ReferenceCitation": "Section 5.4 (Global Temporal View): This view gives an overview of the number of crimes committed over the whole time period, relying on a line chart with a filled area between the data value and the base zero line.",
+              "FeedsInto": [
+                11,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 7,
+              "PaperDescription": "Employs a bar chart to display cumulative crime counts over discrete time intervals (e.g., months, days, or periods of the day) to facilitate comparative temporal analysis.",
+              "Inputs": [
+                "Aggregated crime counts segmented by time intervals"
+              ],
+              "Outputs": [
+                "A bar chart that depicts the cumulative crime counts per chosen time unit"
+              ],
+              "ReferenceCitation": "Section 5.5 (Cumulative Temporal View): This view uses a bar chart to present the number of crimes accumulated by month, day, and period of the day.",
+              "FeedsInto": [
+                11,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Radial Bar Chart",
+              "ID": 8,
+              "PaperDescription": "Implements multiple bar charts arranged in a radial layout to show seasonal variations in individual crime types over the months; each radial chart represents one crime type across months of each year.",
+              "Inputs": [
+                "Crime counts per month for each crime type"
+              ],
+              "Outputs": [
+                "Radial bar charts that expose the seasonal variation of each crime type"
+              ],
+              "ReferenceCitation": "Section 5.7 (Radial Type View): In this view, we are using multiple bar charts with a radial layout. Each chart represents a different crime type.",
+              "FeedsInto": [
+                11,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Gauge Chart",
+              "ID": 10,
+              "PaperDescription": "Displays hotspot metrics via a gauge widget that numerically encodes the number of crimes, the temporal rate of occurrence, and the relative relevance of each hotspot using visual cues (numbers, percentages, pointer).",
+              "Inputs": [
+                "Hotspot metrics (crime count divided by total crimes, temporal frequency, etc.)"
+              ],
+              "Outputs": [
+                "A gauge chart for each hotspot, providing an at-a-glance summary of its significance"
+              ],
+              "ReferenceCitation": "Section 5.3 (Hotspots View): Below each hotspot there is a gauge widget that depicts the number of crimes, the temporal rate, and the hotspot relevance.",
+              "FeedsInto": [
+                11,
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Policy Selection",
+              "ID": 11,
+              "PaperDescription": "Allows users to select and filter policies for analysis.",
+              "Inputs": [
+                "User selection from dropdown."
+              ],
+              "Outputs": [
+                "Filtered policy adoption visualizations."
+              ],
+              "ReferenceCitation": "Section 3.3.1: The drop-down buttons allow the user to select the topic, year ranges, and sorting options.",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Mouse Hover",
+              "ID": 12,
+              "PaperDescription": "Highlights states and policies with contextual information on hover.",
+              "Inputs": [
+                "User hover action."
+              ],
+              "Outputs": [
+                "Tooltips with detailed policy adoption data."
+              ],
+              "ReferenceCitation": "Section 3.3.2: When the user hovers the mouse over a policy label, a tooltip appears showing contextual factors along with associated hazard ratios.",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

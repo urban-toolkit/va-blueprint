@@ -1,0 +1,281 @@
+{
+  "PaperTitle": "AlVis: Situation Awareness in the Surveillance of Road Tunnels",
+  "Year": 2012,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Video Streams",
+              "ID": 1,
+              "PaperDescription": "The primary data source is an array of video cameras surveilling the situation in the tunnel, with cameras typically installed every 80 to 100 meters and additional cameras at critical spots.",
+              "Inputs": [
+                "Live video feeds from tunnel cameras"
+              ],
+              "Outputs": [
+                "Real-time video streams for operator viewing and automated analysis"
+              ],
+              "ReferenceCitation": "Section 3, Fig. 1: The primary data source is an array of video cameras surveilling the situation in the tunnel.",
+              "FeedsInto": [
+                3,
+                9,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "SCADA Data",
+              "ID": 2,
+              "PaperDescription": "The AlVis server also receives data from a SCADA system, including sensor values (e.g., wind speed) and operator actions (e.g., tunnel closure).",
+              "Inputs": [
+                "SCADA system events"
+              ],
+              "Outputs": [
+                "Raw SCADA event data for processing and visualization"
+              ],
+              "ReferenceCitation": "Section 3: In addition to IDS events, this server also receives data from a SCADA system. Examples include values from additional sensors (e.g., wind speed) and actions of the operators like changes of the tunnel configuration (e.g., a partial tunnel closure).",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Event Processing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Enrichment",
+              "ID": 3,
+              "PaperDescription": "Enrichment describes the augmentation of raw events by derived information, including classifications, relationships, and plausibilities.",
+              "Inputs": [
+                "Raw IDS events",
+                "Raw SCADA events"
+              ],
+              "Outputs": [
+                "Enriched events with classifications and relationships"
+              ],
+              "ReferenceCitation": "Section 3: Enrichment describes the augmentation of raw events by derived information. Examples include classifications (e.g., classify speed events as fast or slow vehicles), relationships (e.g., relate multiple events indicating a wrong-way driver to build a trajectory), and plausibilities (e.g., depending on the relative frequency of occurrence).",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Aggregation",
+              "ID": 4,
+              "PaperDescription": "Aggregation refers to the introduction of new events that summarize multiple raw events, such as combining multiple smoke detections into a single aggregated smoke event.",
+              "Inputs": [
+                "Enriched events"
+              ],
+              "Outputs": [
+                "Aggregated events (e.g., entire areas covered by smoke)"
+              ],
+              "ReferenceCitation": "Section 3: Aggregation refers to the introduction of new events that summarize multiple raw events. For example, while each camera detects the presence of smoke separately, an aggregated smoke event describes the entire area covered by smoke.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Prediction",
+              "ID": 5,
+              "PaperDescription": "Prediction creates events whose occurrence is in the future, such as expected smoke expansion or when the tunnel will be empty based on current traffic.",
+              "Inputs": [
+                "Aggregated events"
+              ],
+              "Outputs": [
+                "Predicted events for future incidents (e.g., smoke expansion, tunnel clearance)"
+              ],
+              "ReferenceCitation": "Section 3: Prediction creates events whose occurrence is in the future. Examples include an expected expansion of smoke and an estimation when the tunnel will be empty based on the current traffic.",
+              "FeedsInto": [
+                6,
+                7,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 6,
+              "PaperDescription": "The Present View shows a simplified 2D map of the tunnel, displaying areas such as lanes, breakdown bays, and emergency exits, with visual encoding of incidents based on their spatial position.",
+              "Inputs": [
+                "Aggregated events",
+                "Predicted events",
+                "Video streams"
+              ],
+              "Outputs": [
+                "Interactive 2D map displaying the current and predicted tunnel state"
+              ],
+              "ReferenceCitation": "Section 4.1.1, Fig. 2: The part dedicated to the present state displays a simplified map of the tunnel and is subsequently referred to as the Present View.",
+              "FeedsInto": [
+                9,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Icons and Areas)",
+              "ID": 11,
+              "PaperDescription": "Icons and areas overlay the Map 2D view to represent various incident types, including smoke regions, vehicle trajectories, and breakdowns, using icons, strokes, and areas depending on the event classification and priority.",
+              "Inputs": [
+                "Aggregated events",
+                "Predicted events",
+                "Prioritization levels"
+              ],
+              "Outputs": [
+                "Incident indicators on Map 2D and Timelines with varying priorities and spatial references"
+              ],
+              "ReferenceCitation": "Section 4.1.2, Fig. 2: The layout defines the mapping from points in time and space to coordinates in screen space. This section describes, how different types of incidents are represented visually.",
+              "FeedsInto": [
+                6,
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Timeline (Incidents)",
+              "ID": 7,
+              "PaperDescription": "The Temporal Overview represents up to several hours and supports navigation in time, showing incidents across time with density encoded by color intensity.",
+              "Inputs": [
+                "Aggregated events",
+                "Predicted events"
+              ],
+              "Outputs": [
+                "Timeline overview for past and predicted events"
+              ],
+              "ReferenceCitation": "Section 4.4, Fig. 5: The Temporal Overview focusses on the occurrence of incident types over time. Vertical lines indicate intervals in time while the density of events is indicated by color intensity.",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Prioritization Legend",
+              "ID": 8,
+              "PaperDescription": "The Prioritization Legend provides an overview of all incident types involved in the current situation and their assignment to four priority levels, enabling re-prioritization and filtering of events.",
+              "Inputs": [
+                "Event priorities",
+                "Aggregated events"
+              ],
+              "Outputs": [
+                "Updated visualization layers based on prioritization (Map 2D, Timeline)"
+              ],
+              "ReferenceCitation": "Section 4.2, Fig. 3: The Prioritization Legend provides an overview of all incident types involved in the current situation and their assignment to the four priority levels.",
+              "FeedsInto": [
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Video Access",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Video Cursor",
+              "ID": 9,
+              "PaperDescription": "The video cursor provides a quick preview of available video material for a particular point in time and space as represented in the Spatio-Temporal View, displaying live or historical video.",
+              "Inputs": [
+                "Video streams",
+                "Spatio-temporal user navigation input"
+              ],
+              "Outputs": [
+                "Context-sensitive video previews embedded in the interface"
+              ],
+              "ReferenceCitation": "Section 4.3, Fig. 2e: The video cursor thus appears as one or more small video screens which are located next to the mouse cursor.",
+              "FeedsInto": [
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Video Player",
+              "ID": 10,
+              "PaperDescription": "Video players display live or historic video in full resolution and support tracing of movements, manual and automatic camera switching, and simultaneous access to adjacent cameras.",
+              "Inputs": [
+                "Video streams",
+                "User-selected time-space points"
+              ],
+              "Outputs": [
+                "Detailed video playback with spatial context (adjacent cameras)"
+              ],
+              "ReferenceCitation": "Section 4.3, Fig. 4: Video players are another user interface element for access to video material. Unlike the small preview provided by the video cursor, video players display the video in full resolution.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Prioritization Control",
+              "ID": 12,
+              "PaperDescription": "Allows users to switch between manual and automated prioritization of incident types using predefined configurations or rule-based automation for incident relevance.",
+              "Inputs": [
+                "User selection (manual configuration)",
+                "Incident priority rules (auto configuration)"
+              ],
+              "Outputs": [
+                "Updated incident priorities in Prioritization Legend"
+              ],
+              "ReferenceCitation": "Section 4.2: Selecting auto as configuration enables an automatic prioritization which is based on rules. For each incident type, an ordered set of rules can be defined.",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 13,
+              "PaperDescription": "Allows users to magnify a specific spatial interval along the tunnel axis to support focus+context exploration of events in long tunnels.",
+              "Inputs": [
+                "User selection of spatial interval"
+              ],
+              "Outputs": [
+                "Magnified section of the Map 2D view"
+              ],
+              "ReferenceCitation": "Section 4.1.1: Clicking on a movable interval enables or disables the distortion by magnifying the interval by a pre-defined constant factor.",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 14,
+              "PaperDescription": "Enables users to define the time interval to be displayed in the Spatio-Temporal View by interacting with the Temporal Overview.",
+              "Inputs": [
+                "User interaction with Temporal Overview (time selection)"
+              ],
+              "Outputs": [
+                "Updated time window in Timeline and Map 2D"
+              ],
+              "ReferenceCitation": "Section 4.4: The user may drag the bottom border to extend or contract the time interval of the History View. Similarly, dragging the present line affects the time shown in the Future View.",
+              "FeedsInto": [
+                7,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

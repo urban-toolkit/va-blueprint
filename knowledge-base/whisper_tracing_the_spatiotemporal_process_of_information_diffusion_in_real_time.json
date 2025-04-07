@@ -1,0 +1,290 @@
+{
+  "PaperTitle": "Whisper: Tracing the Spatiotemporal Process of Information Diffusion in Real Time",
+  "Year": 2012,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Social Media",
+              "ID": 1,
+              "PaperDescription": "Gathers microblog data using Twitter APIs in streaming and search modes, and obtains spatial information using Google Geocoding API.",
+              "Inputs": [
+                "Twitter APIs streaming and search data",
+                "Google Geocoding API"
+              ],
+              "Outputs": [
+                "Cleaned tweet data with spatial and temporal attributes"
+              ],
+              "ReferenceCitation": "As shown in Fig. 4, Whisper's system architecture consists of three primary components. First, in the raw data module, micro-blog data are gathered based on Twitter APIs. Two data gathering modes, the streaming mode and the search mode, are supported by these APIs. The spatial information of each tweet is also collected using the Google Geocoding API while the data are gathered. (Section 4, Fig. 4)",
+              "FeedsInto": [
+                2,
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Layout Algorithms",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Topic Disc",
+              "ID": 2,
+              "PaperDescription": "Lays out active and inactive tweets using a sunflower packing algorithm, placing inactive tweets in the center and active tweets in concentric rings.",
+              "Inputs": [
+                "Cleaned tweet data with spatial and temporal attributes"
+              ],
+              "Outputs": [
+                "Packed layout of tweets in topic disc"
+              ],
+              "ReferenceCitation": "Inactive tweets and active tweets are laid out in different ways. The inactive tweets are placed inside the topic disc using the well-known sunflower packing algorithm proposed by Vogel. (Section 5.1)",
+              "FeedsInto": [
+                3,
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Diffusion Pathways",
+              "ID": 3,
+              "PaperDescription": "Creates curved diffusion pathways using a magnetic flux line-drawing algorithm based on a diffusion field model between tweets and user groups.",
+              "Inputs": [
+                "Packed layout of tweets in topic disc",
+                "Arranged user groups with hierarchical structure"
+              ],
+              "Outputs": [
+                "Curved diffusion pathways showing retweet flows"
+              ],
+              "ReferenceCitation": "We introduce an artificial diffusion field model to mimic electric fields and to generate flux lines. The model is defined based on a bipartite graph that consists of two types of nodes: topic nodes and user group nodes. (Section 5.2)",
+              "FeedsInto": [
+                5,
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "User Group",
+              "ID": 4,
+              "PaperDescription": "Groups retweeters hierarchically by geo-location and arranges user groups either on a circular layout or according to geographic coordinates.",
+              "Inputs": [
+                "Cleaned tweet data with spatial and temporal attributes"
+              ],
+              "Outputs": [
+                "Arranged user groups with hierarchical structure"
+              ],
+              "ReferenceCitation": "User groups are placed in an outer ring based on two layout options: (1) longitude layout: projects user groups on the circle based on the retweet users' location longitude available from the twitter APIs or obtained from the Google Geocoding API; (2) circular layout: projects the user groups onto a circle by equally dividing the circle arc. (Section 5.3)",
+              "FeedsInto": [
+                3,
+                5,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Overlay (Sunflower Metaphor)",
+              "ID": 5,
+              "PaperDescription": "Visualizes the spatiotemporal diffusion of information using a sunflower metaphor, where the center disc represents the source tweets, the pathways represent the retweet flow, and the outer regions display user groups arranged by geographic or circular layout.",
+              "Inputs": [
+                "Packed layout of tweets in topic disc",
+                "Curved diffusion pathways showing retweet flows",
+                "Arranged user groups with hierarchical structure",
+                "Temporal and sentiment data from retweets"
+              ],
+              "Outputs": [
+                "Integrated spatiotemporal diffusion visualization with sentiment, timing, and influence encodings"
+              ],
+              "ReferenceCitation": "We design Whisper to leverage the advantages of visual encodings and coordinated views – it traces the dynamics of information diffusion by using an intuitive sunflower visual metaphor to construct a narrative among topic, people, time, and location within one single visualization. (Section 3, Visual Metaphors and Encodings)",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 6,
+              "PaperDescription": "Provides a spatial context by showing user group locations in either geographic or circular layout on a 2D map.",
+              "Inputs": [
+                "Arranged user groups with hierarchical structure"
+              ],
+              "Outputs": [
+                "2D map showing spatial distribution of user groups"
+              ],
+              "ReferenceCitation": "Examples of longitude and circular layouts can be seen in Fig. 1 and Fig. 10 respectively. (Section 3.2 User Group)",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Timeline",
+              "ID": 7,
+              "PaperDescription": "Displays a timeline showing the detailed retweeting behavior between users for a specific tweet or pathway.",
+              "Inputs": [
+                "Curved diffusion pathways showing retweet flows"
+              ],
+              "Outputs": [
+                "Timeline visualization of retweet interactions"
+              ],
+              "ReferenceCitation": "When any of the pathways is focused upon, a diffusion series is shown to reveal the specific relationships among the users of the information source tweet and the succeeding retweet users. (Section 3.2 Diffusion Pathway and Fig. 3)",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 8,
+              "PaperDescription": "Summarizes the volume of incoming tweets and average sentiments within each time interval using an interactive timeline.",
+              "Inputs": [
+                "Temporal tweet and retweet data with sentiment analysis"
+              ],
+              "Outputs": [
+                "Line chart showing temporal trends and sentiments"
+              ],
+              "ReferenceCitation": "The interactive timeline that summarizes the volume of incoming tweets and the average sentiments within each time interval. (Section 4, Fig. 1: 7)",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Attribute Selection (Topic)",
+              "ID": 9,
+              "PaperDescription": "Enables filtering tweets by keywords, supporting logical operators (AND/OR) for more precise queries.",
+              "Inputs": [
+                "User input (keywords and logical operators)"
+              ],
+              "Outputs": [
+                "Filtered tweet and retweet data"
+              ],
+              "ReferenceCitation": "Users can monitor a topic in real time by giving a keyword or a set of keywords. They can also query certain keywords to gather and explore historical tweet data. (Section 3.3, Topic driven data exploration)",
+              "FeedsInto": [
+                2,
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Attribute Selection (Sentiment)",
+              "ID": 10,
+              "PaperDescription": "Allows filtering tweets and retweets by sentiment (positive, neutral, negative) to support data reduction and comparison.",
+              "Inputs": [
+                "User selection of sentiment type"
+              ],
+              "Outputs": [
+                "Filtered tweet and retweet data by sentiment"
+              ],
+              "ReferenceCitation": "Different types of data filters, including topic filters, influence filters, and sentiment filters, are provided in Whisper to support data reduction and facilitate subset comparison. (Section 3.3, Filtering)",
+              "FeedsInto": [
+                2,
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Attribute Selection (Influence)",
+              "ID": 11,
+              "PaperDescription": "Filters tweets based on the expected influence of users, typically determined by their follower counts.",
+              "Inputs": [
+                "User-selected influence threshold"
+              ],
+              "Outputs": [
+                "Filtered tweet and retweet data by influence"
+              ],
+              "ReferenceCitation": "The influence filter (to select tweets based on the users' expected influence). (Section 4, Fig. 1: 6)",
+              "FeedsInto": [
+                2,
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatial Zoom-In",
+              "ID": 12,
+              "PaperDescription": "Allows users to zoom into specific user groups to explore diffusion processes within a finer spatial granularity.",
+              "Inputs": [
+                "User selection of a user group"
+              ],
+              "Outputs": [
+                "Detailed diffusion view of the selected user group"
+              ],
+              "ReferenceCitation": "The capability of zooming into a user group enables users to explore the diffusion process within a location of interest, and to further see the activities of individual users within the group. (Section 3.3, Spatial zoom-in)",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Configuration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Information Flow Direction Switch",
+              "ID": 13,
+              "PaperDescription": "Switches between diffusion mode (retweets moving outward from the source) and convergence mode (retweets moving inward toward the topic disc).",
+              "Inputs": [
+                "User selection of flow direction mode"
+              ],
+              "Outputs": [
+                "Updated visualization showing selected flow direction"
+              ],
+              "ReferenceCitation": "Users can switch between the two modes to focus on either direction of information flow. (Section 3.3, Switching direction of information flow)",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Hovering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Element Hover",
+              "ID": 14,
+              "PaperDescription": "Allows users to focus on specific tweets, pathways, or user groups by hovering or clicking, which triggers tooltips and highlights related elements.",
+              "Inputs": [
+                "User mouse hover or click on visualization elements"
+              ],
+              "Outputs": [
+                "Highlighted tweets, pathways, and user groups; tooltips with detailed information"
+              ],
+              "ReferenceCitation": "Elements in Whisper, including tweet/retweet glyphs and user group icons, can be focused on when the mouse hovers over the elements. (Section 3.3, Highlighting)",
+              "FeedsInto": [
+                7,
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

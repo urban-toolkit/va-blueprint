@@ -1,0 +1,390 @@
+{
+  "PaperTitle": "TCEVis: Visual analytics of traffic congestion influencing factors based on explainable machine learning",
+  "Year": 2024,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Street Network",
+              "ID": 1,
+              "PaperDescription": "Loads road network data from OpenStreetMap",
+              "Inputs": [
+                "Raw road network dataset"
+              ],
+              "Outputs": [
+                "Structured road segment data"
+              ],
+              "ReferenceCitation": "Section 3.2: Road network data consist of a dataset extracted from OpenStreetMap that provides information about a city's road network.",
+              "FeedsInto": [
+                5,
+                6,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 2,
+              "PaperDescription": "Loads taxi trajectory data for congestion analysis",
+              "Inputs": [
+                "Raw taxi trajectory data"
+              ],
+              "Outputs": [
+                "Processed vehicle movement data"
+              ],
+              "ReferenceCitation": "Section 3.2: Taxi trajectory data is a collection of information on the recorded movements of taxis in a city during the month of October 2021.",
+              "FeedsInto": [
+                5,
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Air Quality",
+              "ID": 3,
+              "PaperDescription": "Loads air quality data from environmental monitoring stations",
+              "Inputs": [
+                "Air pollution measurements"
+              ],
+              "Outputs": [
+                "Processed air quality dataset"
+              ],
+              "ReferenceCitation": "Section 3.2: Air quality data refers to information gathered from Chinas General Environmental Monitoring Station. This data contains measurements of different air pollutants taken in real-time.",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Weather",
+              "ID": 4,
+              "PaperDescription": "Loads meteorological and weather data",
+              "Inputs": [
+                "Historical weather data"
+              ],
+              "Outputs": [
+                "Structured weather dataset"
+              ],
+              "ReferenceCitation": "Section 3.2: Meteorological and weather data are details about past weather conditions that can be found on historical websites.",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Map Matching",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "GPS Trajectory Points",
+              "ID": 5,
+              "PaperDescription": "Matches GPS trajectory points to road segments using ST-Matching",
+              "Inputs": [
+                "Trajectory points",
+                "Road network"
+              ],
+              "Outputs": [
+                "Mapped road segment data"
+              ],
+              "ReferenceCitation": "Section 3.3.1: The matching of the road network is performed using the ST-Matching algorithm, which considers topological information.",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Embedding",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Road Network Graph",
+              "ID": 6,
+              "PaperDescription": "Generates spatial representation of road networks",
+              "Inputs": [
+                "Road network graph"
+              ],
+              "Outputs": [
+                "Road feature vector"
+              ],
+              "ReferenceCitation": "Section 3.3.2: We employ the DeepWalk algorithm to produce an efficient spatial representation of the original road network.",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Feature Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Road Speed Factors",
+              "ID": 7,
+              "PaperDescription": "Constructs feature vectors for road speed prediction",
+              "Inputs": [
+                "Traffic data",
+                "Weather data",
+                "Air data"
+              ],
+              "Outputs": [
+                "Feature matrix for model"
+              ],
+              "ReferenceCitation": "Section 3.3.3: We construct a road feature vector as an input to the model for predicting short-term future road speed.",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Indexing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Speed Performance",
+              "ID": 8,
+              "PaperDescription": "Computes road congestion level based on speed deviation",
+              "Inputs": [
+                "Speed data"
+              ],
+              "Outputs": [
+                "Congestion index score"
+              ],
+              "ReferenceCitation": "Section 3.3.4: The Road Speed Performance Index is utilized. This is calculated by dividing the actual vehicle speed by the maximum allowable travel speed.",
+              "FeedsInto": [
+                14,
+                15
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Prediction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Road Speed",
+              "ID": 9,
+              "PaperDescription": "Predicts short-term traffic speed using a machine learning model",
+              "Inputs": [
+                "Road feature matrix"
+              ],
+              "Outputs": [
+                "Predicted road speed"
+              ],
+              "ReferenceCitation": "Section 4: We applied a model based on machine learning to estimate the short-term speed of roads in the future.",
+              "FeedsInto": [
+                8,
+                10
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Quantify",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Multi-source Factors on Congestion",
+              "ID": 10,
+              "PaperDescription": "Explains the influence of multi-source factors on congestion",
+              "Inputs": [
+                "Prediction results",
+                "Input data"
+              ],
+              "Outputs": [
+                "SHAP values for feature impact"
+              ],
+              "ReferenceCitation": "Section 4.1: We used the SHAP method to explain the speed prediction model and quantify the degree of influence of multi-source factors on congested roads.",
+              "FeedsInto": [
+                11,
+                12,
+                13,
+                17,
+                18
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Bar Chart (Global View)",
+              "ID": 11,
+              "PaperDescription": "Displays overall impact of influencing factors",
+              "Inputs": [
+                "Aggregated factor importance"
+              ],
+              "Outputs": [
+                "Bar and pie charts"
+              ],
+              "ReferenceCitation": "Section 5.1: Global view showed basic data information, encoding the average degree of influence for multiple influencing factors through bar charts and pie charts.",
+              "FeedsInto": [
+                19
+              ]
+            },
+            {
+              "GranularBlockName": "Pie Chart",
+              "ID": 12,
+              "PaperDescription": "Displays overall impact of influencing factors",
+              "Inputs": [
+                "Aggregated factor importance"
+              ],
+              "Outputs": [
+                "Bar and pie charts"
+              ],
+              "ReferenceCitation": "Section 5.1: Global view showed basic data information, encoding the average degree of influence for multiple influencing factors through bar charts and pie charts.",
+              "FeedsInto": [
+                19
+              ]
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 13,
+              "PaperDescription": "Shows correlation between congestion factors and impact",
+              "Inputs": [
+                "Feature impact values"
+              ],
+              "Outputs": [
+                "Scatterplot visualization"
+              ],
+              "ReferenceCitation": "Section 5.2: Relationship view demonstrated the response relationship between influencing factors in terms of their original value domains and their degree of influence in a two-dimensional space.",
+              "FeedsInto": [
+                19
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 14,
+              "PaperDescription": "Tracks temporal traffic congestion trends",
+              "Inputs": [
+                "Traffic data over time"
+              ],
+              "Outputs": [
+                "Time-series congestion chart"
+              ],
+              "ReferenceCitation": "Section 5.3: Monitor view supported exploring the occurrence of traffic congestion at different moments, with time-series charts representing congestion levels.",
+              "FeedsInto": [
+                20
+              ]
+            },
+            {
+              "GranularBlockName": "Matrix",
+              "ID": 17,
+              "PaperDescription": "Compares congestion impact of different roads",
+              "Inputs": [
+                "Road congestion factors"
+              ],
+              "Outputs": [
+                "Color-encoded matrix"
+              ],
+              "ReferenceCitation": "Section 5.5: Matrix view adopted a matrix design, where each row represented a road, and columns represented influencing factors with color encoding their impact.",
+              "FeedsInto": [
+                20
+              ]
+            },
+            {
+              "GranularBlockName": "Bar Chart (Temporal View)",
+              "ID": 18,
+              "PaperDescription": "Analyzes factor importance changes over time",
+              "Inputs": [
+                "Historical congestion data"
+              ],
+              "Outputs": [
+                "Line chart with factor impact"
+              ],
+              "ReferenceCitation": "Section 5.6: Temporal view was designed to analyze how the degree of influence of different factors on the speed of the target road changed over time.",
+              "FeedsInto": [
+                19
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Overlay (Roads)",
+              "ID": 15,
+              "PaperDescription": "Overlays congestion levels on the map",
+              "Inputs": [
+                "Road congestion levels"
+              ],
+              "Outputs": [
+                "Color-coded congestion overlay"
+              ],
+              "ReferenceCitation": "Section 5.4: Mapview depicted traffic conditions on the road, using four colors to represent varying levels of congestion.",
+              "FeedsInto": [
+                16,
+                20
+              ]
+            },
+            {
+              "GranularBlockName": "2D Map",
+              "ID": 16,
+              "PaperDescription": "Displays road network and locations",
+              "Inputs": [
+                "Road network data"
+              ],
+              "Outputs": [
+                "Base map visualization"
+              ],
+              "ReferenceCitation": "Section 5.4: Mapview represented the real geographic locations of roads and related attribute information.",
+              "FeedsInto": [
+                20
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Factor Selection",
+              "ID": 19,
+              "PaperDescription": "Enables users to filter factors influencing congestion",
+              "Inputs": [
+                "User selection"
+              ],
+              "Outputs": [
+                "Filtered congestion data"
+              ],
+              "ReferenceCitation": "Section 6.1: Recognizing the different degree of influence could help traffic managers develop targeted measures to alleviate traffic congestion.",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Road Selection",
+              "ID": 20,
+              "PaperDescription": "Allows users to select roads for detailed congestion analysis",
+              "Inputs": [
+                "User-selected road"
+              ],
+              "Outputs": [
+                "Focused congestion details"
+              ],
+              "ReferenceCitation": "Section 6.2: We investigated traffic congestion from monitor view by randomly selecting six times on several days.",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

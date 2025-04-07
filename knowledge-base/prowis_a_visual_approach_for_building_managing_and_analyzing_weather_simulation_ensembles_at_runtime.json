@@ -1,0 +1,280 @@
+{
+  "PaperTitle": "PROWIS: A Visual Approach for Building, Managing, and Analyzing Weather Simulation Ensembles at Runtime",
+  "Year": 2024,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Features",
+              "ID": 1,
+              "PaperDescription": "Loads the nested domain definitions for the WRF simulation grid setup, including spatial resolution and domain boundaries.",
+              "Inputs": [
+                "User-specified grid resolutions and domain central points"
+              ],
+              "Outputs": [
+                "Structured data of nested domain configurations"
+              ],
+              "ReferenceCitation": "Section 6.2.1 Setup view: Users can set the simulation domains' grid resolutions and central points using the top menu, define the start/end simulation time, and select the ICBC data source.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Weather Simulation Parameters",
+              "ID": 2,
+              "PaperDescription": "Loads the physical parameterization schemes (e.g., cloud microphysics, cumulus, land surface, surface layer, planetary boundary layer) for the WRF simulations.",
+              "Inputs": [
+                "User selection of parameterizations from predefined lists"
+              ],
+              "Outputs": [
+                "Structured parameter set for WRF configuration"
+              ],
+              "ReferenceCitation": "Section 6.2.1 Setup view: The parameterization menu allows the selection of the physical parameterizations considered in the simulation.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Management",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "DAG Workflow Execution",
+              "ID": 3,
+              "PaperDescription": "Executes WRF workflow steps via Apache Airflow DAGs, supporting reuse of outputs, caching, and provenance recording.",
+              "Inputs": [
+                "Domain configuration",
+                "Physical parameterizations",
+                "ICBC data"
+              ],
+              "Outputs": [
+                "Scheduled and executed WRF workflow tasks with provenance metadata"
+              ],
+              "ReferenceCitation": "Section 6.1 Backend: We adopted the Apache Airflow workflow management system to orchestrate the multiple WRF runs.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Aggregation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Atmospheric Field Aggregation",
+              "ID": 4,
+              "PaperDescription": "Performs spatial and temporal aggregation (min, max, avg, probability) of atmospheric field data (e.g., precipitation, temperature) from ongoing simulations and ensembles.",
+              "Inputs": [
+                "Atmospheric field outputs from WRF simulations"
+              ],
+              "Outputs": [
+                "Aggregated atmospheric data for visualization"
+              ],
+              "ReferenceCitation": "Section 6.1 Backend: PROWIS handles dynamic aggregation queries. The Server Core computes, at each grid point, the aggregation of each field considering the runs.",
+              "FeedsInto": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 5,
+              "PaperDescription": "Displays spatial distributions of atmospheric fields over simulation domains, with options to select specific time intervals or fields. Up to three maps can be shown simultaneously for different variables.",
+              "Inputs": [
+                "Aggregated atmospheric data",
+                "User-selected time intervals"
+              ],
+              "Outputs": [
+                "Rendered 2D maps with atmospheric field distributions"
+              ],
+              "ReferenceCitation": "Section 6.2.2 Simulation view: The spatial analysis panel allows the analysis of the distribution of atmospheric fields. It contains three maps for the visualization of the distributions of different fields at a given instant (or the accumulated field distribution over a time interval).",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 6,
+              "PaperDescription": "Overlays heatmaps on the 2D maps to visualize the intensity and distribution of atmospheric variables such as precipitation, temperature, and wind speed.",
+              "Inputs": [
+                "Atmospheric field data (precipitation, temperature, wind, etc.)"
+              ],
+              "Outputs": [
+                "Heatmap overlays showing field intensities on Map 2D"
+              ],
+              "ReferenceCitation": "Section 6.2.2 Simulation view: The spatial analysis panel allows the analysis of the distribution of atmospheric fields. Contour plots (marching squares algorithm) are used to generate the spatial distributions.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 7,
+              "PaperDescription": "Displays temporal trends of atmospheric variables (e.g., precipitation, temperature) to analyze changes over simulation time steps.",
+              "Inputs": [
+                "Time series of atmospheric field values"
+              ],
+              "Outputs": [
+                "Line charts showing field values over time"
+              ],
+              "ReferenceCitation": "Section 6.2.2 Simulation view: The line charts show the simulated value of different atmospheric fields at each time step.",
+              "FeedsInto": [
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Sunburst Chart",
+              "ID": 8,
+              "PaperDescription": "Displays accumulated precipitation data using concentric circles to represent multiple time aggregations (1h, 3h, 24h, entire simulation period).",
+              "Inputs": [
+                "Temporal aggregation of precipitation data"
+              ],
+              "Outputs": [
+                "Sunburst chart showing hierarchical time-based precipitation accumulation"
+              ],
+              "ReferenceCitation": "Section 6.2.2 Simulation view: The sunburst chart is a collection of concentric circles representing different time aggregations and is colored based on the accumulated precipitation in each period.",
+              "FeedsInto": [
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Heat Matrix",
+              "ID": 9,
+              "PaperDescription": "Displays ensemble simulation data for multiple atmospheric fields across time and runs; rows represent ensemble members, columns represent time steps.",
+              "Inputs": [
+                "Aggregated ensemble atmospheric data"
+              ],
+              "Outputs": [
+                "Heat matrix visualizations per atmospheric field"
+              ],
+              "ReferenceCitation": "Section 6.2.3 Ensemble view: The temporal analysis panel comprises a collection of heat matrices, one for each atmospheric field. Each row of a matrix represents an ensemble member, each column a time step.",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 10,
+              "PaperDescription": "Visualizes simulation runs' precipitation predictions similarity based on PCA projections of feature vectors.",
+              "Inputs": [
+                "Feature vectors from simulation runs"
+              ],
+              "Outputs": [
+                "2D scatter plot representing similarity of simulations"
+              ],
+              "ReferenceCitation": "Section 6.2.2 Simulation view: The scatter plot shows how similar the performed simulations are considering the predicted precipitation volume.",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Graph",
+              "ID": 11,
+              "PaperDescription": "Displays the parent-child provenance relationships among simulation runs in a graph structure for provenance tracking and simulation management.",
+              "Inputs": [
+                "Simulation run metadata and relationships"
+              ],
+              "Outputs": [
+                "Provenance graph of simulation runs"
+              ],
+              "ReferenceCitation": "Section 6.2.2 Simulation view: The runs overview panel was designed to enable the monitoring of active simulations and the creation of new simulations that share configuration parameters with previous runs.",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 12,
+              "PaperDescription": "Enables users to select time intervals in the sunburst chart to update spatial field visualizations and line charts.",
+              "Inputs": [
+                "User-selected time ranges from sunburst chart"
+              ],
+              "Outputs": [
+                "Filtered spatial and temporal data for display updates"
+              ],
+              "ReferenceCitation": "Section 6.2.2 Simulation view: The user can interact with the chart by clicking and brushing the cells. Doing so, the spatial rainfall distribution shown in the spatial analysis panel is updated.",
+              "FeedsInto": [
+                5,
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Point Selection",
+              "ID": 13,
+              "PaperDescription": "Allows users to click on a map to select specific grid points, triggering updates in line charts and sunburst charts for that location.",
+              "Inputs": [
+                "User-clicked map points"
+              ],
+              "Outputs": [
+                "Filtered time series for selected grid points"
+              ],
+              "ReferenceCitation": "Section 6.2.2 Simulation view: If the user wants to investigate a specific domain point, they can click on a map to select it. In doing so, the temporal analysis panel is updated only to show data associated with the selection.",
+              "FeedsInto": [
+                7,
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Run/Ensemble Selection",
+              "ID": 14,
+              "PaperDescription": "Allows users to select simulation runs or ensembles from the runs overview graph and scatter plot for further analysis, comparison, or management.",
+              "Inputs": [
+                "User-selected runs or ensembles"
+              ],
+              "Outputs": [
+                "Filtered simulation runs for detailed analysis"
+              ],
+              "ReferenceCitation": "Section 6.2.2 Simulation view: If a node is clicked, the user can choose to Analyze the simulation... create a New child... Restart or Abort... Delete...",
+              "FeedsInto": [
+                5,
+                7,
+                8,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,332 @@
+{
+  "PaperTitle": "Location2vec: A Situation-Aware Representation for Visual Exploration of Urban Locations",
+  "Year": 2019,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 1,
+              "PaperDescription": "Loads mobile phone trajectory data including user ID, cell station ID, and timestamp, which are later transformed into spatial-temporal words for representation learning.",
+              "Inputs": [
+                "Mobile phone trajectory records (pid, sid, t)"
+              ],
+              "Outputs": [
+                "Cleaned and structured trajectory sequences"
+              ],
+              "ReferenceCitation": "Section III.A: Our dataset includes 7 million mobile users in a city with 9 million residents. Thus, the citywide mobility can only be modeled. The dataset contains trajectory records of mobile phones and the information of cell stations.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Preprocessing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory Cleaning",
+              "ID": 2,
+              "PaperDescription": "Removes noisy and inconsistent data from mobile trajectories using the method by Wu et al. to prepare cleaned data for embedding.",
+              "Inputs": [
+                "Raw trajectory data from mobile phones"
+              ],
+              "Outputs": [
+                "Cleaned trajectory records"
+              ],
+              "ReferenceCitation": "Section III.B: We employ the data cleaning process provided by Wu et al. [20] to remove data noise.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Embedding",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Location2Vec Embedding Model",
+              "ID": 3,
+              "PaperDescription": "Applies a skip-gram word2vec model to generate high-dimensional vector representations of locations based on contextual trajectories within mobile phone data.",
+              "Inputs": [
+                "Cleaned trajectory sequences",
+                "Contextual trajectory windows"
+              ],
+              "Outputs": [
+                "Vector representations of urban locations (location embeddings)"
+              ],
+              "ReferenceCitation": "Section IV.A: We employ the well-studied distributed representation learning [7] to generate location vectors for urban locations.",
+              "FeedsInto": [
+                4,
+                5,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Feature Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "k-Nearest Neighbors",
+              "ID": 4,
+              "PaperDescription": "Computes the k-nearest neighbors for each location in the vector space based on cosine similarity, revealing similar location functionalities.",
+              "Inputs": [
+                "Location vector representations"
+              ],
+              "Outputs": [
+                "List of k-nearest neighbor locations for each urban location"
+              ],
+              "ReferenceCitation": "Section IV.B.1: We compute the similarity as the cosine distance in the vector space. We define kNN Nk(s, t) as the set of k locations where people of location s at time t will visit.",
+              "FeedsInto": [
+                7,
+                8,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Intra-Distance of kNN",
+              "ID": 5,
+              "PaperDescription": "Measures the geographic dispersion of a location's k-nearest neighbors, representing how far people tend to travel from the location.",
+              "Inputs": [
+                "kNN location lists",
+                "Geographic positions of locations"
+              ],
+              "Outputs": [
+                "Intra-distance metric for each location"
+              ],
+              "ReferenceCitation": "Section IV.B.2: We compute the intra-distance of kNN, Disk(s, t), as the average distance from location s to Nk(s, t) in geographic space.",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Fractional Anisotropy",
+              "ID": 6,
+              "PaperDescription": "Computes the directional concentration of trajectories using fractional anisotropy, indicating whether movement is directionally biased.",
+              "Inputs": [
+                "Geographic positions of kNN locations"
+              ],
+              "Outputs": [
+                "Fractional Anisotropy (FA) value for each location"
+              ],
+              "ReferenceCitation": "Section IV.B.3: We compute fractional anisotropy (FA) to represent the degree to which trajectory records are concentrated in one direction.",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 7,
+              "PaperDescription": "Displays the geographical distribution of urban locations, enriched with compass glyphs encoding flow direction, intra-distance, and fractional anisotropy.",
+              "Inputs": [
+                "Geographic positions of locations",
+                "Intra-distance metrics",
+                "Fractional Anisotropy values",
+                "Flow directions"
+              ],
+              "Outputs": [
+                "Interactive 2D map visualization with compass glyphs"
+              ],
+              "ReferenceCitation": "Section IV.C.2 and Figure 3: As shown in Figure 3, the orientation of the compass encodes the flow direction and the length of the compass represents the fractional anisotropy.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Overlay (Glyph)",
+              "ID": 8,
+              "PaperDescription": "Displays the kNN distribution and flow volume in a glyph-based radar graph, visualizing directional mobility patterns for each location.",
+              "Inputs": [
+                "kNN lists with similarity metrics",
+                "Flow volume data",
+                "Geographic positions of kNN locations"
+              ],
+              "Outputs": [
+                "kNN glyph overlays on the map for each urban location"
+              ],
+              "ReferenceCitation": "Section IV.C.3 and Figure 4: The kNN glyph is designed to show the geographical distribution of Nk(s, t) and the flow volume in eight directions of center location s.",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 9,
+              "PaperDescription": "Displays contextual trajectories of selected locations as a heatmap overlay to reveal the flow concentration and movement direction.",
+              "Inputs": [
+                "Contextual trajectory data",
+                "Geographic location data"
+              ],
+              "Outputs": [
+                "Heatmap overlay showing contextual movement flow"
+              ],
+              "ReferenceCitation": "Section V.B.3: The contextual trajectories through location s are visualized by heat map.",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 10,
+              "PaperDescription": "Visualizes the high-dimensional vector space of location embeddings reduced to 2D using LargeVis, enabling spatial exploration of location similarity.",
+              "Inputs": [
+                "High-dimensional location vectors"
+              ],
+              "Outputs": [
+                "2D scatter plot of location embeddings"
+              ],
+              "ReferenceCitation": "Section IV.C.1 and Figure 7(a): We apply a dimensionality reduction technique (i.e., LargeVis [24]) to reduce high-dimensional vector space to two-dimensional space to reveal the global pattern of location vectors.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Matrix",
+              "ID": 11,
+              "PaperDescription": "Displays pairwise location similarity and traffic volume as a matrix, encoding similarity with color and traffic volume with circle size.",
+              "Inputs": [
+                "Location similarity metrics",
+                "Flow volume data"
+              ],
+              "Outputs": [
+                "Similarity matrix with traffic volume encoding"
+              ],
+              "ReferenceCitation": "Section IV.C.4 and Figure 5: As shown in Figure 5, each cell in the matrix represents the interconnection between the corresponding two locations. The color of the grid encodes the similarity of two locations and the size of the circle encodes the volume of traffic.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Radar Chart",
+              "ID": 12,
+              "PaperDescription": "Displays flow volume across eight directions for a location as part of the kNN glyph in polar coordinates.",
+              "Inputs": [
+                "Flow volume data for eight directions",
+                "Directional labels"
+              ],
+              "Outputs": [
+                "Radar chart displaying directional flow volume"
+              ],
+              "ReferenceCitation": "Section IV.C.3 and Figure 4: The flow volume of each location is aggregated along eight directions (e.g., north, northeast, east, etc.). They are illustrated with a radar graph.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Polar Coordinate Plot",
+              "ID": 13,
+              "PaperDescription": "Visualizes the geographic distribution of the kNN neighbors around a central location in polar coordinates, representing their relative directions and distances.",
+              "Inputs": [
+                "kNN location data",
+                "Geographic distance and direction"
+              ],
+              "Outputs": [
+                "Polar coordinate chart showing neighbor distribution"
+              ],
+              "ReferenceCitation": "Section IV.C.3 and Figure 4: The coordinate (x, y) of location si ∈ Nk(s, t) is computed as: θ = tan-1((spi.latitude - sp.latitude)/(spi.longitude - sp.longitude)).",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 14,
+              "PaperDescription": "Allows users to select and explore different time intervals to observe temporal changes in location functionality and human mobility.",
+              "Inputs": [
+                "User-defined time interval"
+              ],
+              "Outputs": [
+                "Filtered representations and visualizations for the selected time interval"
+              ],
+              "ReferenceCitation": "Section V.B.5: In the configuration panel, the analyst can modulate the parameters such as the time to explore the dynamic change.",
+              "FeedsInto": [
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 15,
+              "PaperDescription": "Enables selection of specific urban locations for detailed exploration of their kNN distributions, contextual trajectories, and similarity relations.",
+              "Inputs": [
+                "User-selected location"
+              ],
+              "Outputs": [
+                "Highlighted visualizations in map, scatter plot, kNN glyph, matrix chart, and radar/polar charts"
+              ],
+              "ReferenceCitation": "Section V.B.5: For instance, the analyst can gain an overview in the map view and select a location s. The map view shows the geographical position of its kNN.",
+              "FeedsInto": [
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Configuration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Parameter Adjustment",
+              "ID": 16,
+              "PaperDescription": "Allows users to adjust parameters such as the number of nearest neighbors (k) and window size (m), affecting the visualization and feature extraction processes.",
+              "Inputs": [
+                "User-defined configuration parameters"
+              ],
+              "Outputs": [
+                "Updated data processing and visualizations based on new parameters"
+              ],
+              "ReferenceCitation": "Section V.B.5: In the configuration panel, the analyst can modulate the parameters such as the time to explore the dynamic change.",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

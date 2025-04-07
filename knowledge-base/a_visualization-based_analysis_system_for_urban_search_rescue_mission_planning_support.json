@@ -1,0 +1,229 @@
+{
+  "PaperTitle": "A Visualization-Based Analysis System for Urban Search & Rescue Mission Planning Support",
+  "Year": 2017,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Geometries",
+              "ID": 1,
+              "PaperDescription": "Loads unstructured point cloud data acquired from unmanned robots and converts them into a 3D voxel grid.",
+              "Inputs": [
+                "Raw point cloud data from unmanned robots"
+              ],
+              "Outputs": [
+                "Voxelized 3D grid representation of the building structure"
+              ],
+              "ReferenceCitation": "Section 5.1: The data retrieved from the unmanned robots are an unstructured point cloud. One issue with rendering point clouds is depth perception and the non-uniform distribution of measured points. To avoid this problem, we perform a binning to obtain a 3D regular voxel data structure.",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Attribute Derivation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Hazard Distance Field",
+              "ID": 2,
+              "PaperDescription": "Computes the distance from each voxel to the closest hazard points to inform path planning and safety assessment.",
+              "Inputs": [
+                "Voxelized 3D grid with hazard point annotations"
+              ],
+              "Outputs": [
+                "Distance field indicating proximity to hazards for each voxel"
+              ],
+              "ReferenceCitation": "Section 5.1: We compute a hazard distance field that denotes the distance to the closest hazard points.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Support Field",
+              "ID": 3,
+              "PaperDescription": "Calculates the available supporting area for each voxel to determine floor stability and responder safety.",
+              "Inputs": [
+                "Voxelized 3D grid"
+              ],
+              "Outputs": [
+                "Support field measuring floor area adequacy for safe traversal"
+              ],
+              "ReferenceCitation": "Section 5.1: The support field shows the available supporting area for each voxel. This value determines whether there is enough floor available for a responder to walk on.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Path Computation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Path Generation",
+              "ID": 4,
+              "PaperDescription": "Computes multiple optimal access paths from entry points to POIs using an A* algorithm with customized metrics based on hazard proximity, support, size constraints, and surface orientation.",
+              "Inputs": [
+                "Voxelized 3D grid",
+                "Hazard distance field",
+                "Support field",
+                "Size constraints",
+                "Surface normal data"
+              ],
+              "Outputs": [
+                "Ensemble of optimal paths from entry points to POIs"
+              ],
+              "ReferenceCitation": "Section 5.3: We employ the widely used A* algorithm for the path computations. The metric used in our system is composed of several, weighted sub-metrics.",
+              "FeedsInto": [
+                5,
+                7,
+                8,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 5,
+              "PaperDescription": "Displays an interactive 3D voxel-based visualization of the collapsed building, including annotated hazards, POIs, and paths.",
+              "Inputs": [
+                "Voxelized 3D grid",
+                "Access paths",
+                "Annotations (hazards, POIs, forbidden areas)"
+              ],
+              "Outputs": [
+                "Rendered 3D environment showing building structure and path options"
+              ],
+              "ReferenceCitation": "Section 5.5: Our system renders the point cloud interactively while preserving occlusion information and, thus, helping the IC to form a mental model of the building.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Overlay (Texture and bump)",
+              "ID": 6,
+              "PaperDescription": "Applies projective texturing and bump mapping to the 3D voxel grid to provide visual context and reliability indicators.",
+              "Inputs": [
+                "Images from unmanned robots",
+                "Voxel occupancy field"
+              ],
+              "Outputs": [
+                "Overlaid texture and bump maps on the 3D scene for enhanced realism and uncertainty visualization"
+              ],
+              "ReferenceCitation": "Section 5.5: Provided an orientation and a position, information that is available from the robots, the acquired images or videos are projected onto the voxels.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Profile Plot",
+              "ID": 7,
+              "PaperDescription": "Displays attribute changes along a selected path, such as hazard distance or support, enabling identification of problematic path sections.",
+              "Inputs": [
+                "Path attribute data (hazard distance, support, inclination)"
+              ],
+              "Outputs": [
+                "Line plot visualizing attribute variation along path distance"
+              ],
+              "ReferenceCitation": "Section 5.4.1: In order to enable the analysis of attribute changes along a path, we include a PP. This variation of a line plot enables the IC to spot outliers among the paths and measurement errors that would present themselves as spikes and shifts.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Parallel Coordinates Plot",
+              "ID": 8,
+              "PaperDescription": "Visualizes correlations and trade-offs between multiple global path attributes for informed decision making by the IC.",
+              "Inputs": [
+                "Path attribute data (path length, minimal hazard distance, average hazard distance, etc.)"
+              ],
+              "Outputs": [
+                "Parallel coordinate plot showing attribute correlations across paths"
+              ],
+              "ReferenceCitation": "Section 5.4.2: In our system, the PCP axes show the global path attributes, for example, Path Length, Minimal Hazard Distance or Average Hazard Distance.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Scatterplot Matrix",
+              "ID": 9,
+              "PaperDescription": "Presents pairwise correlations between all path attributes, supporting exploration of unexpected patterns and relationships.",
+              "Inputs": [
+                "Path attribute data"
+              ],
+              "Outputs": [
+                "Scatterplot matrix showing attribute correlations"
+              ],
+              "ReferenceCitation": "Section 5.4.3: Therefore, we use a Scatterplot Matrix (SPLOM) to show relations between all attributes.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Annotation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Voxel Annotation",
+              "ID": 10,
+              "PaperDescription": "Allows the IC to interactively annotate voxels as Start, POI, Hazard, or Forbidden to reflect changing mission circumstances.",
+              "Inputs": [
+                "User input via 3D rendering interaction"
+              ],
+              "Outputs": [
+                "Updated voxel classifications in the 3D grid"
+              ],
+              "ReferenceCitation": "Section 5.2: Points can be assigned to these three classes either by the initial reconnaissance of the robot or, in a later step, interactively by the IC.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Navigation",
+              "ID": 11,
+              "PaperDescription": "Enables the IC to explore the 3D voxel scene, manually or by following precomputed paths to assess feasibility and hazards.",
+              "Inputs": [
+                "User interaction (mouse/keyboard input)"
+              ],
+              "Outputs": [
+                "Updated camera position and viewpoint within the 3D scene"
+              ],
+              "ReferenceCitation": "Section 5.5: The camera can be steered by the IC directly, or it can follow a selected path automatically.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

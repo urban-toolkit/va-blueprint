@@ -1,0 +1,234 @@
+{
+  "PaperTitle": "TrajGraph: A Graph-Based Visual Analytics Approach to Studying Urban Network Centralities Using Taxi Trajectory Data",
+  "Year": 2016,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 1,
+              "PaperDescription": "Loads massive taxi trajectory data to construct the road network graph with traffic information, including GPS locations, time, and speed of taxis.",
+              "Inputs": [
+                "Raw taxi trajectory GPS data"
+              ],
+              "Outputs": [
+                "Structured GPS samples with time, location, and speed attributes"
+              ],
+              "ReferenceCitation": "Section 3 REQUIREMENT ANALYSIS AND TRAJGRAPH OVERVIEW: The trajectory data was acquired from 15,206 taxis. Each day a taxi trajectory records around 3k sample points with time, GPS location, and speed at an interval of 20 seconds.",
+              "FeedsInto": [
+                2,
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Graph Construction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Street-level Graph Generation",
+              "ID": 2,
+              "PaperDescription": "Generates a directed dual graph representing the urban road network from taxi trajectory data by mapping road segments to vertices and their connections to edges.",
+              "Inputs": [
+                "Structured GPS samples"
+              ],
+              "Outputs": [
+                "Street-level graph (GT) representing road segments and their connectivity"
+              ],
+              "ReferenceCitation": "Section 4.1 Transforming Trajectories to a Graph: A vertex in GT represents a road segment in a city. If a taxi travels from road segment A to its connected neighbor B, a directed edge AB is added to GT.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Graph Partitioning",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Region-Level Graph Partitioning",
+              "ID": 3,
+              "PaperDescription": "Applies graph partitioning using METIS to aggregate street-level vertices into region-level vertices for multiscale analysis, balancing vertex weights and minimizing inter-region edges.",
+              "Inputs": [
+                "Street-level graph (GT)"
+              ],
+              "Outputs": [
+                "Region-level graph with aggregated regions based on street connectivity and traffic information"
+              ],
+              "ReferenceCitation": "Section 4.2.1 Graph Partitioning: We use a multilevel k-way approach in the well-known METIS partition [19]. Here k is a given number of partitions to achieve.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Graph Centrality Computation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Pagerank and Betweenness Centralities",
+              "ID": 4,
+              "PaperDescription": "Computes Pagerank and betweenness centralities on region-level graphs to quantify the hub and backbone roles of urban regions in transportation networks.",
+              "Inputs": [
+                "Region-level graph with aggregated regions"
+              ],
+              "Outputs": [
+                "Pagerank and betweenness scores for each region vertex"
+              ],
+              "ReferenceCitation": "Section 4.3 Revealing Transportation Patterns by Graph Centralities: In particular, we compute Pagerank and betweenness, which are widely used indicators in graph analysis, to characterize hub and backbone streets/regions.",
+              "FeedsInto": [
+                5,
+                6,
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 5,
+              "PaperDescription": "Displays the spatial distribution of regions and streets on a city map, overlaid with traffic and centrality information such as Pagerank and betweenness scores.",
+              "Inputs": [
+                "Region-level graph data with centrality scores",
+                "Base city map"
+              ],
+              "Outputs": [
+                "2D map visualization with region highlights and overlays"
+              ],
+              "ReferenceCitation": "Section 5.1 Visualization Interface: Map view is the major instrument to visualize roads and regions with traffic information and centralities (Fig. 5(4)(6)).",
+              "FeedsInto": [
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Rose Chart)",
+              "ID": 6,
+              "PaperDescription": "Displays rose charts on the map view to represent temporal changes of centrality and traffic information in each region, with each arc segment representing a time window.",
+              "Inputs": [
+                "Temporal centrality and traffic data"
+              ],
+              "Outputs": [
+                "Rose charts overlaid on map view for temporal comparison"
+              ],
+              "ReferenceCitation": "Section 5.1 Visualization Interface: Moreover, a rose chart can be turned on to visualize the temporal changes of the information on a region.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Trajectory)",
+              "ID": 7,
+              "PaperDescription": "Overlays trajectories of taxis on the map view to visualize the routes traveled between regions or street segments.",
+              "Inputs": [
+                "Raw taxi trajectory data"
+              ],
+              "Outputs": [
+                "Trajectory overlay on the 2D map displaying taxi routes"
+              ],
+              "ReferenceCitation": "Section 5.1 Visualization Interface: Corresponding to the selection in the node-link graph view, the streets in the selected regions are drawn over the background map.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Graph",
+              "ID": 8,
+              "PaperDescription": "Displays an interactive node-link graph showing region-level connections and centrality scores; allows selection of regions for deeper analysis.",
+              "Inputs": [
+                "Region-level graph data with Pagerank and betweenness scores"
+              ],
+              "Outputs": [
+                "Node-link graph visualization with color-coded centrality representation"
+              ],
+              "ReferenceCitation": "Section 5.1 Visualization Interface: A node-link diagram (Fig. 5(1)(2)) visualizes the region-level graph with centrality or traffic information.",
+              "FeedsInto": [
+                7,
+                9,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 9,
+              "PaperDescription": "Displays the temporal changes of centrality scores and traffic metrics for selected regions across different time periods.",
+              "Inputs": [
+                "Temporal centrality data of selected regions"
+              ],
+              "Outputs": [
+                "Line chart visualizing temporal variation of centralities and traffic metrics"
+              ],
+              "ReferenceCitation": "Section 5.1 Visualization Interface: A line chart is used to display temporal changes of the centrality scores and general traffic information (average speed, average travel time, and traffic flow).",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 10,
+              "PaperDescription": "Allows users to select regions from the node-link diagram or map view to highlight and explore their centrality and traffic data across views.",
+              "Inputs": [
+                "User click on region in node-link diagram or map view"
+              ],
+              "Outputs": [
+                "Highlighted region and updated visualizations in map view and temporal view"
+              ],
+              "ReferenceCitation": "Section 5.1 Visualization Interface: A key feature of our visual analytics system is that the graph view serves as a control panel for the other views. Users can browse the graph view for vertices with interesting centralities and click (select) them to investigate the regions in the map view.",
+              "FeedsInto": [
+                5,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 11,
+              "PaperDescription": "Allows users to filter and load different time periods for analyzing temporal variations in traffic and centralities through buttons and list boxes.",
+              "Inputs": [
+                "User selection of time period from UI"
+              ],
+              "Outputs": [
+                "Filtered centrality and traffic data for the selected time period"
+              ],
+              "ReferenceCitation": "Section 5.1 Visualization Interface: A set of buttons and list boxes are provided for the selection of time periods, centralities, and traffic information (e.g., travel speed or time).",
+              "FeedsInto": [
+                4,
+                5,
+                8,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

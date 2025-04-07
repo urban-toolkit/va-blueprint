@@ -1,0 +1,396 @@
+{
+  "PaperTitle": "Urban Rhapsody: Large-scale exploration of urban soundscapes",
+  "Year": 2022,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Audio Recordings",
+              "ID": 1,
+              "PaperDescription": "Loads raw urban audio data (3x10s recordings per minute) from the SONYC sensor network",
+              "Inputs": [
+                "Sensor-collected audio files stored on disk"
+              ],
+              "Outputs": [
+                "Raw audio files for subsequent feature extraction"
+              ],
+              "ReferenceCitation": "Sec. 4.1: As of 2021, SONYC has collected... 877,000 hours of recorded audio.",
+              "FeedsInto": [
+                3,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Audio Embeddings",
+              "ID": 2,
+              "PaperDescription": "Loads OpenL3-generated audio embeddings (each 10s clip => 10 frames of 512-d vectors)",
+              "Inputs": [
+                "Precomputed embedding vectors (512-dim) for each 1-second audio frame"
+              ],
+              "Outputs": [
+                "A memory-resident or queryable store of embedding vectors"
+              ],
+              "ReferenceCitation": "Sec. 4.1: For each 10-second recording, we... produce 10 512-dimensional feature vectors...",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Audio Features",
+              "ID": 3,
+              "PaperDescription": "Transforms raw audio into 512-d embedding vectors using self-supervised audio model",
+              "Inputs": [
+                "Raw audio files"
+              ],
+              "Outputs": [
+                "A 512-d embedding vector for each 1s frame (OpenL3 features)"
+              ],
+              "ReferenceCitation": "Sec. 4.1: We employ OpenL3 [CWSB19]... for each snippet, we compute a feature vector...",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Dimension Reduction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "High-dimensional Audio Feature Vectors",
+              "ID": 4,
+              "PaperDescription": "Maps high-dimensional audio embeddings down to 2D for the Day View scatterplots",
+              "Inputs": [
+                "Subset of embedding vectors",
+                "User selection filters"
+              ],
+              "Outputs": [
+                "2D coordinates for each frame, used to generate scatterplots"
+              ],
+              "ReferenceCitation": "Sec. 6.2: In the Day View... we visualize the audio frames... by projecting them with UMAP [MHM18].",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Embedding Vectors",
+              "ID": 5,
+              "PaperDescription": "Generates a hierarchical tree of audio-frame clusters for the Mixture Explorer",
+              "Inputs": [
+                "Subset of embedding vectors for a single day"
+              ],
+              "Outputs": [
+                "A cluster tree to help explore mixture of sound categories"
+              ],
+              "ReferenceCitation": "Sec. 6.2: When a day is loaded, Urban Rhapsody automatically calculates a hierarchical clustering... for the mixture explorer.",
+              "FeedsInto": [
+                10
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Classification",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Likelihood Scoring",
+              "ID": 6,
+              "PaperDescription": "Trains user-defined concept models from positively/negatively labeled frames",
+              "Inputs": [
+                "User-labeled audio frames",
+                "Negative samples"
+              ],
+              "Outputs": [
+                "A per-concept binary classifier producing probability scores per frame"
+              ],
+              "ReferenceCitation": "Sec. 6.1: We define prototypes... the classification model is trained via random forest using user-labeled frames...",
+              "FeedsInto": [
+                8,
+                10,
+                12,
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Similarity Calculation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Euclidean Distance of Audio Features",
+              "ID": 7,
+              "PaperDescription": "Finds audio frames similar to a user-provided snippet or concept",
+              "Inputs": [
+                "User snippet or prototype concept",
+                "ANN index over embeddings"
+              ],
+              "Outputs": [
+                "Retrieved set of top-k frames matching the snippet or concept"
+              ],
+              "ReferenceCitation": "Sec. 6.3: We can use representative frames as query input for an approximated nearest neighbors (ANN) query...",
+              "FeedsInto": [
+                8,
+                9,
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Map",
+              "ID": 13,
+              "PaperDescription": "Shows sensor positions or city boundaries in a 2D map reference",
+              "Inputs": [
+                "Coordinates of sensors",
+                "City polygons"
+              ],
+              "Outputs": [
+                "An interactive 2D map for basic geographic context"
+              ],
+              "ReferenceCitation": "Sec. 4.1 / Fig. 2: The SONYC acoustic sensor network... distribution of the sensors... around three boroughs of NYC.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Calendar",
+              "ID": 8,
+              "PaperDescription": "Displays day-level distribution of frames or concept density over a year",
+              "Inputs": [
+                "Likelihood scores / concept counts aggregated by day"
+              ],
+              "Outputs": [
+                "A color-coded calendar with bar charts per day/time block"
+              ],
+              "ReferenceCitation": "Sec. 6.2: The first is the Calendar View... each cell representing a single day with bar charts...",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 9,
+              "PaperDescription": "Renders scatterplots of frames for a single day after UMAP projection (Day View)",
+              "Inputs": [
+                "Subset of embedding vectors (e.g., day's frames)",
+                "2D coordinates"
+              ],
+              "Outputs": [
+                "A 2D scatterplot enabling cluster inspection, selection, labeling"
+              ],
+              "ReferenceCitation": "Sec. 6.2: In the Day View... we visualize the audio frames... scatterplots... using UMAP.",
+              "FeedsInto": [
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Hierarchical Tree",
+              "ID": 10,
+              "PaperDescription": "Shows hierarchical clusters in the Mixture Explorer to find sound mixtures",
+              "Inputs": [
+                "Clustering results plus concept probability scores"
+              ],
+              "Outputs": [
+                "A tree with subnodes color-coded by concept likelihood"
+              ],
+              "ReferenceCitation": "Sec. 6.2: Mixture Explorer... we do hierarchical clustering... each node subdivided by user concepts...",
+              "FeedsInto": [
+                20
+              ]
+            },
+            {
+              "GranularBlockName": "Spectrogram",
+              "ID": 11,
+              "PaperDescription": "Displays selected audio snippet as a spectrogram (Focused View)",
+              "Inputs": [
+                "A subset of raw audio frames selected by user"
+              ],
+              "Outputs": [
+                "Spectrogram plots in time-frequency space for frame analysis"
+              ],
+              "ReferenceCitation": "Sec. 6.2: The Focused View shows a spectrogram of the audio samples... bridging visual representation and actual audio.",
+              "FeedsInto": [
+                19
+              ]
+            },
+            {
+              "GranularBlockName": "Matrix",
+              "ID": 12,
+              "PaperDescription": "Depicts concept-likelihood matrix for each 1-second frame of the snippet",
+              "Inputs": [
+                "User-labeled frames",
+                "Classification probabilities from prototypes"
+              ],
+              "Outputs": [
+                "A matrix showing concept membership probabilities per frame"
+              ],
+              "ReferenceCitation": "Sec. 6.2: Frame Classification View... displays the likelihood of observing a concept in the audio sample.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Distribution Chart",
+              "ID": 14,
+              "PaperDescription": "Depicts the numeric distributions (e.g. hourly or daily frequency) of frames or concepts",
+              "Inputs": [
+                "Aggregated data for day/time",
+                "Concept frequency"
+              ],
+              "Outputs": [
+                "Histogram or bar chart to quickly grasp distribution patterns"
+              ],
+              "ReferenceCitation": "Sec. 6.2: ...the hour distribution chart... a bar chart representing how frames are spread across time slices...",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Audio Query",
+              "ID": 15,
+              "PaperDescription": "Lets user pick or upload an audio snippet as input for similarity-based retrieval",
+              "Inputs": [
+                "User-provided snippet",
+                "Previously retrieved snippet"
+              ],
+              "Outputs": [
+                "A set of frames returned as top matches to the snippet/concept"
+              ],
+              "ReferenceCitation": "Sec. 6.3: The exploration process starts with the user querying... by selecting a frame from examples or uploading their snippet...",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Bounding Box Selection",
+              "ID": 16,
+              "PaperDescription": "Allows user to drag a box over scatterplot to pick frames for inspection/labeling",
+              "Inputs": [
+                "2D scatterplot region",
+                "User's bounding box gesture"
+              ],
+              "Outputs": [
+                "Selected frames pass to labeling or playback modules"
+              ],
+              "ReferenceCitation": "Sec. 6.2: ...the scatterplots... allow selecting points through bounding box or period of day...",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 17,
+              "PaperDescription": "Enables user to click a day cell in the Calendar to load that day's audio frames",
+              "Inputs": [
+                "A day cell from the Calendar View"
+              ],
+              "Outputs": [
+                "Loads and projects that day's frames in the Day View"
+              ],
+              "ReferenceCitation": "Sec. 6.2: If a Calendar cell is clicked, all data for that day is loaded...",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Tree Node Selection",
+              "ID": 20,
+              "PaperDescription": "Allows user to click a node in the hierarchical tree to select corresponding cluster in scatterplots",
+              "Inputs": [
+                "A tree node from the Mixture Explorer",
+                "User's click interaction"
+              ],
+              "Outputs": [
+                "Selected cluster of frames highlighted in scatterplots and other views"
+              ],
+              "ReferenceCitation": "Sec. 6.2: If a node is clicked, the corresponding cluster is selected in the scatterplots and all the components of the interface are updated accordingly.",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Annotation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Labeling Audio Frames",
+              "ID": 18,
+              "PaperDescription": "Allows user to assign positive/negative labels for frames, building new concepts",
+              "Inputs": [
+                "Subsets of frames selected in scatterplots or cluster tree"
+              ],
+              "Outputs": [
+                "Updated annotation sets that refine classification prototypes"
+              ],
+              "ReferenceCitation": "Sec. 6.2: One of the system's requirements is the ability to annotate... user can label frames with as many labels as they want...",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Playback",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Listen to Spectrogram Snippet",
+              "ID": 19,
+              "PaperDescription": "Lets user click on a spectrogram to hear the snippet for deeper audio inspection",
+              "Inputs": [
+                "A spectrogram in Focused View",
+                "User's click on it"
+              ],
+              "Outputs": [
+                "Audio playback in the browser for that snippet"
+              ],
+              "ReferenceCitation": "Sec. 6.2: Users can click on the spectrogram to listen to the recording... bridging the gap between visual and actual audio.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

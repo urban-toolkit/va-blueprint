@@ -1,0 +1,270 @@
+{
+  "PaperTitle": "Visually Exploring Transportation Schedules",
+  "Year": 2016,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Transportation Schedules",
+              "ID": 1,
+              "PaperDescription": "Loads the planned transportation schedules consisting of trip stop times per route, clustered by directions and days of the week.",
+              "Inputs": [
+                "Planned route schedules (stop times per station)"
+              ],
+              "Outputs": [
+                "Planned trips dataset with stop times, directions, and days of the week"
+              ],
+              "ReferenceCitation": "Section 3.1 Transportation Schedules: The set of trips with desired stop times for each route constitutes the planned service/schedule.",
+              "FeedsInto": [
+                3,
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Actual Transportation Service",
+              "ID": 2,
+              "PaperDescription": "Loads actual transportation service data consisting of observed trip stop times across different days and directions, spanning several months.",
+              "Inputs": [
+                "Observed trip stop times from real service logs"
+              ],
+              "Outputs": [
+                "Actual trips dataset with observed stop times, directions, and days of the week"
+              ],
+              "ReferenceCitation": "Section 3.1 Transportation Schedules: The actual service (the set of trips with observed stop times) often differs from the planned schedule.",
+              "FeedsInto": [
+                3,
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Attribute Computation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Deviation Computation",
+              "ID": 3,
+              "PaperDescription": "Computes deviation as the L1 distance between planned stop times and observed stop times for each trip and segment.",
+              "Inputs": [
+                "Planned trips dataset",
+                "Actual trips dataset"
+              ],
+              "Outputs": [
+                "Deviation values for each trip and segment"
+              ],
+              "ReferenceCitation": "Section 4.3 Trips Explorer: Trip deviation is defined as the distance measure between a polyline for a real trip and its matching planned trip, which is pre-computed for each planned/real trip pair.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Speed Computation",
+              "ID": 4,
+              "PaperDescription": "Computes vehicle speed for each trip segment as derived from station distances and times between stops.",
+              "Inputs": [
+                "Actual trips dataset (stop times)",
+                "Station distances"
+              ],
+              "Outputs": [
+                "Speed values per trip segment"
+              ],
+              "ReferenceCitation": "Section 4.3 Trips Explorer: The Trips Explorer encodes vehicle speed in the slope of the lines: steeper lines represent trip segments with higher speed.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Kernel Density Estimation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "KDE Aggregation",
+              "ID": 5,
+              "PaperDescription": "Performs kernel density estimation on accumulated attribute values (frequency, deviation, speed, delay, wait time, reliability) to provide multiscale visual exploration.",
+              "Inputs": [
+                "Deviation values",
+                "Speed values",
+                "Actual trips dataset (trip frequency)",
+                "Stop-level attributes (delay, wait time, reliability)"
+              ],
+              "Outputs": [
+                "Density fields for attribute visualization (frequency, deviation, speed, delay, wait time, reliability)"
+              ],
+              "ReferenceCitation": "Section 4.2 Reducing Clutter with Kernel Density Estimation: TR-EX uses KDE both for Trips Explorer and Stops Explorer as a flexible and unified approach to reveal trends at different scales.",
+              "FeedsInto": [
+                6,
+                7,
+                8,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart (Marey's Graph with KDE)",
+              "ID": 6,
+              "PaperDescription": "Displays trips as lines in a time vs. station coordinate system based on Marey's Graph, with line color encoding attributes like speed or deviation and KDE used to represent trip density over time and space.",
+              "Inputs": [
+                "Planned trips dataset",
+                "Actual trips dataset",
+                "Density fields for frequency, deviation, speed"
+              ],
+              "Outputs": [
+                "Line chart visualization of trip trajectories over time and station locations with attribute encoding"
+              ],
+              "ReferenceCitation": "Section 4.3 Trips Explorer: The Trips Explorer extends Marey's Graph for use with a large number of real trips. Color scales are also provided to convey measures of the different attributes available.",
+              "FeedsInto": [
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Heatmap on Marey's Graph",
+              "ID": 7,
+              "PaperDescription": "Overlays a density heatmap onto Marey's Graph using KDE results, showing trip frequencies across time and stations with color encoding to highlight areas of high or low density.",
+              "Inputs": [
+                "Density fields for trip frequency"
+              ],
+              "Outputs": [
+                "Heatmap overlay representing trip density on the line chart"
+              ],
+              "ReferenceCitation": "Section 4.3 Trips Explorer: After accumulation, the resulting density estimation of the KDE step is mapped to a chosen sequential color scale defined by the user.",
+              "FeedsInto": [
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Dot Plot",
+              "ID": 8,
+              "PaperDescription": "Displays individual stop events as dots in a time vs. station coordinate system, with color encoding for station-level attributes such as delay, wait time, and reliability.",
+              "Inputs": [
+                "Actual trips dataset (stop times and attributes)",
+                "Density fields for delay, wait time, reliability"
+              ],
+              "Outputs": [
+                "Dot plot visualization of stop events over time and stations with attribute encoding"
+              ],
+              "ReferenceCitation": "Section 4.4 Stops Explorer: Each stop is drawn as a dot at the station level carrying the visualized scalar attribute, and after accumulation, the result of the KDE step is visually mapped with a sequential color scale defined by the user.",
+              "FeedsInto": [
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Heatmap on Dot Plot",
+              "ID": 9,
+              "PaperDescription": "Overlays a density heatmap on the dot plot for station-level attributes using KDE, showing areas of high or low delay, wait time, or reliability across time and stations.",
+              "Inputs": [
+                "Density fields for delay, wait time, reliability"
+              ],
+              "Outputs": [
+                "Heatmap overlay representing attribute density on the dot plot"
+              ],
+              "ReferenceCitation": "Section 4.4 Stops Explorer: After accumulation, the result of the KDE step is visually mapped with a sequential color scale defined by the user.",
+              "FeedsInto": [
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Zoom and Pan",
+              "ID": 10,
+              "PaperDescription": "Allows users to zoom and pan across the time (horizontal axis) and station (vertical axis) dimensions of the Trips and Stops Explorers for detailed inspection.",
+              "Inputs": [
+                "User interaction (scroll, drag)"
+              ],
+              "Outputs": [
+                "Updated view of the line chart and dot plot visualizations"
+              ],
+              "ReferenceCitation": "Section 4.3 Trips Explorer: To allow inspection of specific times of day, we provide zooming and panning on the plot (horizontal axis). Zooming in the vertical axis can be done through brushing of specific stations on the route.",
+              "FeedsInto": [
+                6,
+                7,
+                8,
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Attribute Selection",
+              "ID": 11,
+              "PaperDescription": "Allows users to select which attribute to visualize (frequency, deviation, speed, delay, wait time, reliability) in the Trips and Stops Explorers.",
+              "Inputs": [
+                "User UI selection of attributes"
+              ],
+              "Outputs": [
+                "Updated attribute selection for KDE rendering and color mapping"
+              ],
+              "ReferenceCitation": "Section 4.5 Putting It All Together: The attributes to be displayed are selected in box 6.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Bandwidth Adjustment",
+              "ID": 12,
+              "PaperDescription": "Enables users to adjust the kernel bandwidth used in KDE to reveal patterns at different levels of detail.",
+              "Inputs": [
+                "User-defined bandwidth setting"
+              ],
+              "Outputs": [
+                "Updated KDE smoothing for visualizations"
+              ],
+              "ReferenceCitation": "Section 4.2 Reducing Clutter with Kernel Density Estimation: We give users the control over the smoothing factor in KDE by providing UI controls for the bandwidth shape.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Spatiotemporal Filter",
+              "ID": 13,
+              "PaperDescription": "Allows filtering trips and stations by time of day, days of the week, and direction for focused exploration.",
+              "Inputs": [
+                "User-defined filters (time range, day type, direction)"
+              ],
+              "Outputs": [
+                "Filtered trip and station datasets for visualization"
+              ],
+              "ReferenceCitation": "Section 4.5 Putting It All Together: The Filter Panel (box 5) provides controls for setting visibility for specific days of the week and filtering of speed ranges for trips and segments.",
+              "FeedsInto": [
+                6,
+                7,
+                8,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

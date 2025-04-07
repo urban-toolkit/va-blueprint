@@ -1,0 +1,316 @@
+{
+  "PaperTitle": "Urbane: A 3D Framework to Support Data Driven Decision Making in Urban Development",
+  "Year": 2015,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Features",
+              "ID": 1,
+              "PaperDescription": "2D Data Layer Handling",
+              "Inputs": [
+                "Polygon",
+                "Line",
+                "Point",
+                "Grid data (e.g., roads, city neighborhoods) with 2D discrete geometry or aggregated numeric attributes"
+              ],
+              "Outputs": [
+                "In-memory 2D features for subsequent analysis",
+                "Visualizations"
+              ],
+              "ReferenceCitation": "Section 5: We support four types of 2D data layers - point layer, line layer, polygon layer, and grid layer",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "3D Geometries",
+              "ID": 2,
+              "PaperDescription": "3D Data Layer Handling",
+              "Inputs": [
+                "3D building meshes (parametric or triangle-based)",
+                "3D terrain",
+                "Discrete geometry with continuous coordinates",
+                "Urbane uses parametric meshes from Open Street Map for most buildings and triangle meshes for detailed landmarks"
+              ],
+              "Outputs": [
+                "Structured 3D data for visualization and computations"
+              ],
+              "ReferenceCitation": "Section 5: We classify the data layers as 2D and 3D layers, which can be either pre-computed or dynamically derived. [...] For the rest of the buildings, we use the parametric meshes also obtained from Open Street Map. [...] They are used to model buildings having a high level of detail such as the different landmarks..",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Indexing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatial Data",
+              "ID": 3,
+              "PaperDescription": "Spatial Indexing (kd-tree)",
+              "Inputs": [
+                "2D or 3D geometry data, typically discrete polygons or meshes, plus indexing parameters"
+              ],
+              "Outputs": [
+                "A kd-tree or similar structure enabling fast spatial queries for rendering & analysis"
+              ],
+              "ReferenceCitation": "Section 5: In order to enable fast retrieval of the data for the rendering as well as computation purposes, we index the data layers using the kd-tree data structure [5]",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                8,
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Rasterization",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Landmark",
+              "ID": 4,
+              "PaperDescription": "Landmark Visibility Measure",
+              "Inputs": [
+                "3D geometry (buildings + a landmark)",
+                "Vantage points/rays",
+                "A rasterization approach"
+              ],
+              "Outputs": [
+                "Per-building numeric coverage or visibility measures (continuous)"
+              ],
+              "ReferenceCitation": "Section 6: We allow the user to inspect the impact of a new construction with respect to two quantitative criteria, namely, landmark visibility and sky exposure (illustrated in Fig. 3). [...] We only have to compute the views from different points of the landmark",
+              "FeedsInto": [
+                7,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Sky",
+              "ID": 5,
+              "PaperDescription": "Sky Exposure Measure",
+              "Inputs": [
+                "3D geometry (streets + buildings)",
+                "Discrete sample points (center lines along streets)",
+                "Upward vantage directions"
+              ],
+              "Outputs": [
+                "Numeric fraction of visible sky at each street segment (continuous measure)"
+              ],
+              "ReferenceCitation": "Section 6: Sky exposure. The streets of the city are divided into line segments of equal size, and the sky exposure is computed at the center points of these line segments. [...] We allow the user to inspect the impact of a new construction with respect to sky exposure",
+              "FeedsInto": [
+                7,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Coverage",
+              "ID": 6,
+              "PaperDescription": "GPU-Based Rasterization & Pixel Counting",
+              "Inputs": [
+                "3D geometry",
+                "Camera transform / color-encoding scheme",
+                "Discrete pass to compute coverage or occlusion"
+              ],
+              "Outputs": [
+                "Pixel-based coverage data or occlusion metrics (continuous counts)"
+              ],
+              "ReferenceCitation": "Section 6.3: In order to perform this computation in real time, we make use of the newly introduced compute shader that has been included as part of the graphics pipeline [17]. [...] The expensive aspect of this step is in retrieving the rendered scene from the GPU and performing pixel counting",
+              "FeedsInto": [
+                7,
+                10
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Aggregation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Building/Region Metrics",
+              "ID": 7,
+              "PaperDescription": "Computing averages or min/max for user-selected sets",
+              "Inputs": [
+                "Multi-attribute building/region records",
+                "User's current selection (brush or threshold)"
+              ],
+              "Outputs": [
+                "Numeric metrics (e.g. average building height, min or max values) to feed into the PCC or table"
+              ],
+              "ReferenceCitation": "Section 7: We also visualize the attributes corresponding to the average of the items being shown. [...] The main exploration workflow supported in Urbane consists in exploring the data at the neighborhood level and later drilling-down to the building level",
+              "FeedsInto": [
+                11,
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Map",
+              "ID": 8,
+              "PaperDescription": "Map View (2D Mode)",
+              "Inputs": [
+                "2D geometry layers + numeric attributes",
+                "User viewpoint or navigation"
+              ],
+              "Outputs": [
+                "A top-down orthographic map (pixels)"
+              ],
+              "ReferenceCitation": "Section 7: We support two possible states of map rendering - 2D and 3D. This state is used to visualize the 2D data layers. For example, a top view of the map is shown similar to conventional GIS map interfaces",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 9,
+              "PaperDescription": "Map View (3D Mode)",
+              "Inputs": [
+                "3D building geometry",
+                "User camera transforms",
+                "Possible 2D overlays for data (heat-map, lines, etc.)"
+              ],
+              "Outputs": [
+                "On-screen 3D environment (continuous 3D coords) displaying buildings, roads, etc"
+              ],
+              "ReferenceCitation": "Section 7: The 3D state visualizes both 2D and 3D data layers. [...] For example, in Fig. 4(c), the 2D layers representing physical aspects of the city are shown together with a heat-map denoting the sky exposure over the road network. Transparency on the 3D layers can be used to avoid occlusion",
+              "FeedsInto": [
+                13,
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 10,
+              "PaperDescription": "Color-coded or heat-map style overlay",
+              "Inputs": [
+                "Aggregated numeric measure (e.g., sky exposure per road)",
+                "Geometry for roads or polygons"
+              ],
+              "Outputs": [
+                "A color-coded overlay on the 2D",
+                "3D map reflecting intensity distribution"
+              ],
+              "ReferenceCitation": "Section 7: For example, in Fig. 4(c), the 2D layers representing physical aspects of the city are shown together with a heat-map denoting the sky exposure over the road network",
+              "FeedsInto": [
+                8,
+                9,
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Parallel Coordinates Plot",
+              "ID": 11,
+              "PaperDescription": "Parallel Coordinates Chart (PCC)",
+              "Inputs": [
+                "Multi-attribute numeric data (e.g., building metrics)",
+                "User brushing",
+                "Discrete category fields possible"
+              ],
+              "Outputs": [
+                "Parallel-coordinates plot (pixels) for attribute comparison and filtering"
+              ],
+              "ReferenceCitation": "Section 7: Each qualitative 2D data layer corresponds to one dimension in the PCC. [...] We also visualize the attributes corresponding to the average of the items being shown. [...] The main exploration workflow supported in Urbane consists in exploring the data at the neighborhood level and later drilling-down to the building level",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Table",
+              "ID": 12,
+              "PaperDescription": "Data Table",
+              "Inputs": [
+                "Subset of discrete or numeric data records (e.g., building info, neighborhood polygons, attributes)"
+              ],
+              "Outputs": [
+                "A tabular listing of attributes (pixels in table form)"
+              ],
+              "ReferenceCitation": "Section 7: The filtered entities are listed in the data table and are also highlighted on the map view",
+              "FeedsInto": [
+                13
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Geometry Selection",
+              "ID": 13,
+              "PaperDescription": "Filtering & Selection",
+              "Inputs": [
+                "Data sets with discrete/continuous attributes",
+                "User thresholds",
+                "Brushing"
+              ],
+              "Outputs": [
+                "A subset of data that meets the constraints, triggers highlight or focus in the visuals"
+              ],
+              "ReferenceCitation": "Section 7: The Data Exploration View can be used to select and filter entities having the required range of values along different data sets. [...] The buildings remaining after this filter is applied..",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Manipulation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Geometry Replacement",
+              "ID": 14,
+              "PaperDescription": "Building Replacement (Change button)",
+              "Inputs": [
+                "Original 3D geometry (discrete building shapes)",
+                "User-chosen new geometry to place"
+              ],
+              "Outputs": [
+                "Updated geometry set (some building replaced or a new shape inserted), re-triggering relevant computations"
+              ],
+              "ReferenceCitation": "Section 7: Once a building of interest is chosen, the user can replace it with a new mesh using the Change button [...]. This operation will trigger the impact analysis computation",
+              "FeedsInto": [
+                4,
+                5,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

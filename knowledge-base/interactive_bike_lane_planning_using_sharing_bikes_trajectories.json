@@ -1,0 +1,227 @@
+{
+  "PaperTitle": "Interactive Bike Lane Planning Using Sharing Bikes' Trajectories",
+  "Year": 2020,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Street Network",
+              "ID": 1,
+              "PaperDescription": "Loads the road network graph, including vertices as intersections and edges as road segments, used for mapping and planning.",
+              "Inputs": [
+                "Road network data from Bing Map"
+              ],
+              "Outputs": [
+                "Structured road network graph G(V,E)"
+              ],
+              "ReferenceCitation": "Section 6.1 Datasets: We use the road network of Shanghai, China from Bing Map, which contains 333,766 intersections and 440,922 road segments.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 2,
+              "PaperDescription": "Loads one month of Mobike trajectory data containing bike IDs, user IDs, temporal ranges, start/end locations, and sequences of GPS points.",
+              "Inputs": [
+                "Raw Mobike trajectory data"
+              ],
+              "Outputs": [
+                "Pre-processed bike trajectories with spatial-temporal attributes"
+              ],
+              "ReferenceCitation": "Section 6.1 Datasets: The Mobike dataset is collected in one month (i.e., 09/01/2016 - 09/30/2016) from the city of Shanghai. The dataset contains 13,063 unique users, 3,971 bikes, and 230,303 trajectories.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Preprocessing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory Parsing",
+              "ID": 3,
+              "PaperDescription": "Cleans raw Mobike trajectories by filtering noisy GPS points using a heuristic-based outlier detection method.",
+              "Inputs": [
+                "Raw Mobike trajectory data"
+              ],
+              "Outputs": [
+                "Cleaned trajectory data"
+              ],
+              "ReferenceCitation": "Section 3 Pre-Processing: This step cleans the raw trajectories from Mobike by filtering the noisy GPS points using a heuristic-based outlier detection method [16].",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Trajectory Map-Matching",
+              "ID": 4,
+              "PaperDescription": "Maps each GPS point from Mobike trajectories onto the corresponding road segment using a revised interactive-voting based map matching algorithm.",
+              "Inputs": [
+                "Cleaned trajectory data",
+                "Road network graph"
+              ],
+              "Outputs": [
+                "Matched trajectories projected onto road segments"
+              ],
+              "ReferenceCitation": "Section 3 Pre-Processing: In this step, the system maps each GPS point onto the corresponding road segment. We employ a revised version of an interactive-voting based map matching algorithm [17].",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Inverted Index Construction",
+              "ID": 5,
+              "PaperDescription": "Builds an inverted index for each road segment, recording the trajectory IDs that pass through it, to speed up trajectory lookup operations.",
+              "Inputs": [
+                "Matched trajectories",
+                "Road network graph"
+              ],
+              "Outputs": [
+                "Inverted index mapping road segments to trajectory IDs"
+              ],
+              "ReferenceCitation": "Section 3 Pre-Processing: In this step, the system builds the inverted index for each road segment, recording the trajectory IDs passing it.",
+              "FeedsInto": [
+                6,
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Bike Lane Planning",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Greedy Network Expansion",
+              "ID": 6,
+              "PaperDescription": "Expands the bike lane plan by iteratively selecting road segments with the maximum beneficial score gain per cost, ensuring the budget and connectivity constraints are satisfied.",
+              "Inputs": [
+                "Inverted index",
+                "Road network graph",
+                "User-defined parameters (budget B, number of connected components k, tuning parameter α)"
+              ],
+              "Outputs": [
+                "Bike lane recommendation plan (subset of road segments E0)"
+              ],
+              "ReferenceCitation": "Section 4.1 Greedy Network Expansion Framework: The algorithm selects the best road segment (i.e., with the highest beneficial score gain per cost) to the result set E0 and adds its none-selected adjacent segments to the candidate set.",
+              "FeedsInto": [
+                7,
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Trajectory Score Computing",
+              "ID": 7,
+              "PaperDescription": "Computes the incremental beneficial score for candidate road segments using a novel trajectory score index and inverted trajectory index to reduce computation complexity from O(N) to O(1).",
+              "Inputs": [
+                "Inverted index",
+                "Trajectory score index",
+                "Candidate segments"
+              ],
+              "Outputs": [
+                "Incremental beneficial score Dg for each candidate segment"
+              ],
+              "ReferenceCitation": "Section 5.1.2 Efficient Trajectory Score Computing: The intuition of the efficient score computation algorithm focuses on computing only the incremental score, i.e., Dg.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 8,
+              "PaperDescription": "Displays the recommended bike lane plans on a 2D map, highlighting different road segments selected through the planning algorithm.",
+              "Inputs": [
+                "Bike lane recommendation plan (road segments E0)",
+                "Base map of the road network"
+              ],
+              "Outputs": [
+                "Interactive 2D map visualization of bike lane plans"
+              ],
+              "ReferenceCitation": "Figure 7a: The recommended bike lanes are marked in red in the figure, which form one large set of connected components&#8203;:contentReference[oaicite:0]{index=0}.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 9,
+              "PaperDescription": "Overlays a heatmap on the 2D map showing trajectory densities and spatial hotspots identified from Mobike trajectory data.",
+              "Inputs": [
+                "Trajectory density data",
+                "Road network graph"
+              ],
+              "Outputs": [
+                "Heatmap overlay indicating trajectory density"
+              ],
+              "ReferenceCitation": "Figure 8a: The intuition behind the spatial clustering-based initialization is from the observation of the trajectory heat map&#8203;:contentReference[oaicite:1]{index=1}.",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Trajectories)",
+              "ID": 11,
+              "PaperDescription": "Overlays individual bike trajectories or aggregated trajectory paths on the 2D map, allowing planners to observe frequently used routes and hotspots.",
+              "Inputs": [
+                "Matched bike trajectory data",
+                "Road network graph"
+              ],
+              "Outputs": [
+                "Trajectory overlay visualization on 2D map"
+              ],
+              "ReferenceCitation": "Section 4.3 Spatial Clustering-Based Initialization: The intuition behind the spatial clustering-based initialization is from the observation of the trajectory heat map (i.e., Fig. 8a), which visually has some rough clusters over the space&#8203;:contentReference[oaicite:2]{index=2}.",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Parameter Selection",
+              "ID": 10,
+              "PaperDescription": "Allows urban planners to specify the total budget, number of connected components, and the tuning parameter α to generate different bike lane plans.",
+              "Inputs": [
+                "User input: total budget B",
+                "User input: number of components k",
+                "User input: tuning parameter α"
+              ],
+              "Outputs": [
+                "Updated bike lane recommendation plan"
+              ],
+              "ReferenceCitation": "Section 2.2 System Framework: This component takes the user's parameters, e.g., the total budget, number of connected components, and the α value, and outputs the bike lane recommendation results.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

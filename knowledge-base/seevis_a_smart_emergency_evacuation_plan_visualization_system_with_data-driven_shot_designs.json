@@ -1,0 +1,252 @@
+{
+  "PaperTitle": "SEEVis: A Smart Emergency Evacuation Plan Visualization System with Data-Driven Shot Designs",
+  "Year": 2020,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Earthquake-Tsunami Evacuation",
+              "ID": 1,
+              "PaperDescription": "The dataset simulates the earthquake-tsunami evacuation event in Kochi Prefecture, Japan, including buildings, roads, terrains, damages, and 75,000 agents with different roles and dynamic behaviors.",
+              "Inputs": [
+                "Finite Element Method (FEM)-based structural analysis data",
+                "Tsunami wave propagation simulation data",
+                "Multi-agent simulation data"
+              ],
+              "Outputs": [
+                "Spatiotemporal evacuation trajectories",
+                "Dynamic environment data (building damage, road blockage, agent status)"
+              ],
+              "ReferenceCitation": "Section 3.1 Dataset Description and Term Definition: The dataset in this work simulates the earthquake-tsunami evacuation event in Kochi Prefecture, Japan, including the easily damaged part of the city that has an area of around 51.84km2.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory Clustering",
+              "ID": 2,
+              "PaperDescription": "Performs a two-step spatiotemporal clustering on trajectories, using Mean Shift clustering for each timestamp and establishing relationships between clusters over time.",
+              "Inputs": [
+                "Agent evacuation trajectories",
+                "Spatial positions and timestamps of agents"
+              ],
+              "Outputs": [
+                "Clustered evacuation trajectories represented as a scene feature graph"
+              ],
+              "ReferenceCitation": "Section 4.1 Purpose Acquisition Module: We perform a spatiotemporal clustering on the aforementioned trajectories to generate a scene feature graph. Specifically, we develop a two-step trajectory clustering algorithm that considers both the spatial and temporal attributes of these trajectories.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Graph Construction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Scene Feature Graph Generation",
+              "ID": 3,
+              "PaperDescription": "Generates a directed acyclic scene feature graph where vertices represent clustered groups of agents with features like congestion or turn-back, and edges denote movement and feature variation between groups.",
+              "Inputs": [
+                "Clustered evacuation trajectories",
+                "Spatiotemporal agent features (e.g., speed, density, turn-back values)"
+              ],
+              "Outputs": [
+                "Scene feature graph with nodes representing evacuation events and edges representing agent flows"
+              ],
+              "ReferenceCitation": "Section 4.1 Purpose Acquisition Module: Figure 3 presents a scene feature graph, which is a directed acyclic graph (DAG) that contains two parts: (1) Vertex. A vertex v = (p_v, t_v, n_v, f_v) denotes a cluster with position p_v, timestamp t_v, number of agents n_v, and user-specific features f_v including congestion or turn-back.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Mapping",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Feature Event Mapping",
+              "ID": 4,
+              "PaperDescription": "Maps evacuation clusters to dominant feature events based on pre-defined thresholds and displays the corresponding event icons (e.g., turn-back, congestion, unobstructed, trapped) on the graph nodes.",
+              "Inputs": [
+                "Scene feature graph vertices",
+                "Threshold values for feature detection"
+              ],
+              "Outputs": [
+                "Dominant feature events for each node in the scene feature graph"
+              ],
+              "ReferenceCitation": "Section 4.1 Purpose Acquisition Module: To represent the evacuation groups with intuitive events for a better understanding, we leverage a feature event mapping method that obtains the most dominating feature for each evacuation group.",
+              "FeedsInto": [
+                6,
+                7,
+                13,
+                14,
+                15
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 6,
+              "PaperDescription": "Renders a perspective 3D environment with buildings, roads, and agents, enabling dynamic camera transitions and shot designs to illustrate the evacuation scenario from various viewpoints.",
+              "Inputs": [
+                "Urban environment data (terrain, buildings, roads)",
+                "Agent geometry or statuses",
+                "Optimal camera route",
+                "Shot design specifications"
+              ],
+              "Outputs": [
+                "3D perspective scene with real-time camera transitions"
+              ],
+              "ReferenceCitation": "Section 4.2 Storyboard Generation Module: For different evacuation events along this route, we employ the corresponding shot design to reveal the underlying feature evolution and its correlation with the environment.",
+              "FeedsInto": [
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 13,
+              "PaperDescription": "Displays a density heatmap overlay on the 2D map to visualize areas with high agent density during evacuation.",
+              "Inputs": [
+                "Trajectory density data"
+              ],
+              "Outputs": [
+                "Density heatmap overlay on 2D map"
+              ],
+              "ReferenceCitation": "Section 5.2 Case 2: To observe a congestion event and its potential causes, E.2 adjusted the threshold and set agent density as his feature of interest. By using a 2D heat map of trajectory density and a line chart of density over time, E.2 identified a high-density area in front of a bridge (Figure 8 1©).",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Graph)",
+              "ID": 16,
+              "PaperDescription": "Overlays the scene feature graph on the 2D map, showing evacuation events spatially positioned on the map with nodes representing groups and edges showing movement.",
+              "Inputs": [
+                "Scene feature graph data"
+              ],
+              "Outputs": [
+                "Graph overlay on 2D map"
+              ],
+              "ReferenceCitation": "Section 4.1 Purpose Acquisition Module: We support both representations of scene feature graph on the separate canvas and on the map, since sometimes experts prefer to adjust the scene feature graph first before observing the evacuation motion on the map while in other cases they need to witness the context.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Scene Feature Graph",
+              "ID": 7,
+              "PaperDescription": "Visualizes the scene feature graph as a directed acyclic graph (DAG), where nodes represent evacuation groups with icons for dominant events and edges represent their temporal-spatial transitions.",
+              "Inputs": [
+                "Scene feature graph data",
+                "Dominant evacuation events per node"
+              ],
+              "Outputs": [
+                "Interactive graph visualization for exploring evacuation events and feature dynamics"
+              ],
+              "ReferenceCitation": "Section 4.1 Purpose Acquisition Module: Users initially select the trajectories of interest on the control panel (Figure 1 A). The selected trajectories are clustered, and a scene feature graph is generated, in which the circles represent the groups of agents and the edges indicate the movement of these groups.",
+              "FeedsInto": [
+                10,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 14,
+              "PaperDescription": "Displays temporal trends of agent density for selected regions or groups to analyze changes over time during evacuation.",
+              "Inputs": [
+                "Trajectory density data over time"
+              ],
+              "Outputs": [
+                "Line chart visualizing density changes over time"
+              ],
+              "ReferenceCitation": "Section 5.2 Case 2: By using a 2D heat map of trajectory density and a line chart of density over time, E.2 identified a high-density area in front of a bridge (Figure 8 1©).",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Box Plot",
+              "ID": 15,
+              "PaperDescription": "Visualizes feature distributions (e.g., density, speed) for selected nodes in the scene feature graph, allowing users to adjust thresholds and observe feature variations.",
+              "Inputs": [
+                "Feature values of selected nodes in the scene feature graph"
+              ],
+              "Outputs": [
+                "Box plots showing feature distributions and thresholds"
+              ],
+              "ReferenceCitation": "Section 4.1 Purpose Acquisition Module: We design a box plot-embedded bar chart that shows the feature distribution of the selected node. The box plot and height of the bar indicate the value distribution (e.g., median and quartiles) and the average value of the corresponding feature of all agents in the selected circle.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 9,
+              "PaperDescription": "Allows users to specify regions of interest on the 2D map for evacuation analysis, triggering trajectory extraction and scene graph generation for those areas.",
+              "Inputs": [
+                "User selection on the 2D map interface"
+              ],
+              "Outputs": [
+                "Selected evacuation trajectories and relevant scene feature graph segments"
+              ],
+              "ReferenceCitation": "Section 4.1 Purpose Acquisition Module: The users first indicate their area of interest by clicking an area of interest on the map, and the trajectories relevant to this area are then taken into consideration.",
+              "FeedsInto": [
+                2
+              ]
+            },
+            {
+              "GranularBlockName": "Metrics Adjustment",
+              "ID": 10,
+              "PaperDescription": "Enables users to adjust thresholds for evacuation features (e.g., density, speed), dynamically changing the dominant feature assignment and event representation in the scene feature graph.",
+              "Inputs": [
+                "User-defined thresholds for evacuation features"
+              ],
+              "Outputs": [
+                "Updated dominant features and event icons on scene feature graph nodes"
+              ],
+              "ReferenceCitation": "Section 4.1 Purpose Acquisition Module: Users can dynamically adjust the threshold, which subsequently projects to the whole trajectory graph and generates different dominating features.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

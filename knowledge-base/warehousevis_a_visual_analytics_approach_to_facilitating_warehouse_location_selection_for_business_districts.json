@@ -1,0 +1,364 @@
+{
+  "PaperTitle": "WarehouseVis: A Visual Analytics Approach to Facilitating Warehouse Location Selection for Business Districts",
+  "Year": 2020,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Street Network",
+              "ID": 1,
+              "PaperDescription": "Comprises a directed graph of a city, where the vertices represent road intersections and the edges represent roads. This graph has 253,890 vertices and 314,234 edges.",
+              "Inputs": [
+                "Raw urban road network data"
+              ],
+              "Outputs": [
+                "Directed graph of urban roads and intersections"
+              ],
+              "ReferenceCitation": "The internal GIS system provides us with a dataset, which records four types of information: (1) Urban road network data comprises a directed graph of a city, where the vertices represent road intersections and the edges represent roads. This graph has 253,890 vertices and 314,234 edges. (Section 5.1 Data Description)",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 2,
+              "PaperDescription": "Includes 183,250,600 snapshots of trunk status collected from a collaboration local logistics company of a one-month period.",
+              "Inputs": [
+                "Raw GPS trajectory logs from logistics trucks"
+              ],
+              "Outputs": [
+                "Time-stamped GPS trajectories including id, coordinates, speed, direction"
+              ],
+              "ReferenceCitation": "GPS trajectory data includes 183,250,600 snapshots of trunk status collected from a collaboration local logistics company of a one-month period. (Section 5.1 Data Description)",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Warehouse",
+              "ID": 3,
+              "PaperDescription": "Includes the attributes of a warehouse such as the geographical location, images, area size, rental area, rent, floors.",
+              "Inputs": [
+                "Warehouse metadata records"
+              ],
+              "Outputs": [
+                "Warehouse attributes including location, area, rent, floors"
+              ],
+              "ReferenceCitation": "Warehouse data includes the attributes of a warehouse such as the geographical location, images, area size, rental area, rent, floors. (Section 5.1 Data Description)",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Business Store",
+              "ID": 4,
+              "PaperDescription": "Consists of the basic properties of local business stores, including the geographical location, the shop title, the cuisine style.",
+              "Inputs": [
+                "Business store records"
+              ],
+              "Outputs": [
+                "Business store attributes including location, title, cuisine style"
+              ],
+              "ReferenceCitation": "Business store data consists of the basic properties of local business stores, including the geographical location, the shop title, the cuisine style. (Section 5.1 Data Description)",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Estimation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Travel-Time Matrix",
+              "ID": 7,
+              "PaperDescription": "Estimates the travel time on each road segment by matching GPS trajectories to the road network and uses a matrix-factorization approach to fill missing data.",
+              "Inputs": [
+                "Urban road network graph",
+                "GPS trajectory data"
+              ],
+              "Outputs": [
+                "Travel-time estimations on road segments across time slices"
+              ],
+              "ReferenceCitation": "To tackle this issue, we leverage a matrix-factorization approach to calculate the traveling time on the missing segments. (Section 5.2 Travel-time Estimation)",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Recommendation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Warehouse Recommendation with TOPSIS",
+              "ID": 8,
+              "PaperDescription": "Ranks candidate warehouses using TOPSIS, considering weighted criteria such as unit price, stock holding capacity, average distances to shops and suppliers, and the number of nearby suppliers and freeway entrances.",
+              "Inputs": [
+                "Warehouse dataset",
+                "Business store dataset",
+                "Travel-time matrix"
+              ],
+              "Outputs": [
+                "Ranked list of candidate warehouses"
+              ],
+              "ReferenceCitation": "We then apply a widely-used multiple criteria decision making methodology, TOPSIS, which determines solution alternatives from a finite set based on maximizing the distance from the negative ideal point and minimizing the distance from the positive ideal point. (Section 5.3.2 Ranking Candidate Warehouses)",
+              "FeedsInto": [
+                10,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 10,
+              "PaperDescription": "Displays the distribution of business districts and warehouses on a heat map, supporting area selection by polygon drawing and overlaying warehouse icons.",
+              "Inputs": [
+                "Business store locations",
+                "Warehouse locations"
+              ],
+              "Outputs": [
+                "Interactive map with heatmap layers and warehouse icons"
+              ],
+              "ReferenceCitation": "We thereby combine the heat map with the warehouse icons for visualization. (Section 6.1 Map View)",
+              "FeedsInto": [
+                18,
+                21,
+                22
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 11,
+              "PaperDescription": "Uses a heatmap overlay on the 2D map to show the density of business districts and support the selection of candidate warehouses.",
+              "Inputs": [
+                "Business district density data"
+              ],
+              "Outputs": [
+                "Heatmap overlay for density visualization"
+              ],
+              "ReferenceCitation": "We thereby combine the heat map with the warehouse icons for visualization. (Section 6.1 Map View)",
+              "FeedsInto": [
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Markers)",
+              "ID": 12,
+              "PaperDescription": "Displays icons representing warehouse locations on the 2D map to facilitate spatial analysis and selection.",
+              "Inputs": [
+                "Warehouse location data"
+              ],
+              "Outputs": [
+                "Warehouse icons rendered on the map"
+              ],
+              "ReferenceCitation": "We thereby combine the heat map with the warehouse icons for visualization. (Section 6.1 Map View)",
+              "FeedsInto": [
+                10
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Matrix",
+              "ID": 13,
+              "PaperDescription": "Displays a ranking view of recommended candidate warehouses in a matrix format, with bars representing normalized attribute values, enabling sorting and filtering by attribute.",
+              "Inputs": [
+                "Ranked candidate warehouses"
+              ],
+              "Outputs": [
+                "Matrix chart showing candidate attributes and rankings"
+              ],
+              "ReferenceCitation": "Figure 1 shows a matrix-based ranking view, which is inspired by lineup. (Section 6.2 Ranking and Candidate List View)",
+              "FeedsInto": [
+                19,
+                21,
+                22
+              ]
+            },
+            {
+              "GranularBlockName": "Radar Chart",
+              "ID": 14,
+              "PaperDescription": "Displays delivery distance and time comparisons between multiple candidate warehouses at different departure times, enhanced to show delivery performance.",
+              "Inputs": [
+                "Candidate warehouses' delivery performance data"
+              ],
+              "Outputs": [
+                "Radar chart showing comparative delivery efficiency among candidates"
+              ],
+              "ReferenceCitation": "We design a warehouse comparison view to allow users to closely investigate the differences among a few candidate warehouses from these aspects. (Section 6.4 Warehouse Comparison View)",
+              "FeedsInto": [
+                22
+              ]
+            },
+            {
+              "GranularBlockName": "Radial Chart",
+              "ID": 15,
+              "PaperDescription": "Displays comparative delivery distances and durations from warehouses to business districts and suppliers across departure times in a polar radial layout.",
+              "Inputs": [
+                "Warehouse delivery distance and duration data"
+              ],
+              "Outputs": [
+                "Radial chart showing delivery efficiency comparisons"
+              ],
+              "ReferenceCitation": "We leverage a circular polar coordinate design to demonstrate the road information from the main suppliers to the selected warehouse and from the selected warehouse to its serving business districts, respectively. (Section 6.3 Warehouse Inspection View)",
+              "FeedsInto": [
+                22
+              ]
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 16,
+              "PaperDescription": "Visualizes the distribution of all business districts and main suppliers on the traveling duration (y-axis) and distance (x-axis), enabling brushing and filtering.",
+              "Inputs": [
+                "Traveling duration and distance data for business districts and suppliers"
+              ],
+              "Outputs": [
+                "Scatter plot for filtering and focusing on subsets of districts/suppliers"
+              ],
+              "ReferenceCitation": "We show the distribution of all business districts and main suppliers on the traveling duration (y-axis) and distance (x-axis). Users can brush on both axes to filter out dots that are displayed. (Section 6.3 Warehouse Inspection View)",
+              "FeedsInto": [
+                20,
+                22
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 17,
+              "PaperDescription": "Displays the cumulative congestion coefficient over distance from the warehouse to business districts, helping assess traffic congestion impact.",
+              "Inputs": [
+                "Congestion coefficient data over distance"
+              ],
+              "Outputs": [
+                "Line chart showing cumulative congestion coefficients"
+              ],
+              "ReferenceCitation": "We derive a term called the congestion coefficient with a stack area representing the cumulative congestion coefficient over the distance from the warehouse to the business districts. (Section 6.3 Warehouse Inspection View)",
+              "FeedsInto": [
+                22
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 18,
+              "PaperDescription": "Allows users to specify an area of interest on the map by drawing polygons to focus the warehouse selection process.",
+              "Inputs": [
+                "User-drawn polygon on map"
+              ],
+              "Outputs": [
+                "Filtered subset of business districts and warehouses within the specified area"
+              ],
+              "ReferenceCitation": "Section 6.1 Map View: The area drawing layer supports drawing polygons on the map, enabling users to specify the target business district area.",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Candidate Selection",
+              "ID": 19,
+              "PaperDescription": "Allows users to select candidate warehouses from the ranking view for further inspection and comparison.",
+              "Inputs": [
+                "User clicks or selection on ranking table"
+              ],
+              "Outputs": [
+                "Selected warehouses for inspection and comparison views"
+              ],
+              "ReferenceCitation": "Section 6.2 Ranking and Candidate List View: Our experts required a candidate list for storing the interested candidates they found when using the system.",
+              "FeedsInto": [
+                14,
+                15
+              ]
+            },
+            {
+              "GranularBlockName": "Brushing",
+              "ID": 20,
+              "PaperDescription": "Allows users to brush on scatter plot axes to filter displayed business districts and suppliers based on travel duration and distance.",
+              "Inputs": [
+                "User brush input on scatter plot axes"
+              ],
+              "Outputs": [
+                "Filtered data points in scatter plot and updated candidate lists"
+              ],
+              "ReferenceCitation": "Users can brush on both axes to filter out dots that are displayed. (Section 6.3 Warehouse Inspection View)",
+              "FeedsInto": [
+                16
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Linking",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Linked Views",
+              "ID": 21,
+              "PaperDescription": "Links views through ID correspondence to facilitate coordinated examination of a variety of information at different granularities and in different contexts.",
+              "Inputs": [
+                "User interaction across visualizations"
+              ],
+              "Outputs": [
+                "Synchronized highlighting and filtering across views"
+              ],
+              "ReferenceCitation": "Section 6.5 Interactions: Views are linked through id correspondence. The coordinated interactions among the candidates facilitate the examination of a variety of information at different granularities and in different contexts.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Hovering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Hover Tooltip",
+              "ID": 22,
+              "PaperDescription": "Displays detailed information about business districts, suppliers, and warehouses on mouse hover in the inspection and comparison views.",
+              "Inputs": [
+                "User hover on visual elements"
+              ],
+              "Outputs": [
+                "Tooltip displaying detailed information"
+              ],
+              "ReferenceCitation": "Section 6.5 Interactions: Users can hover on the dots such as the business districts at different timestamps and the relevant information would be displayed.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

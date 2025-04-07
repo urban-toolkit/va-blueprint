@@ -1,0 +1,304 @@
+{
+  "PaperTitle": "Submerse: Visualizing Storm Surge Flooding Simulations in Immersive Display Ecologies",
+  "Year": 2024,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Flood Simulation Data",
+              "ID": 1,
+              "PaperDescription": "Loads time-series flood simulation data, including water elevation and tidal velocity.",
+              "Inputs": [
+                "Time-series data of water elevation",
+                "Tidal velocity, discretized over a geographic grid"
+              ],
+              "Outputs": [
+                "Structured flood simulation dataset for visualization and analysis."
+              ],
+              "ReferenceCitation": "Sec. 3.1: The flood simulation data, which serves as input to our application, is a time series data of scalar water elevation values and 2D tidal velocity, discretized over a vast irregular grid of latitude and longitude positions.",
+              "FeedsInto": [
+                5,
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "3D Geometries",
+              "ID": 2,
+              "PaperDescription": "Loads 3D building models and additional reference objects for flood simulation.",
+              "Inputs": [
+                "3D building models",
+                "Reference objects"
+              ],
+              "Outputs": [
+                "Structured 3D environment for integration with flood visualization."
+              ],
+              "ReferenceCitation": "Sec. 3.2: ...supplementary scene objects, such as 3D buildings and reference objects.",
+              "FeedsInto": [
+                9,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Digital Elevation Model",
+              "ID": 3,
+              "PaperDescription": "Loads terrain elevation data to integrate with the flood simulation environment.",
+              "Inputs": [
+                "Digital Elevation Models (DEM)."
+              ],
+              "Outputs": [
+                "3D terrain representation for flood overlay."
+              ],
+              "ReferenceCitation": "Sec. 3.2: The virtual scene is additionally set up using GIS data, such as digital elevation map (DEM).",
+              "FeedsInto": [
+                5,
+                9,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Satellite Imagery",
+              "ID": 4,
+              "PaperDescription": "Loads high-resolution satellite imagery to enhance visualization of flood-prone areas.",
+              "Inputs": [
+                "Satellite imagery datasets."
+              ],
+              "Outputs": [
+                "Integrated high-resolution texture layers for terrain and buildings."
+              ],
+              "ReferenceCitation": "Sec. 3.2: The virtual scene is additionally set up using GIS data, such as digital elevation map (DEM) and satellite imagery.",
+              "FeedsInto": [
+                9,
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Interpolation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Water Surface Reconstruction",
+              "ID": 5,
+              "PaperDescription": "Reconstructs a continuous water surface using a quadtree grid",
+              "Inputs": [
+                "Sparse water depth data"
+              ],
+              "Outputs": [
+                "Smooth water surface mesh using bilinear interpolation"
+              ],
+              "ReferenceCitation": "Section IV-B: We discretize the data on a quadtree and interpolate the values...",
+              "FeedsInto": [
+                7,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Ray Casting",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "POI Visibility",
+              "ID": 6,
+              "PaperDescription": "Determines best viewpoints for flood visualization",
+              "Inputs": [
+                "List of POIs",
+                "Camera constraints"
+              ],
+              "Outputs": [
+                "Optimized camera path minimizing occlusions"
+              ],
+              "ReferenceCitation": "Section VI: The system should assist with providing effective views...",
+              "FeedsInto": [
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Rasterization",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Water Flow",
+              "ID": 7,
+              "PaperDescription": "Animates water flow using GPU rasterization",
+              "Inputs": [
+                "Tidal velocity vectors",
+                "Water surface"
+              ],
+              "Outputs": [
+                "Realistic animated flow visualization"
+              ],
+              "ReferenceCitation": "Section IV-B: We apply Gerstner wave synthesis model using velocity vectors...",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Flood Simulation",
+              "ID": 8,
+              "PaperDescription": "GPU-based rasterization of flood simulation data for real-time rendering.",
+              "Inputs": [
+                "Large flood simulation datasets."
+              ],
+              "Outputs": [
+                "Interactive, real-time flood visualizations on immersive displays."
+              ],
+              "ReferenceCitation": "Sec. 4.3: Our algorithms are designed to support the efficient rendering of large simulation data at interactive frame rates and to be scalable for distributed immersive visual display systems.",
+              "FeedsInto": [
+                9,
+                10,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 9,
+              "PaperDescription": "Integrates flooding data into a 3D virtual model for an immersive experience.",
+              "Inputs": [
+                "Time-series flood simulation data",
+                "3D geospatial data"
+              ],
+              "Outputs": [
+                "A to-scale, interactive 3D flood visualization."
+              ],
+              "ReferenceCitation": "Sec. 5.1: We present an interactive visualization of the flooding scenario by integrating the flooding level into a to-scale 3D virtual model of the corresponding geographic area.",
+              "FeedsInto": [
+                13,
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Flood)",
+              "ID": 10,
+              "PaperDescription": "Overlays flood simulation on 3D topographic models",
+              "Inputs": [
+                "Flood simulation",
+                "3D terrain",
+                "Buildings"
+              ],
+              "Outputs": [
+                "Animated flood extent over time"
+              ],
+              "ReferenceCitation": "Section IV-D: We present an interactive visualization of the flooding scenario...",
+              "FeedsInto": [
+                9,
+                13,
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Augmented Reality",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Focus+Context",
+              "ID": 11,
+              "PaperDescription": "Augments immersive displays with localized flood severity views",
+              "Inputs": [
+                "Camera-tracked user device",
+                "Flood simulation data"
+              ],
+              "Outputs": [
+                "AR-based personalized flood visualization"
+              ],
+              "ReferenceCitation": "Section IV-C: We introduce a mixed-reality focus+context technique...",
+              "FeedsInto": [
+                13,
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Camera Path Planning",
+              "ID": 12,
+              "PaperDescription": "Automates smooth camera transitions between POIs",
+              "Inputs": [
+                "User-selected POI",
+                "Occlusion constraints"
+              ],
+              "Outputs": [
+                "Optimized path minimizing VR sickness"
+              ],
+              "ReferenceCitation": "Section VI: We generate a smooth camera path for navigating to the POI views...",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "POI Selection",
+              "ID": 13,
+              "PaperDescription": "Enables users to interactively select flood impact areas",
+              "Inputs": [
+                "User-selected POI on The camera path is pre-calculated,3D map"
+              ],
+              "Outputs": [
+                "Highlighted region with flood severity metrics"
+              ],
+              "ReferenceCitation": "Section IV-D: Users can point and select specific buildings to view additional info...",
+              "FeedsInto": [
+                6,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Collaboration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Multi-User Display Synchronization",
+              "ID": 14,
+              "PaperDescription": "Synchronizes multi-GPU immersive display environments for collaborative flood analysis.",
+              "Inputs": [
+                "Multiple users interacting with a tiled display or immersive facility."
+              ],
+              "Outputs": [
+                "Synchronized views across multiple displays."
+              ],
+              "ReferenceCitation": "Section 6.2: Submerse manages synchronized instances of the application for each viewport in the system and optimizes computational and memory resources by determining view-dependent data extents.",
+              "FeedsInto": [
+                6,
+                13
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

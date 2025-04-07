@@ -1,0 +1,280 @@
+{
+  "PaperTitle": "UrbanMotion: Visual Analysis of Metropolitan-Scale Sparse Trajectories",
+  "Year": 2021,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Sparse Trajectory",
+              "ID": 1,
+              "PaperDescription": "The dataset contains trajectories from billions of smart devices collected via mobile apps, including timestamp, location, unique device ID, and localization method, with long-tailed sparsity patterns.",
+              "Inputs": [
+                "Raw mobile app location data"
+              ],
+              "Outputs": [
+                "Sparse trajectory records with timestamp, location, unique device ID, and localization method"
+              ],
+              "ReferenceCitation": "Section 3.1: Our data is provided by a mobile analytics company which keeps track of billions of smart devices in China, including mobile phones, tablets, wearable devices, etc.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Movement Extraction",
+              "ID": 2,
+              "PaperDescription": "Applies the Slice & Doubly Sliding (SDS) algorithm to extract stay and travel trips from sparse trajectories by detecting dense sub-segments within long-tailed sparse data.",
+              "Inputs": [
+                "Sparse trajectory records with timestamp, location, unique device ID, and localization method"
+              ],
+              "Outputs": [
+                "Stay trips and travel trips from sparse trajectories"
+              ],
+              "ReferenceCitation": "Section 4.1: We apply the SDS algorithm to the dataset of Beijing. The percentage of records detected as in the stay and travel trips are 50.2 and 0.83 percent respectively.",
+              "FeedsInto": [
+                3,
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Movement Pattern Discovery",
+              "ID": 5,
+              "PaperDescription": "Discovers hub cells, channel cells, and temporal anomalies from stochastic vector fields by applying bimodality coefficient metrics and anomaly detection through Extreme Value Theory (EVT).",
+              "Inputs": [
+                "Clustered local movement flows forming a stochastic vector field",
+                "Map-matched movement vectors grouped into local movement flows"
+              ],
+              "Outputs": [
+                "Hub cells, channel cells, and temporal anomalies in movement patterns"
+              ],
+              "ReferenceCitation": "Section 4.4: For spatial patterns, we identify two types of spatial cells that are characteristic in the population movement: hub cells and channel cells.",
+              "FeedsInto": [
+                6,
+                7,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Movement Clustering",
+              "ID": 3,
+              "PaperDescription": "Clusters local movement vectors into significant local movement flows using a one-dimensional DBSCAN algorithm, supported by an optional vector kernel density estimation (KDE).",
+              "Inputs": [
+                "Travel trips from movement extraction"
+              ],
+              "Outputs": [
+                "Clustered local movement flows forming a stochastic vector field"
+              ],
+              "ReferenceCitation": "Section 4.2: In a final step, the set of movement vectors in each cell-time pair are clustered to generate significant local movement flows.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Indexing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map Matching",
+              "ID": 4,
+              "PaperDescription": "Aligns movement vectors onto road segments extracted from OpenStreetMap using a weighted topological algorithm by Velaga et al., grouping them into local flows along the road network.",
+              "Inputs": [
+                "Travel trips from movement extraction",
+                "Road network data from OpenStreetMap"
+              ],
+              "Outputs": [
+                "Map-matched movement vectors grouped into local movement flows"
+              ],
+              "ReferenceCitation": "Section 4.3: We applied a weighted topological algorithm proposed by Velaga et al. [60], which is scalable and has been successfully used for sparse data [14].",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 6,
+              "PaperDescription": "Displays global population flows as animated streamlines generated from a stochastic vector field using a pattern-based flow seeding and deterministic flow tracing algorithm.",
+              "Inputs": [
+                "Stochastic vector field from movement clustering or map-matching",
+                "Hub cells, channel cells, and temporal anomalies in movement patterns"
+              ],
+              "Outputs": [
+                "Animated map of global and local population flows"
+              ],
+              "ReferenceCitation": "Section 5.3: In a default white-background style, all the flows are visualized in red colors; in another dark-background style, the flows are visualized in white colors (Fig. 8).",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 7,
+              "PaperDescription": "Overlays both the population heatmap and the animated trajectory visualization (wind map) on the 2D map, including net incoming/outgoing population, movement speed, anomaly scores, and global flow lines.",
+              "Inputs": [
+                "Population movement data",
+                "Anomaly scores from pattern discovery",
+                "Global movement flows from flow tracing"
+              ],
+              "Outputs": [
+                "Color-coded heatmap overlay and animated trajectory overlay on the 2D map"
+              ],
+              "ReferenceCitation": "Section 5.5: The movement category (Mov.) is selected to show the distribution of net incoming/outgoing population, i.e., source and destination regions (Figs. 8b and 8c).",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 8,
+              "PaperDescription": "Displays time series of movement statistics (e.g., number of devices, flow volume) within a selected spatial cell for anomaly detection and temporal dynamics analysis.",
+              "Inputs": [
+                "Movement statistics per cell",
+                "Anomaly detection results"
+              ],
+              "Outputs": [
+                "Time series chart of movement statistics for selected cells"
+              ],
+              "ReferenceCitation": "Section 5.3: When users click on a cell on the main map view, the number of movement devices extracted from the raw data on this cell is displayed in a statistical chart (Fig. 11d).",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 9,
+              "PaperDescription": "Allows users to select specific days or hours through bar charts and clock-shaped heat maps, controlling the time window for visualizing movement flows and population statistics.",
+              "Inputs": [
+                "User input for selecting days or hours"
+              ],
+              "Outputs": [
+                "Filtered dataset for selected time intervals"
+              ],
+              "ReferenceCitation": "Section 5.2: Users can click on the bar chart to select one day and then click on the hour wedges of the heat map to specify a time window of one or more hours on that day.",
+              "FeedsInto": [
+                6,
+                7,
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 12,
+              "PaperDescription": "Allows users to click on a map region or cell to display movement statistics for that area and time interval.",
+              "Inputs": [
+                "User-selected map region or cell"
+              ],
+              "Outputs": [
+                "Selected spatial cell and corresponding movement statistics"
+              ],
+              "ReferenceCitation": "Section 5.3: When users click on a cell on the main map view, the number of movement devices extracted from the raw data on this cell is displayed in a statistical chart (Fig. 11d).",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Highlight & Selection",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Directional Highlight on Movement Legend",
+              "ID": 10,
+              "PaperDescription": "Enables users to highlight global movement flows by selecting angular sectors on a clock-shaped movement legend, filtering flows by direction in the visualization.",
+              "Inputs": [
+                "User input on movement legend sectors"
+              ],
+              "Outputs": [
+                "Filtered and highlighted movement flows by direction"
+              ],
+              "ReferenceCitation": "Section 5.2: Users can select one or more sectors on the legend to highlight the global movement flows starting from the corresponding angular ranges.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Configuration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Algorithm Configuration Panel",
+              "ID": 11,
+              "PaperDescription": "Provides interface controls for adjusting flow tracing parameters such as search depth, angular range, and branching degree, affecting the global movement flow generation.",
+              "Inputs": [
+                "User parameter inputs"
+              ],
+              "Outputs": [
+                "Flow tracing parameters for generating global flows"
+              ],
+              "ReferenceCitation": "Section 5.4: These conditions and the search depth can be adjusted by the user in the algorithm configuration panel (Fig. 5c).",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Animation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Time Animation",
+              "ID": 13,
+              "PaperDescription": "Allows users to play through days and hours, animating the population movement visualization over time periods.",
+              "Inputs": [
+                "User-selected time intervals",
+                "Animation play button"
+              ],
+              "Outputs": [
+                "Animated visualization of temporal changes in movement flows"
+              ],
+              "ReferenceCitation": "Section 5.2: Two play buttons are also available on the panels, which can be used to trigger animations on the main movement visualization.",
+              "FeedsInto": [
+                6,
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

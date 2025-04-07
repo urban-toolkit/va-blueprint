@@ -1,0 +1,288 @@
+{
+  "PaperTitle": "MobiSpaces: An Architecture for Energy-Efficient Data Spaces for Mobility Data",
+  "Year": 2023,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Mobility",
+              "ID": 1,
+              "PaperDescription": "Provides data ingestion from diverse mobility data sources that deliver input data both as a stream in real-time as well as batches of historical data.",
+              "Inputs": [
+                "Real-time mobility data streams",
+                "Batch mobility datasets"
+              ],
+              "Outputs": [
+                "Unified data ingestion for processing and storage"
+              ],
+              "ReferenceCitation": "Section II. OVERVIEW OF THE MOBISPACES ARCHITECTURE: These data sources may provide input data both as a stream in real-time as well as batches of historical data.",
+              "FeedsInto": [
+                2
+              ]
+            },
+            {
+              "GranularBlockName": "Data Lake",
+              "ID": 2,
+              "PaperDescription": "Stores scalable mobility data in raw or minimally-processed form in a distributed, cloud-based environment using HDFS as a data lake.",
+              "Inputs": [
+                "Raw mobility data",
+                "Minimally-processed mobility data"
+              ],
+              "Outputs": [
+                "Scalable storage for large mobility datasets"
+              ],
+              "ReferenceCitation": "Section II. OVERVIEW OF THE MOBISPACES ARCHITECTURE: The data lake provides scalable storage of data in raw, or minimally-processed form, in a distributed, cloud-based environment.",
+              "FeedsInto": [
+                3,
+                7,
+                8,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Preprocessing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Error Detection and Cleaning",
+              "ID": 3,
+              "PaperDescription": "Performs error detection and cleaning for mobility datasets, addressing issues such as reversed coordinates and missing points in GPS/AIS data.",
+              "Inputs": [
+                "Raw mobility data"
+              ],
+              "Outputs": [
+                "Cleaned mobility data"
+              ],
+              "ReferenceCitation": "Section III. THE DATA GOVERNANCE FRAMEWORK: MOBISPACES includes an error detection and cleansing mechanism that goes beyond rule-based error detection.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Semantic Modeling",
+              "ID": 4,
+              "PaperDescription": "Transforms cleaned data into RDF triples using RDF-Gen, enabling semantic interoperability through ontologies for mobility data.",
+              "Inputs": [
+                "Cleaned mobility data"
+              ],
+              "Outputs": [
+                "Semantic RDF triples"
+              ],
+              "ReferenceCitation": "Section III. THE DATA GOVERNANCE FRAMEWORK: By applying RDF-Gen to the output records of the Error detection and cleaning, we obtain a common semantic representation, where cleansed data is stored as RDF triples in an RDF store.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Data Interlinking",
+              "ID": 5,
+              "PaperDescription": "Performs spatial and spatio-temporal link discovery to associate mobility data entities and stores the discovered relations as RDF triples.",
+              "Inputs": [
+                "Semantic RDF triples"
+              ],
+              "Outputs": [
+                "Linked RDF triples with spatial-temporal associations"
+              ],
+              "ReferenceCitation": "Section III. THE DATA GOVERNANCE FRAMEWORK: In MOBISPACES, we focus on spatial and spatio-temporal link discovery, aiming to associate (link) entities based on various spatial or/and temporal relations.",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Data Provenance Tracking",
+              "ID": 6,
+              "PaperDescription": "Tracks the history of data transformations and enrichments using PROV-O to ensure traceability and accountability of mobility data processing.",
+              "Inputs": [
+                "Linked RDF triples"
+              ],
+              "Outputs": [
+                "Provenance records as RDF triples"
+              ],
+              "ReferenceCitation": "Section III. THE DATA GOVERNANCE FRAMEWORK: The data provenance mechanism aims to track this history and represent it in a formal way, so that it can be queried.",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Querying",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Declarative Query Engine",
+              "ID": 7,
+              "PaperDescription": "Executes declarative SQL queries on mobility data stored in various formats (raw, relational, NoSQL), providing a unified interface for querying large-scale mobility datasets.",
+              "Inputs": [
+                "Mobility datasets from data lake",
+                "Relational and NoSQL mobility datasets"
+              ],
+              "Outputs": [
+                "Query results over mobility data"
+              ],
+              "ReferenceCitation": "Section IV. DATA OPERATIONS TOOLBOX: In MOBISPACES, the ambition is to provide the same functionality over raw or minimally-processed data, such as those stored in data lakes.",
+              "FeedsInto": [
+                10,
+                11,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Online Data Aggregation",
+              "ID": 8,
+              "PaperDescription": "Provides online aggregation for mobility data streams at the edge, enabling partial results that improve response time and reduce communication overhead.",
+              "Inputs": [
+                "Streaming mobility data"
+              ],
+              "Outputs": [
+                "Aggregated mobility data results in real time"
+              ],
+              "ReferenceCitation": "Section IV. DATA OPERATIONS TOOLBOX: The online aggregation sends partial results to a coordinator that reports the complete result. The aggregation at the edge enhances privacy and reduces communication costs.",
+              "FeedsInto": [
+                10,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Mobility Operators Library",
+              "ID": 9,
+              "PaperDescription": "Provides a library of spatio-temporal operators for mobility data, enabling trajectory simplification, cleaning, and compression at the edge.",
+              "Inputs": [
+                "Edge-collected mobility data"
+              ],
+              "Outputs": [
+                "Processed and compressed mobility trajectories"
+              ],
+              "ReferenceCitation": "Section IV. DATA OPERATIONS TOOLBOX: Preliminary tests have been carried out to use MEOS on edge devices including Rassperry PI 4 and NVIDIA AGX Orin SBC.",
+              "FeedsInto": [
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 10,
+              "PaperDescription": "Displays mobility trajectories and analytics on a 2D map, supporting comparison of original and compressed trajectories in real time.",
+              "Inputs": [
+                "Trajectory data",
+                "Compression analysis results"
+              ],
+              "Outputs": [
+                "Interactive 2D map visualization of mobility data"
+              ],
+              "ReferenceCitation": "Section VII.B Pipeline 2: Fig. 7 shows a MOBISPACES visual analytics (VA) app based on the MovingPandas and Panel open source libraries.",
+              "FeedsInto": [
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 11,
+              "PaperDescription": "Displays the output of predictive models and XAI analysis, including trajectory forecasting and time-series analysis of mobility data.",
+              "Inputs": [
+                "Predictive model outputs",
+                "Time-series mobility data"
+              ],
+              "Outputs": [
+                "Line chart showing temporal trends and forecasts"
+              ],
+              "ReferenceCitation": "Section V. EDGE ANALYTICS SUITE: The outputs of the framework would be the predictions or insights generated by the models, and the visualisations of explanations of the models provided by the XAI component of the framework using techniques such as heatmaps, scatter plots, or line charts.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 12,
+              "PaperDescription": "Presents mobility model explanations and analysis of feature importance in XAI outputs, facilitating interpretation of mobility predictions.",
+              "Inputs": [
+                "Model feature importance",
+                "Prediction explanations"
+              ],
+              "Outputs": [
+                "Scatter plot visualizing feature relevance and model output clusters"
+              ],
+              "ReferenceCitation": "Section V. EDGE ANALYTICS SUITE: The visualisations of explanations of the models provided by the XAI component of the framework using techniques such as heatmaps, scatter plots, or line charts.",
+              "FeedsInto": [
+                13
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Workflow Management",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Workflow Builder",
+              "ID": 13,
+              "PaperDescription": "Allows users to create, configure, and monitor AI/ETL workflows for mobility data processing through a visual, canvas-based interface.",
+              "Inputs": [
+                "User input for workflow design",
+                "AI Catalog components"
+              ],
+              "Outputs": [
+                "Workflow descriptions (YAML manifests)"
+              ],
+              "ReferenceCitation": "Section IV. DATA OPERATIONS TOOLBOX: The Workflow Builder oversees the delicate task of providing a graphical interface for interaction with the end-user. It allows users to create complex, AI-based batch and ETL workflows through a declarative methodology and a highly customisable, easy-to-interact canvas-and-palette interface.",
+              "FeedsInto": [
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Configuration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Intelligent Resource Allocator",
+              "ID": 14,
+              "PaperDescription": "Optimizes deployment and execution of workflows on edge/cloud resources based on energy consumption, trustworthiness, and resource availability.",
+              "Inputs": [
+                "Workflow descriptions",
+                "Energy benchmarking data",
+                "Trustworthiness scores"
+              ],
+              "Outputs": [
+                "Optimized resource allocation plans"
+              ],
+              "ReferenceCitation": "Section VI. RESOURCE ALLOCATION AND ORCHESTRATION: The Intelligent Resource Allocator, depicted in Fig. 5, is the core component, which optimizes the allocation based on various constraints provided as input.",
+              "FeedsInto": [
+                7,
+                8,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

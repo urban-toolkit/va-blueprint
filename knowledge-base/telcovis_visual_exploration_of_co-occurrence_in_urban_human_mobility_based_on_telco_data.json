@@ -1,0 +1,281 @@
+{
+  "PaperTitle": "TelCoVis: Visual Exploration of Co-occurrence in Urban Human Mobility Based on Telco Data",
+  "Year": 2016,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Telco Trajectory Data",
+              "ID": 1,
+              "PaperDescription": "Loads telco data records that include mobile phone identity, timestamp, cell station ID, and corresponding location for co-occurrence analysis.",
+              "Inputs": [
+                "Telco data records from OSS (Operation Supporting System)"
+              ],
+              "Outputs": [
+                "Trajectory data mapped to users and locations with spatial-temporal attributes"
+              ],
+              "ReferenceCitation": "Section 3.1 Data Description: In this work, we extract useful information from each record of the telco data, including an encrypted unique mobile phone identity IDphone, a timestamp time, a cell station identity IDbase and the corresponding location of the cell station <longitude, latitude>.",
+              "FeedsInto": [
+                2,
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Mapping",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "User Region Mapping",
+              "ID": 2,
+              "PaperDescription": "Maps individual users to cell station regions based on their mobility patterns and aggregates them into unique physical regions through Voronoi tessellation.",
+              "Inputs": [
+                "Trajectory data of mobile phone users"
+              ],
+              "Outputs": [
+                "Mapped user groups by physical regions"
+              ],
+              "ReferenceCitation": "Section 3.3.1 Population Mapping: We map each individual user to a cell station based on the corresponding vector Vinterval. Further, we aggregate cell stations at the same location (i.e. same <longitude, latitude>) to form 9472 unique physical regions through Voronoi tessellation.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Co-occurrence Event Graph",
+              "ID": 3,
+              "PaperDescription": "Extracts co-occurrence events and constructs a graph where nodes represent regions and edges represent co-occurrence events weighted by the number of people from two regions co-occurring at a location.",
+              "Inputs": [
+                "Mapped user groups by region"
+              ],
+              "Outputs": [
+                "Co-occurrence graph with nodes (regions) and weighted edges (events)"
+              ],
+              "ReferenceCitation": "Section 3.3.2 Co-occurrence Events Extraction: According to the definition, we can model the co-occurrence in a graph structure G = (V,E) with regions as nodes and co-occurrence events as edges.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Correlation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Biclustering of Co-occurrence Events",
+              "ID": 4,
+              "PaperDescription": "Applies biclustering to binary matrices derived from co-occurrence events to mine correlations, identifying biclusters of multiple regions co-occurring at different places during the same time span.",
+              "Inputs": [
+                "Co-occurrence event graph"
+              ],
+              "Outputs": [
+                "Discovered biclusters representing correlated co-occurrence patterns"
+              ],
+              "ReferenceCitation": "Section 3.3.3 Correlations Mining: In this way, the biclustering algorithm [21] can be easily applied to each binary matrix Bk.",
+              "FeedsInto": [
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 5,
+              "PaperDescription": "Displays the spatial regions for co-occurrence exploration in the city, providing a base map for overlays.",
+              "Inputs": [
+                "Base map tiles",
+                "City region geometry"
+              ],
+              "Outputs": [
+                "2D map for spatial context"
+              ],
+              "ReferenceCitation": "Section 5.1 Map View: In our system, we adopt two linked heat maps, namely flow-out map (Fig. 1a) and flow-in map (Fig. 1b), with rich interactions to support various analytical tasks.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Flow-Out Map)",
+              "ID": 6,
+              "PaperDescription": "Overlays a heatmap on the 2D map showing regions where people flow out, encoding the number of regions each region co-occurs with.",
+              "Inputs": [
+                "Co-occurrence data by region"
+              ],
+              "Outputs": [
+                "Heatmap overlay for flow-out co-occurrences"
+              ],
+              "ReferenceCitation": "Section 5.1 Map View: For the flow-out map, we focus on regions where people flow out. We aggregate extracted co-occurrence events to calculate the number of regions that ever have co-occurrence with each region (T.1.1).",
+              "FeedsInto": [
+                5,
+                8,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Flow-In Map)",
+              "ID": 7,
+              "PaperDescription": "Overlays a heatmap on the 2D map showing places where people flow in, encoding the number of regions that co-occur at each place.",
+              "Inputs": [
+                "Co-occurrence data by region and place"
+              ],
+              "Outputs": [
+                "Heatmap overlay for flow-in co-occurrences"
+              ],
+              "ReferenceCitation": "Section 5.1 Map View: For the flow-in map, we study places where people flow in. Another heat map is generated to show the number of regions which ever co-occur at each place (T.1.2).",
+              "FeedsInto": [
+                5,
+                8,
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Contour-based Treemap",
+              "ID": 8,
+              "PaperDescription": "Visualizes spatio-temporal characteristics of human mobility at a specific place, including visitor counts over time, distance traveled, and loyalty of regions.",
+              "Inputs": [
+                "Human mobility data at co-occurrence places"
+              ],
+              "Outputs": [
+                "Radial treemap with temporal contours and sector partitions"
+              ],
+              "ReferenceCitation": "Section 5.2 Contour-based Treemap View: The design goal of this view is to present spatial and temporal characteristics of human mobility at a specific place.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Matrix",
+              "ID": 9,
+              "PaperDescription": "Summarizes biclusters of co-occurrences in a matrix layout, where each cell encodes the number of biclusters by the number of regions and places.",
+              "Inputs": [
+                "Biclustering results"
+              ],
+              "Outputs": [
+                "Matrix chart showing bicluster distributions"
+              ],
+              "ReferenceCitation": "Section 5.3 Matrix View: The color of each cell (e.g., (m,n)) represents the number of biclusters of the corresponding size (e.g. m regions co-occur at n different places).",
+              "FeedsInto": [
+                10,
+                11,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Parallel Coordinates Plot",
+              "ID": 10,
+              "PaperDescription": "Displays various statistical attributes of biclusters using parallel axes, supporting multivariate analysis of co-occurrence correlations.",
+              "Inputs": [
+                "Biclustering results with attributes"
+              ],
+              "Outputs": [
+                "Parallel coordinates chart for bicluster analysis"
+              ],
+              "ReferenceCitation": "Section 5.4 Parallel Coordinates View: Parallel coordinates are adopted in our system as they are widely used for multivariate data visualization and each bicluster can be conveniently presented as a polygonal line.",
+              "FeedsInto": [
+                11,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Extended LineUp Chart",
+              "ID": 11,
+              "PaperDescription": "Ranks biclusters by selected attributes, embedding region/place mosaics and horizon graphs to show diversity and temporal patterns.",
+              "Inputs": [
+                "Biclustering results with diversity data"
+              ],
+              "Outputs": [
+                "LineUp chart for ranked bicluster exploration"
+              ],
+              "ReferenceCitation": "Section 5.5 Extended LineUp View: Owing to the limited space, we embed colored mosaics into each bar of LineUp to represent regions (as purple mosaics) or places (as yellow mosaics) contained in each bicluster.",
+              "FeedsInto": [
+                13
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 12,
+              "PaperDescription": "Allows users to filter the co-occurrence data and visualizations based on selected time intervals.",
+              "Inputs": [
+                "User-selected time intervals"
+              ],
+              "Outputs": [
+                "Filtered co-occurrence data and updated views"
+              ],
+              "ReferenceCitation": "Section 5.1 Map View: Meanwhile, to provide analysts the flexibility to explore different time periods, our system also includes two interactive time controllers on the top of two maps.",
+              "FeedsInto": [
+                6,
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Linking",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Coordinated Selection",
+              "ID": 13,
+              "PaperDescription": "Links selections across maps, matrix, parallel coordinates, and LineUp views for integrated co-occurrence analysis.",
+              "Inputs": [
+                "User selections in one view"
+              ],
+              "Outputs": [
+                "Synchronized selections and updates in all coordinated views"
+              ],
+              "ReferenceCitation": "Section 5.6 Interactions: For example, if a specific set of regions on the flow-out map or places on the flow-in map are selected, the cell in Matrix View that contains related biclusters and the corresponding lines in Parallel Coordinates View will be highlighted, and Extended LineUp View will be updated accordingly.",
+              "FeedsInto": [
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

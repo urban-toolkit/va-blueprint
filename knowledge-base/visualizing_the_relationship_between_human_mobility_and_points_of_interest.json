@@ -1,0 +1,352 @@
+{
+  "PaperTitle": "Visualizing the Relationship Between Human Mobility and Points of Interest",
+  "Year": 2017,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Public Transportation",
+              "ID": 1,
+              "PaperDescription": "Loads one-week public transportation data in Singapore, consisting of 5.4 million trips/day on weekdays and 4.3 million trips/day on weekends, including card ID, boarding & alighting times and stops.",
+              "Inputs": [
+                "Raw public transportation records (boarding and alighting data with timestamps and stop IDs)"
+              ],
+              "Outputs": [
+                "Structured dataset with passenger trips (departure, arrival, stop IDs, timestamps)"
+              ],
+              "ReferenceCitation": "Section III.A.2.a: 'The movement data is a one-week public transportation data in Singapore, which consists of 5.4 million trips/day on weekdays and 4.3 million trips/day on weekends.'",
+              "FeedsInto": [
+                3,
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "POI",
+              "ID": 2,
+              "PaperDescription": "Loads POI data retrieved from Foursquare, organized into three hierarchical levels, including name, geographic information, and popularity metrics such as check-in counts.",
+              "Inputs": [
+                "Raw POI data from Foursquare (venue name, category, latitude, longitude, check-in counts)"
+              ],
+              "Outputs": [
+                "Structured POI dataset organized by hierarchical categories with popularity metrics"
+              ],
+              "ReferenceCitation": "Section III.A.2.b: 'The POIs studied in this work are extracted from venue services provided by Foursquare... including the aggregated number of user counting how many users have checked-in the venue, check-in counting the total number of check-ins.'",
+              "FeedsInto": [
+                5,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Indexing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Stop-Trip Indexing",
+              "ID": 3,
+              "PaperDescription": "Creates stop-trip indexes by mapping people movements onto boarding and alighting stops with 15-minute time bin partitions over a week.",
+              "Inputs": [
+                "Structured passenger trip dataset (boarding/alighting stop IDs, timestamps)"
+              ],
+              "Outputs": [
+                "Stop-trip index with departure and arrival volumes in 15-minute bins over a week"
+              ],
+              "ReferenceCitation": "Section III.C: 'Each stop-trip index is basically a 2D array with two rows (one for arrival and one departure), while each column corresponds to the related movement volume partitioning in a 15-minutes time bin over a week.'",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Aggregation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "POI Aggregation by Category",
+              "ID": 4,
+              "PaperDescription": "Aggregates POIs within an area of interest by their top-level category and sums up their check-in counts to represent activity context.",
+              "Inputs": [
+                "Structured POI dataset with categories and check-in counts"
+              ],
+              "Outputs": [
+                "Aggregated check-in counts for top-level POI categories"
+              ],
+              "ReferenceCitation": "Section IV.B: 'We firstly find its corresponding highest category in the top ten categories (see Fig. 4(c)), and then aggregate the POI's check-in counts to its highest POI category.'",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Modeling",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "POI-Mobility Relationship Modeling",
+              "ID": 5,
+              "PaperDescription": "Computes departure and arrival movements for areas of interest using a gravity model, correlating check-in counts with movement volumes weighted by distance decay functions.",
+              "Inputs": [
+                "Stop-trip index",
+                "Aggregated POI check-in counts",
+                "Gravity model parameters (distance decay function)"
+              ],
+              "Outputs": [
+                "Departure and arrival movement volumes per area of interest"
+              ],
+              "ReferenceCitation": "Section IV.C: 'In our case, the gravity model posits that people movement at a stop relating to a POI is positively associated with the check-in counts of the POI, and declines with increasing distance from the POI to the stop.'",
+              "FeedsInto": [
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Activity Duration Computation",
+              "ID": 6,
+              "PaperDescription": "Computes activity durations at areas of interest by calculating the difference between arrival and next departure times, categorized into five quantized periods (0-2, 2-4, 4-8, 8-12, and 12-24 hours).",
+              "Inputs": [
+                "Arrival movement data",
+                "Next trip departure times"
+              ],
+              "Outputs": [
+                "Categorized activity durations (0-2, 2-4, 4-8, 8-12, 12-24 hours)"
+              ],
+              "ReferenceCitation": "Section IV.D: 'As suggested by the transportation experts, we consider the possible activity durations into five quantized periods: 0-2, 2-4, 4-8, 8-12, and 12-24 hours.'",
+              "FeedsInto": [
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Kernel Density Estimation",
+              "ID": 7,
+              "PaperDescription": "Performs kernel density estimation (KDE) for departure and arrival movement data to construct bivariate density fields representing spatial movement densities.",
+              "Inputs": [
+                "Departure and arrival movement volumes",
+                "Stop-trip index"
+              ],
+              "Outputs": [
+                "Density fields for bivariate density maps"
+              ],
+              "ReferenceCitation": "Section V.B: 'Here, we construct the bivariate density map in the following steps: First, we compute density fields for both the departure & arrival movements, using kernel density estimation (KDE)...'",
+              "FeedsInto": [
+                8,
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 8,
+              "PaperDescription": "Displays an interactive 2D map overview of departure and arrival movement densities with bivariate density maps and major POI spatial distributions.",
+              "Inputs": [
+                "Density fields for departure and arrival movements",
+                "Aggregated POI datasets with categories"
+              ],
+              "Outputs": [
+                "Interactive 2D map showing spatial distribution of human mobility and POIs"
+              ],
+              "ReferenceCitation": "Section V.B: 'We present a map overview (Fig. 6) to provide intuitive spatial information of the departure & arrival movements and POIs.'",
+              "FeedsInto": [
+                16,
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Bivariate Density Map)",
+              "ID": 9,
+              "PaperDescription": "Overlays a bivariate density map showing spatial densities of departure and arrival movements, with color schemes representing combinations of movement intensities.",
+              "Inputs": [
+                "Density fields for departure and arrival movements"
+              ],
+              "Outputs": [
+                "Bivariate density map with color-coded movement intensities"
+              ],
+              "ReferenceCitation": "Section V.B: 'Here, we construct the bivariate density map... we compute density fields for both the departure & arrival movements, using kernel density estimation (KDE).' (Fig. 6)",
+              "FeedsInto": [
+                8,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (POI Icons)",
+              "ID": 10,
+              "PaperDescription": "Overlays icons representing major POIs on the map, based on user-selected categories or popularity rankings.",
+              "Inputs": [
+                "POI dataset with category and check-in counts"
+              ],
+              "Outputs": [
+                "POI icons displayed on the map"
+              ],
+              "ReferenceCitation": "Section V.B: 'On top of the density map, we present icons of major POIs extracted from Foursquare... Users can also select a specific POI category, and then our system will extract the corresponding top 50 POIs and display them on the map.'",
+              "FeedsInto": [
+                8,
+                17,
+                18
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Radial Pie Chart",
+              "ID": 11,
+              "PaperDescription": "Displays the activity context of an area of interest by showing the aggregated check-in ratios of the highest ten POI categories in a radial pie chart format.",
+              "Inputs": [
+                "Aggregated POI category check-in counts"
+              ],
+              "Outputs": [
+                "Radial pie chart visualizing POI category distribution"
+              ],
+              "ReferenceCitation": "Section V.C.1.b: 'We adapt a pie chart (Fig. 7(b)) to visualize the aggregated ratios of highest ten POI categories as the activity context of a user-specified AOI.'",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Radial Braided Graph",
+              "ID": 12,
+              "PaperDescription": "Visualizes the differences between departure and arrival movements over time in a radial layout using braided graphs to highlight changing points and movement dynamics.",
+              "Inputs": [
+                "Departure and arrival movement volumes over time"
+              ],
+              "Outputs": [
+                "Radial braided graph showing time-dependent differences between departure and arrival movements"
+              ],
+              "ReferenceCitation": "Section V.C.2: 'Users can interactively switch between the following three visual forms... Braided graph (Fig. 8(a)) to present the difference between departure and arrival movements.'",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Radial Stacked Graph",
+              "ID": 13,
+              "PaperDescription": "Displays the aggregation of departure and arrival movements or activity durations using stacked graphs in a radial layout.",
+              "Inputs": [
+                "Departure and arrival movement volumes or categorized activity durations"
+              ],
+              "Outputs": [
+                "Radial stacked graph showing aggregated movement volumes or activity durations"
+              ],
+              "ReferenceCitation": "Section V.C.2: 'Stacked graph (Fig. 8(b)) to present the aggregation of departure and arrival movements... (Fig. 8(c)) to present activity durations of arrival movements.'",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Timeline (Mobility over Time)",
+              "ID": 14,
+              "PaperDescription": "Displays human mobility variations over different days and time periods using radial or segmented timeframes for comparison (e.g., weekdays vs weekends).",
+              "Inputs": [
+                "Departure and arrival movement volumes over time"
+              ],
+              "Outputs": [
+                "Timeline visualizations for time-based movement comparison"
+              ],
+              "ReferenceCitation": "Section V.A (Fig. 5): 'The mobility component can be divided into one part representing averages over one week, seven parts representing Monday to Sunday, or two parts representing averages over weekdays and weekends.'",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 15,
+              "PaperDescription": "Allows users to specify an area of interest by selecting POIs, administrative zones, or drawing lasso/rectangle regions on the map.",
+              "Inputs": [
+                "User interaction (lasso/rectangle selection, POI click, zone selection)"
+              ],
+              "Outputs": [
+                "Selected area of interest (AOI) for subsequent analysis"
+              ],
+              "ReferenceCitation": "Section IV.A: 'Our system allows users to specify an AOI in three modes... Select a single POI, Select an administrative zone, Specify a lasso/rectangle area.'",
+              "FeedsInto": [
+                4,
+                5,
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 16,
+              "PaperDescription": "Allows users to filter data based on specific time periods, such as particular hours of the day or weekdays vs weekends, to analyze temporal movement patterns.",
+              "Inputs": [
+                "User-defined time ranges"
+              ],
+              "Outputs": [
+                "Filtered movement data and updated visualizations"
+              ],
+              "ReferenceCitation": "Section V.B: 'Users can specify time period, and the density map will update correspondingly.'",
+              "FeedsInto": [
+                8,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "POI Category Selection",
+              "ID": 17,
+              "PaperDescription": "Allows users to filter POIs shown on the map and pie chart by selecting specific categories from the POI panel.",
+              "Inputs": [
+                "User-selected POI categories"
+              ],
+              "Outputs": [
+                "Filtered POIs shown on the map and in POI components"
+              ],
+              "ReferenceCitation": "Section V.E: 'POI category panel organizes all the POI categories hierarchically... Users are allowed to expand/fold parent categories, and select a particular category to explore.'",
+              "FeedsInto": [
+                10,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map Pan/Zoom",
+              "ID": 18,
+              "PaperDescription": "Enables users to navigate the map through panning and zooming to explore different areas and levels of detail.",
+              "Inputs": [
+                "User navigation input (pan, zoom)"
+              ],
+              "Outputs": [
+                "Updated map viewport"
+              ],
+              "ReferenceCitation": "Section V.B: 'Besides basic map interactions, such as zoom and pan, our system allows users to filter the layers to explore.'",
+              "FeedsInto": [
+                8,
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

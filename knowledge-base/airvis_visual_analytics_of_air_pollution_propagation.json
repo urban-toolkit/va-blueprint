@@ -1,0 +1,270 @@
+{
+  "PaperTitle": "AirVis: Visual Analytics of Air Pollution Propagation",
+  "Year": 2020,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Meteorological and Air Quality",
+              "ID": 1,
+              "PaperDescription": "Public meteorological and air quality datasets are used in this study. Each dataset includes a station table and a data table. These samples are collected on an hourly basis.",
+              "Inputs": [
+                "Meteorological station data",
+                "Air quality station data"
+              ],
+              "Outputs": [
+                "Hourly meteorological samples",
+                "Hourly air quality samples"
+              ],
+              "ReferenceCitation": "Section 3.2 Data Description: Public meteorological and air quality datasets [77, 78] are used in this study. Each dataset includes a station table and a data table. These samples are collected on an hourly basis.",
+              "FeedsInto": [
+                2
+              ]
+            },
+            {
+              "GranularBlockName": "Station and District Locations",
+              "ID": 14,
+              "PaperDescription": "Each dataset includes a station table and a data table. In the station table, each row represents a meteorological or air quality station identified by its name and district ID or GPS coordinates.",
+              "Inputs": [
+                "Station table (meteorological stations and air quality stations)"
+              ],
+              "Outputs": [
+                "Station locations with district IDs and GPS coordinates"
+              ],
+              "ReferenceCitation": "Section 3.2 Data Description: In the station table, each row represents a meteorological or air quality station identified by its name and district ID (for meteorological stations) or GPS coordinates (for air quality stations).",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Pattern Mining",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Pollutant Transportation Modeling",
+              "ID": 2,
+              "PaperDescription": "The transportation of air pollutants between two districts is modeled by simulating the movement of air parcels, updated iteratively based on meteorological conditions including wind speed and direction.",
+              "Inputs": [
+                "Hourly meteorological samples",
+                "Hourly air quality samples",
+                "Station locations with district IDs and GPS coordinates"
+              ],
+              "Outputs": [
+                "Transportation instances with probability, time, contribution factor, and impact factor"
+              ],
+              "ReferenceCitation": "Section 4.1 Modelling Pollutant Transportation: The transportation of air pollutants between two districts is highly uncertain due to the varying wind fields. To model such a process from district i to j, for example, we need to determine the probability of the air pollutants transported from i to j (Fig. 3A).",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Propagation Graph Construction",
+              "ID": 3,
+              "PaperDescription": "Propagation instances are derived by searching and merging the extracted transportation graphs into propagation graphs based on spatiotemporal continuity.",
+              "Inputs": [
+                "Transportation instances"
+              ],
+              "Outputs": [
+                "Propagation graphs representing multi-district pollutant propagation instances"
+              ],
+              "ReferenceCitation": "Section 4.2 Constructing Propagation Graphs: The transportation instances only describe the pollutant transmission from one district to another. To characterize the pollutants propagated among multiple districts, we derive the propagation instances, represented by propagation graphs (Fig. 2D), by searching and merging the extracted transportation graphs.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Frequent Propagation Pattern Extraction",
+              "ID": 4,
+              "PaperDescription": "Frequent subgraph mining (FSM) is used to extract propagation patterns by finding persistent and significant parts in the generated propagation graphs.",
+              "Inputs": [
+                "Propagation graphs"
+              ],
+              "Outputs": [
+                "Frequent propagation patterns (frequent subgraphs)"
+              ],
+              "ReferenceCitation": "Section 4.3 Extracting Propagation Patterns: To extract the meaningful patterns from the propagation instances, we seek to find the persistent and significant parts in the generated propagation graphs with the frequent subgraph mining (FSM) techniques.",
+              "FeedsInto": [
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                15
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 15,
+              "PaperDescription": "Displays a geographic map providing spatial context for propagation patterns and instances, serving as a base for overlaying node-link diagrams and chord diagrams.",
+              "Inputs": [
+                "District locations",
+                "Frequent propagation patterns",
+                "Propagation instances"
+              ],
+              "Outputs": [
+                "Geographic map with spatial context for overlay visualizations"
+              ],
+              "ReferenceCitation": "Section 5.3.2 Pattern Graph: The pattern graphs are designed to visualize the uncertain propagation processes of a pattern on the map. Section 5.4 Instance Visualization: The transportation instances among the involved districts within the timeframe selected on the slider are visualized with a chord diagram (Fig. 1D1).",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Overlay (Graph)",
+              "ID": 5,
+              "PaperDescription": "Displays the propagation processes on a map-based node-link diagram, encoding cause-effect relationships and pollutant flow among districts.",
+              "Inputs": [
+                "Frequent propagation patterns"
+              ],
+              "Outputs": [
+                "Map-based node-link diagram of pollution propagation"
+              ],
+              "ReferenceCitation": "Section 5.3.2 Pattern Graph: The pattern graphs are designed to visualize the uncertain propagation processes of a pattern on the map.",
+              "FeedsInto": [
+                15
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Chord Diagram)",
+              "ID": 6,
+              "PaperDescription": "Visualizes transportation instances among districts in a circular layout, encoding impacts with chord widths.",
+              "Inputs": [
+                "Propagation instances"
+              ],
+              "Outputs": [
+                "Chord diagram of district-to-district pollutant flows"
+              ],
+              "ReferenceCitation": "Section 5.4 Instance Visualization: The transportation instances among the involved districts within the timeframe selected on the slider are visualized with a chord diagram (Fig. 1D1).",
+              "FeedsInto": [
+                15
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Glyph (Motif)",
+              "ID": 7,
+              "PaperDescription": "Presents the extracted significant motifs with uncertainty-aware glyphs summarizing propagation probability distributions.",
+              "Inputs": [
+                "Frequent propagation patterns"
+              ],
+              "Outputs": [
+                "Uncertainty-aware motif glyphs"
+              ],
+              "ReferenceCitation": "Section 5.2 Topology Visualization: The extracted significant motifs are then visualized in the motif view (Fig. 1B) as the summary representations of pattern topologies.",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Glyph (Pattern)",
+              "ID": 8,
+              "PaperDescription": "Depicts frequent propagation patterns with compact glyphs representing spatiotemporal distributions and directions.",
+              "Inputs": [
+                "Frequent propagation patterns"
+              ],
+              "Outputs": [
+                "Pattern glyphs"
+              ],
+              "ReferenceCitation": "Section 5.3.1 Pattern Glyphs: The design of the pattern glyphs is illustrated in Fig. 1C1. The small dots enclosed in the large circle represent the districts and are laid out according to their geospatial positions.",
+              "FeedsInto": [
+                5,
+                6,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 9,
+              "PaperDescription": "Positions patterns in a scatterplot via t-SNE-based dimensionality reduction to reveal pattern clusters and outliers.",
+              "Inputs": [
+                "Frequent propagation patterns",
+                "High-dimensional pattern vectors"
+              ],
+              "Outputs": [
+                "2D scatterplot of patterns"
+              ],
+              "ReferenceCitation": "Section 5.3.3 Pattern Similarity Detection: The projection view (Fig. 1A3) is designed to assist users in understanding the similarities and differences among the patterns and identifying the interesting pattern clusters and outliers efficiently.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Table",
+              "ID": 10,
+              "PaperDescription": "Provides the raw data of the propagation instances with numeric readings and boxplot distributions.",
+              "Inputs": [
+                "Propagation instances"
+              ],
+              "Outputs": [
+                "Table-based statistics (pollutant concentrations, times, probabilities)"
+              ],
+              "ReferenceCitation": "Section 5.4 Instance Visualization: An instance table (Fig. 1D2) is designed to provide the raw data of the propagation instances with numeric values and the distributions in boxplots.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 11,
+              "PaperDescription": "Users can select a district to filter out patterns not involving it, highlighting the selected district in motif and pattern glyphs.",
+              "Inputs": [
+                "User-selected district"
+              ],
+              "Outputs": [
+                "Filtered pattern visualizations"
+              ],
+              "ReferenceCitation": "Section 5.5 Interactions: Users can select a district and filter out the patterns that do not involve the selected district. The selected district is highlighted.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 12,
+              "PaperDescription": "Users can draw a polygon selection on the projection view to interactively filter and inspect desired patterns.",
+              "Inputs": [
+                "User-defined polygon selection"
+              ],
+              "Outputs": [
+                "Filtered pattern set for motif or pattern view"
+              ],
+              "ReferenceCitation": "Section 5.5 Interactions: Users can also draw a polygon selection on the projection view to see the desired patterns.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

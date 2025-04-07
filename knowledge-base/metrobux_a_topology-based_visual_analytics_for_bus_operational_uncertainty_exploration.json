@@ -1,0 +1,390 @@
+{
+  "PaperTitle": "MetroBUX: A Topology-Based Visual Analytics for Bus Operational Uncertainty EXploration",
+  "Year": 2024,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Bus Stops",
+              "ID": 1,
+              "PaperDescription": "Loads the bus stop metadata (each stop has ID, lat, lon).",
+              "Inputs": [
+                "CSV / database of stops with lat/lon."
+              ],
+              "Outputs": [
+                "In-memory data structure of bus stops."
+              ],
+              "ReferenceCitation": "Sec. IV-A: Stop dataset includes the information of all bus stops",
+              "FeedsInto": [
+                4,
+                7,
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Bus Routes",
+              "ID": 2,
+              "PaperDescription": "Loads the bus route data that describes the sequence of stops, route ID, and direction.",
+              "Inputs": [
+                "Route definitions (e.g., text or DB) specifying the order of stops."
+              ],
+              "Outputs": [
+                "Structured route objects capturing each routes stop sequence."
+              ],
+              "ReferenceCitation": "Sec. IV-A: Route dataset includes the information of bus routes",
+              "FeedsInto": [
+                4,
+                10,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Bus Operational Dataset",
+              "ID": 3,
+              "PaperDescription": "Loads daily bus operational logs: arrival times at each stop for each bus ID and trip.",
+              "Inputs": [
+                "Raw operational logs with timestamps, stop IDs, route IDs, directions."
+              ],
+              "Outputs": [
+                "In-memory record of arrival times (one log entry per route, stop, time)."
+              ],
+              "ReferenceCitation": "Sec. IV-A: Operational data include the daily bus operation data that record the times a bus arrives",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Preprocessing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Operational Data",
+              "ID": 4,
+              "PaperDescription": "Removes duplicated operational records and fills in missing arrival times if the bus did not physically stop.",
+              "Inputs": [
+                "Raw operational logs with possible duplicates or null fields."
+              ],
+              "Outputs": [
+                "Cleaned dataset with consistent arrival times."
+              ],
+              "ReferenceCitation": "Sec. IV-B: We remove duplicates fill in the missing values before the followup analyses.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Ordering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trip Arrivals",
+              "ID": 5,
+              "PaperDescription": "Aligns bus trips across multiple days, assigning trip orders so that arrival times can be compared day-to-day.",
+              "Inputs": [
+                "Cleaned operational logs, with partial day-level trip groupings."
+              ],
+              "Outputs": [
+                "Aligned multi-day bus trips (each trip has consistent trip order)."
+              ],
+              "ReferenceCitation": "Sec. IV-C.1: After connecting bus trips we further align bus trips spanning different days to model bus operation uncertainty",
+              "FeedsInto": [
+                6,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Uncertainty Calculation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trip Arrivals",
+              "ID": 6,
+              "PaperDescription": "Derives the bus arrival time uncertainty (standard deviation) at each stop, treating arrival times as normally distributed.",
+              "Inputs": [
+                "Aligned arrival times from multiple days."
+              ],
+              "Outputs": [
+                "Numeric measure (x) capturing stop-level uncertainty for each trip."
+              ],
+              "ReferenceCitation": "Sec. IV-C.2: We set uncertainty of bus arrival times as xs,o",
+              "FeedsInto": [
+                7,
+                12,
+                15,
+                16
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Kernel Density Estimation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Uncertainty Trip Values",
+              "ID": 7,
+              "PaperDescription": "Uses Kernel Density Estimation on stop-level uncertainties to produce a continuous uncertainty density map over the city.",
+              "Inputs": [
+                "Stop-level uncertainty values",
+                "geospatial stop locations."
+              ],
+              "Outputs": [
+                "2D continuous field visualizing overall region-level uncertainty distribution."
+              ],
+              "ReferenceCitation": "Sec. V-A: We employ kernel density estimation for regional uncertainty modeling and representation",
+              "FeedsInto": [
+                8,
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Representation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "KDE Contours",
+              "ID": 8,
+              "PaperDescription": "Builds a multi-level topological representation of how high/medium/low uncertainty regions evolve over time (split/merge).",
+              "Inputs": [
+                "KDE-based uncertainty contours at multiple thresholds over a time series."
+              ],
+              "Outputs": [
+                "Nested tracking graph capturing region changes (merging, splitting) for each uncertainty level."
+              ],
+              "ReferenceCitation": "Sec. V-B: We further employ a nested tracking graph to represent the evolution of uncertainty over time",
+              "FeedsInto": [
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 9,
+              "PaperDescription": "Displays the spatio-temporal uncertainty density using color-coded maps and contour lines of multiple uncertainty levels.",
+              "Inputs": [
+                "2D map layer"
+              ],
+              "Outputs": [
+                "Interactive 2D map"
+              ],
+              "ReferenceCitation": "Sec. VI, Map View allows users to explore the spatial distribution of uncertainty (Fig. 7 (d))",
+              "FeedsInto": [
+                17,
+                19
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Routes)",
+              "ID": 10,
+              "PaperDescription": "Overlays additional context (e.g., major roads, route lines, city boundaries) or emphasizes selected subregions.",
+              "Inputs": [
+                "Base map",
+                "route geometry",
+                "user selection"
+              ],
+              "Outputs": [
+                "Color-coded or highlighted overlays that enhance the maps context (e.g., bus routes)."
+              ],
+              "ReferenceCitation": "Sec. VI (and possibly VI-F): Overlays can highlight selected area show route geometry",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Graph",
+              "ID": 11,
+              "PaperDescription": "Shows the time-based evolution of multi-level uncertainty regions (splits, merges) as a nested graph.",
+              "Inputs": [
+                "Thresholded isocontours across time."
+              ],
+              "Outputs": [
+                "An interactive timeline graph of region-level changes, with nesting to indicate high/medium/low."
+              ],
+              "ReferenceCitation": "Sec. VI-B: Temporal View incorporates the nested tracking graph to show the uncertainty evolution with time",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Marey's Graph",
+              "ID": 12,
+              "PaperDescription": "Depicts trip-level uncertainty with a Marey-style diagram: the x-axis is time, y-axis is stop order, with color/size encoding uncertainty.",
+              "Inputs": [
+                "Aligned trip data",
+                "stop-level uncertainties"
+              ],
+              "Outputs": [
+                "Graphical schedule of bus trips",
+                "visually encoding each stops uncertainty"
+              ],
+              "ReferenceCitation": "Sec. VI-D: Trip View visualizes the trip-level uncertainty a frequency histogram plus a graphical schedule",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Table",
+              "ID": 13,
+              "PaperDescription": "Provides a tabular list of bus routes with ID, direction, frequency histogram, headway info. May embed a bar chart or sparkline showing route statistics.",
+              "Inputs": [
+                "Route dataset"
+              ],
+              "Outputs": [
+                "A route list table (with embedded mini-charts), letting users pick routes for further analysis."
+              ],
+              "ReferenceCitation": "Sec. VI-A: Route List view essentially a table with route information",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Table",
+              "ID": 14,
+              "PaperDescription": "Shows the selected stops name, routes crossing it, route-level stats or arrival-time uncertainties. Also can display arrival time distribution as small charts.",
+              "Inputs": [
+                "User selection of a stop"
+              ],
+              "Outputs": [
+                "A table-based info panel for that stops bus routes, uncertainties, or distribution charts"
+              ],
+              "ReferenceCitation": "Sec. VI-E: Stop View displays the relevant route IDs, arrival times for the chosen stop",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 15,
+              "PaperDescription": "Depicts discrete or binned metrics (e.g., route frequencies, day-part counts). Often used for frequency histograms or grouped bar comparisons.",
+              "Inputs": [
+                "Numeric distributions",
+                "Aggregated metrics"
+              ],
+              "Outputs": [
+                "A bar-based visualization indicating frequency",
+                "counts",
+                "other numeric categories"
+              ],
+              "ReferenceCitation": "Sec. VI-A:  frequency histogram plus a graphical schedule",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 16,
+              "PaperDescription": "Presents time-series data (e.g., how average uncertainty changes across hours).",
+              "Inputs": [
+                "Time-based numeric data series."
+              ],
+              "Outputs": [
+                "A 2D chart with lines that trend over time, can handle multiple lines for different routes or stops."
+              ],
+              "ReferenceCitation": "Possibly implied in Sec. VI for time-based plots of headways or average uncertainty.",
+              "FeedsInto": [
+                18
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Animation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Time Slider",
+              "ID": 17,
+              "PaperDescription": "Allows stepping or playing through time to see how uncertainty density evolves in the map.",
+              "Inputs": [
+                "Time steps (e.g. 00:00 - 23:59)."
+              ],
+              "Outputs": [
+                "An animated sequence of the Map Views KDE-based uncertainty layers."
+              ],
+              "ReferenceCitation": "Sec. VI-F: MetroBUX provides a quick overview of spatio-temporal changes Users can click the play button to start the animation",
+              "FeedsInto": [
+                9,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Route/Trip/Stop",
+              "ID": 18,
+              "PaperDescription": "Selecting a route from Route List or a trip in Trip View, or a stop in the Map or Trip View, to highlight in all views.",
+              "Inputs": [
+                "User pointer/click event"
+              ],
+              "Outputs": [
+                "Highlighted route/trip/stop in the interface",
+                "updated details in relevant views"
+              ],
+              "ReferenceCitation": "Sec. VI-F: Users can select a specific time period, route, trip, or stop of interest in different views",
+              "FeedsInto": [
+                9,
+                10,
+                12,
+                13,
+                14,
+                15,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 19,
+              "PaperDescription": "Allows users to draw a free-form region in the Map View, filtering only the contained stops/routes for further inspection.",
+              "Inputs": [
+                "User-defined polygon drawn on the map"
+              ],
+              "Outputs": [
+                "Subset of stops with color-coded average uncertainty",
+                "Route List updated for those stops"
+              ],
+              "ReferenceCitation": "Sec. VII, We first delineate a customized region with the lasso tool the stops within that region show large variations",
+              "FeedsInto": [
+                9,
+                13,
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

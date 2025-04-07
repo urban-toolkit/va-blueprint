@@ -1,0 +1,356 @@
+{
+  "PaperTitle": "Visual Cause Analytics for Traffic Congestion",
+  "Year": 2021,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 1,
+              "PaperDescription": "GPS trajectory datasets have been collected from taxis and buses traveling in three different cities including Beijing, San Francisco, and Seoul. The trajectory data consists of ID, date-time, latitude, and longitude.",
+              "Inputs": [
+                "Raw GPS trajectory datasets from taxis and buses"
+              ],
+              "Outputs": [
+                "Structured GPS trajectory data with ID, date-time, latitude, and longitude"
+              ],
+              "ReferenceCitation": "Section 3.1: GPS trajectory datasets have been collected from taxis and buses traveling in three different cities including Beijing, San Francisco, and Seoul. The trajectory data consists of ID, date-time, latitude, and longitude.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Vehicle Detector",
+              "ID": 2,
+              "PaperDescription": "The VD is installed at the beginning and end of the road and detects the vehicle traffic for 24 hours in Seattle. The VD data contains the GPS position of the VD, the vehicle ID, the time the vehicle is detected by VD, the travel time, and the direction of the vehicle.",
+              "Inputs": [
+                "Raw Vehicle Detector datasets from detectors installed at road segments"
+              ],
+              "Outputs": [
+                "Structured vehicle detector data with GPS position, vehicle ID, detection time, travel time, and direction"
+              ],
+              "ReferenceCitation": "Section 3.1: The VD is installed at the beginning and end of the road and detects the vehicle traffic for 24 hours in Seattle [72].",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "2D Features",
+              "ID": 3,
+              "PaperDescription": "Open Street Map provides nodes and ways. A node represents a spatial location, which can be an intersection or the beginning and end of a road. A way indicates an actual road represented by a set of nodes.",
+              "Inputs": [
+                "Open Street Map data (nodes and ways)"
+              ],
+              "Outputs": [
+                "Road network geometry, intersections and spatial references"
+              ],
+              "ReferenceCitation": "Section 3.1: Open Street Map [73] provides nodes and ways. A node represents a spatial location, which can be an intersection or the beginning and end of a road.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Preprocessing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "GPS Data Cleaning",
+              "ID": 4,
+              "PaperDescription": "GPS filtering rules including unrealistic coordinates, duplicated time stamps, high speed, parking, and time. We filter out GPS data containing unrealistic coordinates, low sampling rates, and redundant data.",
+              "Inputs": [
+                "Raw GPS trajectory data"
+              ],
+              "Outputs": [
+                "Cleaned GPS trajectory data"
+              ],
+              "ReferenceCitation": "Section 3.2: We employ the GPS filtering technique proposed by Wang et al. We filter out GPS data containing unrealistic coordinates, low sampling rates, and redundant data.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Intersection Clustering (DBSCAN)",
+              "ID": 5,
+              "PaperDescription": "We group the nodes using DBSCAN, which merges at least two nodes into a group when they are located within a maximum distance of 30 meters. We set the median for each group to the location of the intersection.",
+              "Inputs": [
+                "Open Street Map nodes and ways"
+              ],
+              "Outputs": [
+                "Extracted intersection locations"
+              ],
+              "ReferenceCitation": "Section 3.2: We group the nodes using DBSCAN, which merges at least two nodes into a group when they are located within a maximum distance of 30 meters.",
+              "FeedsInto": [
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Feature Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Vehicle Heading and Speed Calculation",
+              "ID": 6,
+              "PaperDescription": "We calculate the vehicle heading in the true north azimuth angle from time t to t+1 and compute speed as distance/time between time t and t+1 using the Haversine formula.",
+              "Inputs": [
+                "Cleaned GPS trajectory data"
+              ],
+              "Outputs": [
+                "Vehicle heading and speed information"
+              ],
+              "ReferenceCitation": "Section 3.3: We calculate the vehicle heading in the true north azimuth angle (u) from time t to t+1 as follows [75].",
+              "FeedsInto": [
+                7,
+                11,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Entropy Calculation",
+              "ID": 7,
+              "PaperDescription": "We divide the urban area into multiple grids. We load the vehicle trajectory data contained in each grid and create a histogram of the vehicle velocity values. We compute the velocity entropy H(X) of the grid by substituting P(xi) in Equation (1).",
+              "Inputs": [
+                "Vehicle heading and speed information",
+                "Grid definitions"
+              ],
+              "Outputs": [
+                "Entropy values per grid representing traffic flow changes"
+              ],
+              "ReferenceCitation": "Section 4.1: We divide the urban area into multiple grids as described in Section 3.1. We load the vehicle trajectory data contained in each grid and create a histogram of the vehicle velocity values.",
+              "FeedsInto": [
+                10,
+                12,
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Computation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "N-Curve Generation",
+              "ID": 8,
+              "PaperDescription": "The N-curve is a graph that represents the cumulative count of the departing vehicles and the arriving vehicles over time in the traffic flow theory.",
+              "Inputs": [
+                "Cleaned GPS trajectory data",
+                "Vehicle detector data"
+              ],
+              "Outputs": [
+                "N-curve representing cumulative vehicle counts at locations X1 and X2"
+              ],
+              "ReferenceCitation": "Section 4.2: The N-curve is a graph that represents the cumulative count of the departing vehicles and the arriving vehicles over time in the traffic flow theory [80].",
+              "FeedsInto": [
+                9,
+                15
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Classification",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Congestion Pattern Classification",
+              "ID": 9,
+              "PaperDescription": "We convert the N-curve into a binary matrix and classify the TD patterns into four congestion types using a Convolutional Neural Network (CNN).",
+              "Inputs": [
+                "N-curve data"
+              ],
+              "Outputs": [
+                "Congestion pattern classification (types 1-4)"
+              ],
+              "ReferenceCitation": "Section 4.3: Since Convolutional Neural Network (CNN) is useful to search for specific patterns in images, we utilize a CNN model for the TD pattern classification [87], [88].",
+              "FeedsInto": [
+                10,
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 10,
+              "PaperDescription": "The grid map visualizes the grids brushed in the parallel coordinates plot and the scatter plot, allowing users to detect congestion candidates for further analysis.",
+              "Inputs": [
+                "Entropy values per grid",
+                "Congestion pattern classification"
+              ],
+              "Outputs": [
+                "Interactive grid map highlighting congestion candidates"
+              ],
+              "ReferenceCitation": "Section 5.2: Grid map visualizes the grids brushed in the PCP and the scatter plot. The Grid map view allows us to detect the congestion candidates for further analysis.",
+              "FeedsInto": [
+                18
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Glyph)",
+              "ID": 11,
+              "PaperDescription": "The overlay glyph consists of a set of sub-glyphs which represent the vehicle flows on each road at the intersection, encoding volume, speed, and flow entropy.",
+              "Inputs": [
+                "Extracted intersection locations",
+                "Vehicle heading and speed information",
+                "Entropy values"
+              ],
+              "Outputs": [
+                "Glyph visualization of vehicle flows at intersections"
+              ],
+              "ReferenceCitation": "Section 4.4: Fig. 5 presents the new glyph design visualizing the traffic flow at intersections. The glyph consists of a set of sub-glyphs which represent the vehicle flows on each road at the intersection.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Parallel Coordinates Plot",
+              "ID": 12,
+              "PaperDescription": "Parallel coordinates plot enables the analysis of the vehicle flow changes over time. The x-axis represents time, and the y-axis denotes the vehicle flow entropy.",
+              "Inputs": [
+                "Entropy values per grid"
+              ],
+              "Outputs": [
+                "Parallel coordinates visualization of entropy over time"
+              ],
+              "ReferenceCitation": "Section 5.2: Parallel coordinates plot enables the analysis of the vehicle flow changes over time. The x-axis represents time, and the y-axis denotes the vehicle flow entropy.",
+              "FeedsInto": [
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 13,
+              "PaperDescription": "Scatter plot allows us to analyze the relationship between vehicle speed and entropy to classify vehicle flow patterns.",
+              "Inputs": [
+                "Vehicle speed data",
+                "Entropy values"
+              ],
+              "Outputs": [
+                "Scatter plot visualization of speed vs entropy per grid"
+              ],
+              "ReferenceCitation": "Section 5.2: Scatter plot allows us to analyze the relationship between vehicle speed and entropy.",
+              "FeedsInto": [
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Calendar",
+              "ID": 14,
+              "PaperDescription": "The calendar chart provides the past congestion information for the road we have chosen, showing whether congestion is transient or recurrent.",
+              "Inputs": [
+                "Congestion pattern classifications over time"
+              ],
+              "Outputs": [
+                "Calendar chart visualization of congestion pattern history"
+              ],
+              "ReferenceCitation": "Section 5.2: The calendar chart provides the past congestion information for the road we have chosen.",
+              "FeedsInto": [
+                19
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 15,
+              "PaperDescription": "The N-curve chart quantifies vehicle flows, showing the cumulative number of vehicles over time and the total delay time (TD) in the congestion area.",
+              "Inputs": [
+                "N-curve data"
+              ],
+              "Outputs": [
+                "Line chart visualization of N-curve with total delay time (TD)"
+              ],
+              "ReferenceCitation": "Section 5.2: In the N-curve chart, the x-axis represents the time, and the y-axis denotes the cumulative number of vehicles.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Brushing (PCP)",
+              "ID": 16,
+              "PaperDescription": "Once we select the time axis to analyze in the PCP and brush the lines, the system visualizes the corresponding information in the scatter plot and the grid map.",
+              "Inputs": [
+                "User pointer/brush events on the parallel coordinates plot"
+              ],
+              "Outputs": [
+                "Filtered or highlighted subset of grids"
+              ],
+              "ReferenceCitation": "Section 5.2: Once we select the time axis to analyze in the PCP and brush the lines. In Fig. 7b, the system visualizes the corresponding information in the scatter plot in (c) and the Grid map in (d).",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Brushing (Scatter Plot)",
+              "ID": 17,
+              "PaperDescription": "We select areas with high entropy and low vehicle speed to refine the flow analysis. The brushed grids are highlighted in the map for further inspection.",
+              "Inputs": [
+                "User pointer/brush events on the scatter plot"
+              ],
+              "Outputs": [
+                "Filtered or highlighted subset of grids"
+              ],
+              "ReferenceCitation": "Section 5.2: Scatter plot allows us to analyze the relationship between vehicle speed and entropy. We select areas with high entropy and low velocity to refine the vehicle flow analysis.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 18,
+              "PaperDescription": "When we brush a congestion road on the map, the system provides the congestion cause and influence information via the N-curve and the Calendar chart.",
+              "Inputs": [
+                "User pointer/brush events on the 2D map"
+              ],
+              "Outputs": [
+                "Subset of roads or intersections for detailed congestion analysis"
+              ],
+              "ReferenceCitation": "Section 5.2: When we brush the congestion road on the map, the system provides the congestion cause and influence information via the N-curve in Fig. 7f and the Calendar chart in (g).",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 19,
+              "PaperDescription": "Users can click on a day cell in the calendar chart to analyze whether congestion is transient or recurrent. The selected day updates the N-curve or map view accordingly.",
+              "Inputs": [
+                "User click on the calendar chart day cell"
+              ],
+              "Outputs": [
+                "Time-filtered or day-specific congestion data"
+              ],
+              "ReferenceCitation": "Section 5.2: The calendar chart provides the past congestion information for the road we have chosen, showing whether congestion is transient or recurrent.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,329 @@
+{
+  "PaperTitle": "RelationLines: Visual Reasoning of Egocentric Relations from Heterogeneous Urban Data",
+  "Year": 2018,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 1,
+              "PaperDescription": "Loads taxi GPS data consisting of 3,610 taxis whose locations are recorded every 20 seconds from January 20, 2014 to January 28, 2014.",
+              "Inputs": [
+                "Raw taxi GPS data"
+              ],
+              "Outputs": [
+                "Processed taxi trajectory data with spatial and temporal information"
+              ],
+              "ReferenceCitation": "Section 4.1 Data: The taxi GPS data consists of 3,610 taxis whose locations are precisely recorded every 20 seconds from January 20, 2014 to January 28, 2014.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Cell Phone Mobility",
+              "ID": 2,
+              "PaperDescription": "Loads cell-based mobility data of over 5 million citizens with 600 million records covering 9,303 cell stations from January 20, 2014 to January 28, 2014.",
+              "Inputs": [
+                "Raw mobile phone cell station data"
+              ],
+              "Outputs": [
+                "Processed cell-based mobility data with spatial and temporal information"
+              ],
+              "ReferenceCitation": "Section 4.1 Data: The cell-based mobility data contain 600 million records of more than 5 million citizens over 9,303 cell stations from January 20, 2014 to January 28, 2014.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Mobile Calling",
+              "ID": 3,
+              "PaperDescription": "Loads mobile calling data with 550 million records from December 15, 2013 to December 22, 2013, used as ground truth for connections between two persons.",
+              "Inputs": [
+                "Raw mobile calling records"
+              ],
+              "Outputs": [
+                "Processed calling data establishing direct connections"
+              ],
+              "ReferenceCitation": "Section 4.1 Data: The mobile calling dataset contains 550 million calling records from December 15, 2013 to December 22, 2013.",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "POI",
+              "ID": 4,
+              "PaperDescription": "Loads POI data labeled with types (e.g., shopping malls, hospitals) used for aggregating spatial information by mobile cell stations.",
+              "Inputs": [
+                "Raw POI data"
+              ],
+              "Outputs": [
+                "Categorized POI datasets with spatial locations"
+              ],
+              "ReferenceCitation": "Section 4.1 Data: We collected the accurate location of all POIs in the city and aggregate the POIs by mobile cell stations.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Indexing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Quad Tree Spatial Indexing",
+              "ID": 5,
+              "PaperDescription": "Reformulates spatial information from heterogeneous data sources into a uniform quad tree structure, enabling spot-based and trajectory matching across multiple spatial resolutions.",
+              "Inputs": [
+                "Taxi GPS data",
+                "Cell-based mobility data",
+                "POI data"
+              ],
+              "Outputs": [
+                "Quad tree indexed spatial data"
+              ],
+              "ReferenceCitation": "Section 4.2 Spatial Regularization with Quad Tree: A quad structure is applied to reformulate the spatial information of all records in the data.",
+              "FeedsInto": [
+                6,
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Map Matching",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spot-based Matching",
+              "ID": 6,
+              "PaperDescription": "Performs spatial-temporal matching using spot-based constraints to find co-occurrences or social ties from cell-based mobility, taxi GPS, and calling data.",
+              "Inputs": [
+                "Quad tree indexed data",
+                "Spot-based constraints"
+              ],
+              "Outputs": [
+                "Matched individuals satisfying spatial-temporal constraints"
+              ],
+              "ReferenceCitation": "Section 5.2.1 Spot-Based Matching: Spot-based matching is designed to find persons whose traces satisfy a spot-based constraint c (t , sc ) given by the analyst.",
+              "FeedsInto": [
+                9,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Trajectory-based Matching",
+              "ID": 7,
+              "PaperDescription": "Matches trajectories of different individuals using both partial and binary matching schemes to determine spatio-temporal co-occurrence and relationship strength.",
+              "Inputs": [
+                "Quad tree indexed trajectories"
+              ],
+              "Outputs": [
+                "Degree of matching scores for candidate individuals"
+              ],
+              "ReferenceCitation": "Section 5.2.2 Trajectory-Based Matching: Trajectory-based matching is performed by matching a given trajectory-based constraint; namely, a trajectory from a group of trajectories.",
+              "FeedsInto": [
+                9,
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 8,
+              "PaperDescription": "Displays the spatial distribution of individuals and their mobility traces, allows users to specify spatial constraints, and provides positional references for analysis.",
+              "Inputs": [
+                "Matched trajectories",
+                "POI data"
+              ],
+              "Outputs": [
+                "Rendered 2D map with spatial traces and constraint markers"
+              ],
+              "ReferenceCitation": "Section 6.2 The Map View and the Timeline View (Task2): The map view shows the geographical scene and serves as a positional reference for multiple purposes.",
+              "FeedsInto": [
+                12,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Markers)",
+              "ID": 14,
+              "PaperDescription": "Displays spot-based constraints, POIs, and geo-tagged microblog posts as interactive markers over the map view for spatial analysis and user interaction.",
+              "Inputs": [
+                "Spot-based constraint definitions",
+                "POI locations",
+                "Microblog geo-tags"
+              ],
+              "Outputs": [
+                "Marker overlays on Map 2D"
+              ],
+              "ReferenceCitation": "Section 6.1 The Target View (Task1): Spot-based constraints are represented by two geographical icons on the map with associated temporal information.",
+              "FeedsInto": [
+                8,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Glyph)",
+              "ID": 15,
+              "PaperDescription": "Displays radial glyphs at locations on the map to represent weekly moving behaviors of individuals, visualizing temporal patterns of visits to specific locations.",
+              "Inputs": [
+                "Processed mobility traces",
+                "Clustering information"
+              ],
+              "Outputs": [
+                "Radial glyph overlays on Map 2D"
+              ],
+              "ReferenceCitation": "Section 6.2 The Map View and the Timeline View (Task2): We additionally design a radial timeline chart that emphasizes the spatial information of the traces in the period for individual traces.",
+              "FeedsInto": [
+                8,
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Timeline (Trace)",
+              "ID": 9,
+              "PaperDescription": "Depicts the temporal trace of an individual's mobility behaviors as a bar chart, highlighting frequently visited locations and enabling temporal filtering for further analysis.",
+              "Inputs": [
+                "Matched individual trajectories"
+              ],
+              "Outputs": [
+                "Trace timeline visualization of individual movement behaviors"
+              ],
+              "ReferenceCitation": "Section 6.2 The Map View and the Timeline View (Task2): Once an individual is selected, her trace over a long period is plotted in the timeline view.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Timeline (Matched List)",
+              "ID": 10,
+              "PaperDescription": "Displays a list of candidate individuals with bar charts representing their degrees of match under different constraints, supporting sorting and constraint refinement.",
+              "Inputs": [
+                "Matching results from spot and trajectory-based matching"
+              ],
+              "Outputs": [
+                "List of candidates with constraint match visualizations"
+              ],
+              "ReferenceCitation": "Section 6.3 The Egocentric Relation View (Task3): Individuals of top qualified relations are summarized in the egocentric relation view (see Figure 6).",
+              "FeedsInto": [
+                11,
+                16,
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Timeline (Co-occurrence)",
+              "ID": 11,
+              "PaperDescription": "Displays co-occurrence relations between the target and candidates over time, supporting the discovery and refinement of egocentric relations based on temporal overlap.",
+              "Inputs": [
+                "Co-occurrence matching data"
+              ],
+              "Outputs": [
+                "Visualization of temporal co-occurrences for relation verification"
+              ],
+              "ReferenceCitation": "Section 6.4 The Co-occurrence Relation View (Task4): The co-occurrence timeline chart (see Figure 7) shows the matched trajectories among individuals during the entire timeline chart.",
+              "FeedsInto": [
+                17
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spot-based Constraint Definition",
+              "ID": 12,
+              "PaperDescription": "Allows users to define spatial constraints directly on the map or through microblog posts for identifying candidate individuals.",
+              "Inputs": [
+                "User interaction on map or microblog post data"
+              ],
+              "Outputs": [
+                "Spot-based constraints for matching"
+              ],
+              "ReferenceCitation": "Section 6.1 The Target View (Task1): The target view is used to identify a target (a taxi or a mobile phone) with our data by heterogeneous constraints: spot-based constraints, taxi IDs, and microblog posts.",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Trajectory-based Constraint Definition",
+              "ID": 13,
+              "PaperDescription": "Enables users to swipe or select time spans in the timeline view to define trajectory-based constraints for matching and refining egocentric networks.",
+              "Inputs": [
+                "User selection on timeline view"
+              ],
+              "Outputs": [
+                "Trajectory-based constraints for matching"
+              ],
+              "ReferenceCitation": "Section 6.3 The Egocentric Relation View (Task3): The analysts can sort individuals according to relations using one constraint or all constraints. They can also add a trajectory-based constraint by swiping a time span on the trace timeline chart.",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Sorting",
+              "ID": 16,
+              "PaperDescription": "Allows users to sort candidate individuals in the Matched Timeline List according to their degrees of match on different constraints.",
+              "Inputs": [
+                "User selection on sort order or constraint priority"
+              ],
+              "Outputs": [
+                "Sorted candidate list based on specified criteria"
+              ],
+              "ReferenceCitation": "Section 6.3 The Egocentric Relation View (Task3): The analysts can sort individuals according to relations using one constraint or all constraints.",
+              "FeedsInto": [
+                10
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Annotation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Annotation",
+              "ID": 17,
+              "PaperDescription": "Allows users to annotate candidate individuals in the Matched Timeline List to record findings or hypothesized relations.",
+              "Inputs": [
+                "User-provided annotation text"
+              ],
+              "Outputs": [
+                "Annotated candidate data stored in the system"
+              ],
+              "ReferenceCitation": "Section 6.3 The Egocentric Relation View (Task3): Whenever some relations of interest are detected, the analysts can make annotations to related individuals beside the candidate's small icon.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,250 @@
+{
+  "PaperTitle": "Data Flow Analysis and Visualization for Spatiotemporal Statistical Data without Trajectory Information",
+  "Year": 2018,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatiotemporal Statistical",
+              "ID": 1,
+              "PaperDescription": "Loads spatiotemporal event-based statistical datasets such as GPS trajectories, Twitter data, maritime search and rescue events, and syndromic surveillance data, discarding trajectory information if present.",
+              "Inputs": [
+                "Raw event-based datasets (e.g., GPS data, Twitter posts, SAR events)"
+              ],
+              "Outputs": [
+                "Discrete spatiotemporal event dataset without trajectory information"
+              ],
+              "ReferenceCitation": "Section 7.1: We use GPS trajectory data and we apply our technique to the dataset after discarding the trajectory information in the data.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Kernel Density Estimation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Functional Event Representation",
+              "ID": 2,
+              "PaperDescription": "Represents discrete spatiotemporal event distributions as continuous functions using kernel density estimation (KDE), with Triweight kernels and variable bandwidths based on the distance to the kth nearest neighbor.",
+              "Inputs": [
+                "Discrete spatiotemporal event dataset"
+              ],
+              "Outputs": [
+                "Continuous functional representation of event density over space and time"
+              ],
+              "ReferenceCitation": "Section 4: The bandwidth (hs;i) of the kernel (Ks) placed on the point (xi; yi) is proportional to the distance from the ith sample to the kth nearest neighbor.",
+              "FeedsInto": [
+                3,
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Gravity-Based Flow Map Extraction",
+              "ID": 3,
+              "PaperDescription": "Extracts potential flow maps from non-directional spatiotemporal statistical data using a gravity model, computing flow vectors by evaluating adjacent distributions over time within a 3D kernel window.",
+              "Inputs": [
+                "Continuous functional representation of event density over space and time",
+                "User-defined kernel size (W, T)",
+                "User-defined gravity model parameters (a0, a1)"
+              ],
+              "Outputs": [
+                "Spatiotemporal flow maps representing potential movement trends"
+              ],
+              "ReferenceCitation": "Section 5.2: The spatio-temporal flow map extraction model using the gravity model is presented as follows... Equation (5).",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Difference-Based Flow Map Extraction",
+              "ID": 4,
+              "PaperDescription": "Extracts local flow patterns by calculating differences between functional density distributions of two time steps, producing only local movements without global flow analysis.",
+              "Inputs": [
+                "Continuous functional representation of event density over two time steps"
+              ],
+              "Outputs": [
+                "Difference-based flow map showing local flow patterns"
+              ],
+              "ReferenceCitation": "Section 5.2: The difference-based flow extraction model is presented as follows... Equation (6).",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 5,
+              "PaperDescription": "Displays flow maps overlaid on a 2D geographical map to reveal movement patterns within a spatial context.",
+              "Inputs": [
+                "Spatiotemporal flow maps"
+              ],
+              "Outputs": [
+                "Interactive 2D map with overlaid flow vectors and heatmaps"
+              ],
+              "ReferenceCitation": "Section 6: The flow maps are overlaid on a map to reveal movement patterns within a geographical space and the flow fields are visualized with vector field visualization techniques.",
+              "FeedsInto": [
+                9,
+                10,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (OLIC)",
+              "ID": 6,
+              "PaperDescription": "Applies Oriented Line Integral Convolution (OLIC) to visualize directional flow patterns derived from the flow maps over the 2D map.",
+              "Inputs": [
+                "Spatiotemporal flow maps"
+              ],
+              "Outputs": [
+                "OLIC overlay visualization of directional flow fields on the map"
+              ],
+              "ReferenceCitation": "Section 6.1: Similarly, OLIC are applied only to non-zero vector fields, which are extracted in the areas whose density values are not zero.",
+              "FeedsInto": [
+                5,
+                9,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Arrow Glyphs)",
+              "ID": 7,
+              "PaperDescription": "Renders directional arrows on the flow maps to indicate vector directions and magnitudes within the spatiotemporal field.",
+              "Inputs": [
+                "Spatiotemporal flow maps"
+              ],
+              "Outputs": [
+                "Arrow glyph overlay visualization of flow fields on the map"
+              ],
+              "ReferenceCitation": "Section 6.1: Our system provides three different types of visualization including OLIC, arrow glyph, and particle visualization similar to LIC.",
+              "FeedsInto": [
+                5,
+                9,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Particle Tracing)",
+              "ID": 8,
+              "PaperDescription": "Implements particle advection visualization similar to Line Integral Convolution (LIC), where particles move along the vector field derived from the flow maps.",
+              "Inputs": [
+                "Spatiotemporal flow maps"
+              ],
+              "Outputs": [
+                "Particle tracing overlay visualization of movement flows on the map"
+              ],
+              "ReferenceCitation": "Section 6.1: Our system provides three different types of visualization including OLIC, arrow glyph, and particle visualization similar to LIC.",
+              "FeedsInto": [
+                5,
+                9,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Web-Based Flow Map Visualization",
+              "ID": 9,
+              "PaperDescription": "Provides a web-based client that visualizes the extracted flow maps on an interactive 3D globe with particle animations and overlays including roads, boundaries, and lakes.",
+              "Inputs": [
+                "Spatiotemporal flow maps"
+              ],
+              "Outputs": [
+                "Interactive web-based flow map visualization with animated particles"
+              ],
+              "ReferenceCitation": "Section 6.2: The web-based flow map visualization system consists of JavaScript and several APIs... the server attaches minimum geographical information including roads, country boundaries, and lakes.",
+              "FeedsInto": [
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 10,
+              "PaperDescription": "Allows users to specify a region of interest on the map to focus flow extraction and visualization within that specific geographical area.",
+              "Inputs": [
+                "User-selected region on map"
+              ],
+              "Outputs": [
+                "Subset of spatiotemporal flow maps for the selected region"
+              ],
+              "ReferenceCitation": "Section 6.1: We initially place the particles in the region of interest, such as high density or high velocity areas, using the importance-driven method proposed by Bürger et al.",
+              "FeedsInto": [
+                3,
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 11,
+              "PaperDescription": "Enables users to select specific time intervals to explore temporal changes in the spatiotemporal flow maps.",
+              "Inputs": [
+                "User-defined time range"
+              ],
+              "Outputs": [
+                "Filtered spatiotemporal flow maps corresponding to selected time intervals"
+              ],
+              "ReferenceCitation": "Section 6.1: We can extract the flow map by adjusting a0 and a1 to stress certain time steps.",
+              "FeedsInto": [
+                3,
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Configuration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Flow Map Parameter Tuning",
+              "ID": 12,
+              "PaperDescription": "Provides interactive controls for users to adjust the kernel size and gravity model parameters (a0, a1), influencing the flow map extraction process.",
+              "Inputs": [
+                "User-defined kernel size (W, T)",
+                "User-defined gravity model parameters (a0, a1)"
+              ],
+              "Outputs": [
+                "Customized flow maps based on user-specified parameters"
+              ],
+              "ReferenceCitation": "Section 5.2: Since the effects of the parameters, a0 and a1, are dominant, we use (1, 1) for a0 and a1 in order to extract the global flow patterns... however, one can extract the flow map by adjusting a0 and a1 to stress certain time steps.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

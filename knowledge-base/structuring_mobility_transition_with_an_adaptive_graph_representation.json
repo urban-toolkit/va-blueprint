@@ -1,0 +1,284 @@
+{
+  "PaperTitle": "Structuring Mobility Transition With an Adaptive Graph Representation",
+  "Year": 2018,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Trajectory",
+              "ID": 1,
+              "PaperDescription": "Loads a dataset containing 14 billion records from 7 million mobile phone users, covering January to February 2014, with records including phone ID, cell tower ID, and timestamp.",
+              "Inputs": [
+                "Raw mobile trajectory records from mobile phone service company"
+              ],
+              "Outputs": [
+                "Raw trajectory data with user, location, and time information"
+              ],
+              "ReferenceCitation": "Section III: The mobile trajectory data employed in our study are provided by a mobile phone service company. Our data set includes 14 billion records of 7 million mobile users during the period from January 2014 to February 2014.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Segmentation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Adaptive Trajectory Segmentation",
+              "ID": 2,
+              "PaperDescription": "Partitions raw trajectories into segments by detecting stop and move episodes based on time and distance thresholds.",
+              "Inputs": [
+                "Raw trajectory data"
+              ],
+              "Outputs": [
+                "Segmented trajectories with stop and move labels"
+              ],
+              "ReferenceCitation": "Section III-C: We describe a methodology to detect the stay location from a trajectory adaptively according to human behaviors. This segmentation approach is the adaptive portion of the AMTG.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Feature Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Mobility Feature Descriptor Computation",
+              "ID": 3,
+              "PaperDescription": "Extracts eight feature descriptors (e.g., entropy, centroid location, radius of gyration) from trajectory segments for clustering.",
+              "Inputs": [
+                "Segmented trajectories"
+              ],
+              "Outputs": [
+                "Feature vectors for each trajectory segment"
+              ],
+              "ReferenceCitation": "Section III-D1: We compute eight feature descriptors that form a vector Fi from a given trajectory segment Rsegi.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Mobility Pattern Clustering",
+              "ID": 4,
+              "PaperDescription": "Clusters trajectory segments into mobility patterns using K-means based on extracted feature vectors, creating groups of similar behaviors.",
+              "Inputs": [
+                "Feature vectors for each trajectory segment"
+              ],
+              "Outputs": [
+                "Clusters representing mobility patterns"
+              ],
+              "ReferenceCitation": "Section III-D2: We employ the standard K-means clustering algorithm to cluster move (Fmovei) and stop (Fstopi) separately into K classes.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Graph Construction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Adaptive Mobility Transition Graph (AMTG)",
+              "ID": 5,
+              "PaperDescription": "Constructs a directed graph where nodes represent mobility patterns and edges represent transitions with associated probabilities derived from a time-varying dynamic Bayesian network. The AMTG is computed at 2-hour intervals to capture temporal transitions.",
+              "Inputs": [
+                "Clusters of mobility patterns",
+                "Segment sequences of mobility patterns over time"
+              ],
+              "Outputs": [
+                "Time-stamped adaptive mobility transition graph (AMTG)"
+              ],
+              "ReferenceCitation": "Section III-E: Our main contribution is the AMTG, a time-varying visual representation for characterizing the temporal evolutions and interleaved transitions of clustered trajectory segments and associated mobility patterns.",
+              "FeedsInto": [
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 6,
+              "PaperDescription": "Displays trajectories and mobility patterns on a geographical map with OpenStreetMap overlay, using red circles for stop segments and green curves for move segments.",
+              "Inputs": [
+                "Trajectory segments",
+                "Mobility patterns"
+              ],
+              "Outputs": [
+                "Geospatial visualization of trajectories and mobility patterns"
+              ],
+              "ReferenceCitation": "Section IV-A1 and Fig. 3(a): The map view shows the geographical information using an OpenStreetMap overlay. Each stop trajectory segment is encoded with a red circle whose gradient encodes the time duration. Each move trajectory is represented as a green curve.",
+              "FeedsInto": [
+                12,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Convex Hull)",
+              "ID": 7,
+              "PaperDescription": "Visual overlay in the map view showing the coverage area of trajectory segments as a convex hull for summarizing spatial extent.",
+              "Inputs": [
+                "Trajectory segments"
+              ],
+              "Outputs": [
+                "Convex hull overlay showing spatial coverage of trajectory segments"
+              ],
+              "ReferenceCitation": "Section IV-A1 and Fig. 4: The coverage of the trajectory segments is represented with a convex hull in gray.",
+              "FeedsInto": [
+                6,
+                12,
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Parallel Coordinates Plot",
+              "ID": 8,
+              "PaperDescription": "Displays feature descriptor distributions of trajectory segments for evaluating their attributes in a high-dimensional space.",
+              "Inputs": [
+                "Feature descriptors of mobility patterns"
+              ],
+              "Outputs": [
+                "Parallel coordinates visualization of feature distributions"
+              ],
+              "ReferenceCitation": "Section IV-A2 and Fig. 3(b): We employ the parallel coordinates plot to show the distribution of each feature descriptor.",
+              "FeedsInto": [
+                12,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Matrix",
+              "ID": 9,
+              "PaperDescription": "Displays feature descriptors of clustered mobility patterns in a color-coded matrix, enabling row selection for pattern exploration.",
+              "Inputs": [
+                "Mobility pattern feature descriptors"
+              ],
+              "Outputs": [
+                "Matrix visualization for pattern comparison"
+              ],
+              "ReferenceCitation": "Section IV-A3 and Fig. 3(c): A matrix view is employed to show the dimensions of each mobility pattern row by row. The color of each cell encodes the average value of each component of its associated feature descriptor.",
+              "FeedsInto": [
+                12,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Stacked Flow (Sankey-like) Diagram",
+              "ID": 10,
+              "PaperDescription": "Visualizes the AMTG as a timeline-graph, showing transitions between mobility patterns over time, with node height encoding population and edges indicating transition probability.",
+              "Inputs": [
+                "Adaptive Mobility Transition Graph (AMTG)"
+              ],
+              "Outputs": [
+                "Timeline-graph visualization of mobility transitions"
+              ],
+              "ReferenceCitation": "Section IV-A4 and Fig. 3(d): The AMTG view shows an AMTG with the information of each time point. The transition between two consecutive Vtiq and Vti+1p is connected by arrow curves.",
+              "FeedsInto": [
+                12,
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 11,
+              "PaperDescription": "Displays a vertical bar chart encoding the demographic distribution and feature values for selected trajectory segments or mobility patterns.",
+              "Inputs": [
+                "Feature descriptors of selected mobility patterns or persons"
+              ],
+              "Outputs": [
+                "Bar chart visualization of mobility pattern statistics"
+              ],
+              "ReferenceCitation": "Section IV-A2 and Fig. 3(b): A vertical bar chart with gray bins encodes the demographic distribution of each component of the feature vector F. The gradient of each bar denotes the value of the corresponding feature.",
+              "FeedsInto": [
+                12,
+                13
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Attribute Selection",
+              "ID": 12,
+              "PaperDescription": "Allows users to query specific persons by ID, residence location, or mobility patterns and display their trajectories and transitions.",
+              "Inputs": [
+                "User-defined query parameters (ID, residence, patterns)"
+              ],
+              "Outputs": [
+                "Filtered person trajectories and AMTG trace paths"
+              ],
+              "ReferenceCitation": "Section IV-A5 and Fig. 3(e): The query panel supports querying a group of persons by specifying the person id. The trajectory of retrieved persons is shown on other views.",
+              "FeedsInto": [
+                6,
+                8,
+                9,
+                10,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Mobility Pattern Selection",
+              "ID": 13,
+              "PaperDescription": "Allows users to click and select mobility patterns in the matrix or AMTG views to explore related transitions and feature distributions.",
+              "Inputs": [
+                "User selection input (matrix row or AMTG node)"
+              ],
+              "Outputs": [
+                "Highlighted mobility pattern and associated trajectories"
+              ],
+              "ReferenceCitation": "Section IV-B1 and Fig. 5(b): When a mobility pattern is chosen in the matrix view, the mobility pattern and the related transitions (edges) will be highlighted.",
+              "FeedsInto": [
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

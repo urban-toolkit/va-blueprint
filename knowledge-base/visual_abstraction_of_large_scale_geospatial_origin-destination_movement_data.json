@@ -1,0 +1,336 @@
+{
+  "PaperTitle": "Visual Abstraction of Large Scale Geospatial Origin-Destination Movement Data",
+  "Year": 2019,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Bicycle Sharing System OD",
+              "ID": 1,
+              "PaperDescription": "Loads the bicycle sharing system OD dataset, including 10 million usage records from 5800 bicycles across 580 stations, with attributes such as borrowing time, returning time, latitude and longitude of origin and destination stations, and user information.",
+              "Inputs": [
+                "Raw OD movement data from bicycle sharing system (580 stations, 5800 bicycles)"
+              ],
+              "Outputs": [
+                "Structured OD dataset with temporal and spatial attributes"
+              ],
+              "ReferenceCitation": "Section 3.1 Data Description: The bicycle sharing system is a traditional OD movement data, in which 5800 bicycles are borrowed and returned across 580 stations.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Mobile Phone Location OD",
+              "ID": 2,
+              "PaperDescription": "Loads mobile phone location OD dataset covering one week, recording trajectories of about 1.1 million persons through 2755 cell stations, with associated OD flows.",
+              "Inputs": [
+                "Raw mobile phone location data (2755 stations, 1.1 million persons)"
+              ],
+              "Outputs": [
+                "Structured OD dataset with spatial and temporal attributes"
+              ],
+              "ReferenceCitation": "Section 3.1 Data Description: The other dataset records the mobile phone locations in the span of a week. There are 2755 cell stations located in the urban center, recording massive OD trajectories of about 1.1 millions of persons.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Feature Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Word Embedding",
+              "ID": 3,
+              "PaperDescription": "Trains a Word2Vec model to transform OD flows into high-dimensional vectors that characterize the interactions of OD flows based on human mobility trajectories.",
+              "Inputs": [
+                "Structured OD datasets from bicycle sharing and mobile phone datasets"
+              ],
+              "Outputs": [
+                "High-dimensional vector representations of OD flows"
+              ],
+              "ReferenceCitation": "Section 4.1.2 Vectorized Representation: Therefore, we apply the skip-gram model to train the OD flows in our experiments.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Dimensionality Reduction (t-SNE)",
+              "ID": 4,
+              "PaperDescription": "Reduces high-dimensional word embeddings of OD flows to 2D coordinates for visualization and adaptive sampling using t-SNE.",
+              "Inputs": [
+                "High-dimensional vector representations of OD flows"
+              ],
+              "Outputs": [
+                "2D coordinates representing OD flow similarity"
+              ],
+              "ReferenceCitation": "Section 4.1.3 Dimension Reduction: As a commonly-used dimension reduction method, t-Distributed Stochastic Neighbor Embedding (t-SNE)... can be applied to reduce multiple dimensions of vectorized representations and visualize the OD flows with two-dimensional points.",
+              "FeedsInto": [
+                5,
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Sampling",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Adaptive Blue Noise",
+              "ID": 5,
+              "PaperDescription": "Applies adaptive blue noise sampling in the 2D projection space of OD flows to reduce visual clutter while preserving spatial distribution and semantic relationships.",
+              "Inputs": [
+                "2D coordinates from t-SNE projection"
+              ],
+              "Outputs": [
+                "Sampled subset of OD flows"
+              ],
+              "ReferenceCitation": "Section 4.2.1 Adaptive Blue Noise Sampling: Given the massive projected points in word embedding space that correspond to the OD flows in geographical map, an adaptive blue noise sampling method is applied to reduce the scale of OD flows and retain the distribution of points as much as possible.",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Iterative Multi-objective",
+              "ID": 6,
+              "PaperDescription": "Refines the adaptive sampling results through iterative optimization based on flow intersection reduction, edge betweenness, and community distribution preservation.",
+              "Inputs": [
+                "Sampled subset of OD flows from adaptive blue noise sampling"
+              ],
+              "Outputs": [
+                "Optimized subset of OD flows for visualization"
+              ],
+              "ReferenceCitation": "Section 4.2.2 Iterative Multi-objective Sampling: Given above mentioned constraints, an iterative multi-objective sampling model is established by means of which the OD flows can be resampled aiming at the optimization of a flow map.",
+              "FeedsInto": [
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                17
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 7,
+              "PaperDescription": "Displays the spatial context of OD flows on a 2D geographical map, visualizing OD flows as straight lines with color and width encoding flow magnitudes.",
+              "Inputs": [
+                "Optimized subset of OD flows"
+              ],
+              "Outputs": [
+                "2D geospatial map of OD flows"
+              ],
+              "ReferenceCitation": "Section 4.3.1 Map View: Therefore, a major view of the proposed system is a geographical map, in which the OD flows are visualized by means of straight lines.",
+              "FeedsInto": [
+                14,
+                15,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Flow Wheel)",
+              "ID": 8,
+              "PaperDescription": "Visualizes an interactive flow wheel on the map, allowing focus on local areas with flow interaction summaries, temporal patterns, and glyphs representing semantic features.",
+              "Inputs": [
+                "Optimized subset of OD flows",
+                "User-selected local region"
+              ],
+              "Outputs": [
+                "Flow wheel overlay showing local OD flow interactions and temporal magnitude patterns"
+              ],
+              "ReferenceCitation": "Section 4.3.1 Map View: We also design a flow wheel to focus on local regions of interest, enabling users to interactively explore the spatio-temporal features.",
+              "FeedsInto": [
+                7,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Trajectories)",
+              "ID": 17,
+              "PaperDescription": "Displays simplified OD flows on a geographical map using straight lines. Integrated magnitude-based filtering, cluster-based edge bundling, and iterative multi-objective sampling are used to reduce clutter and enhance the readability of human mobility patterns.",
+              "Inputs": [
+                "Optimized subset of OD flows",
+                "Sampling strategies (e.g., iterative multi-objective sampling)",
+                "Clustering and filtering parameters"
+              ],
+              "Outputs": [
+                "Simplified flow map visualization of OD flows on Map 2D"
+              ],
+              "ReferenceCitation": "Section 4.3.1 Map View: Therefore, a major view of the proposed system is a geographical map, in which the OD flows are visualized by means of straight lines. A variety of operations are integrated in this system to reduce the visual clutter of flow map as shown in Fig.1 (a), such as magnitude-based filtering, cluster-based edge bundling and iterative multi-objective sampling, which enhance the visual perception of flow map from different perspectives (T.1).",
+              "FeedsInto": [
+                7,
+                14,
+                15,
+                16
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Scatter Plot (Word Embedding View)",
+              "ID": 9,
+              "PaperDescription": "Displays 2D t-SNE projection of OD flow vectors in a scatter plot to represent semantic similarities and allow selection of flows for further exploration.",
+              "Inputs": [
+                "2D coordinates from t-SNE projection"
+              ],
+              "Outputs": [
+                "Scatter plot showing OD flow similarity in vector space"
+              ],
+              "ReferenceCitation": "Section 4.3.2 Representation View: A word embedding view is provided to represent the semantic difference of OD flows (T.2). Each point in the word embedding view corresponds to a OD flow in the map view and the distance of points represents the semantic interactions of OD flows.",
+              "FeedsInto": [
+                14,
+                15,
+                16
+              ]
+            },
+            {
+              "GranularBlockName": "Radar Chart",
+              "ID": 10,
+              "PaperDescription": "Displays multiple metrics to evaluate the quality of flow abstraction, including flow intersections, edge betweenness, community distribution, and flow interaction retention.",
+              "Inputs": [
+                "Evaluation metrics from sampling process"
+              ],
+              "Outputs": [
+                "Radar chart visualizing flow abstraction evaluation metrics"
+              ],
+              "ReferenceCitation": "Section 4.3.3 Comparison View: A radar chart is designed to visually present the difference between the original and simplified flow maps, with a set of attributes taken into consideration.",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Matrix (Flow Interaction Matrix)",
+              "ID": 11,
+              "PaperDescription": "Displays a matrix where each column represents trajectory segments and rows show flow interactions, helping users explore co-occurrence and select trajectories of interest.",
+              "Inputs": [
+                "Flow interaction data from selected region"
+              ],
+              "Outputs": [
+                "Matrix chart of OD flow interactions"
+              ],
+              "ReferenceCitation": "Section 4.3.1 Map View: In the matrix map, each column of flows represent a trajectory segments that persons move across. The trajectory segments are arranged in rows enabling users to easily capture the distribution of flow interactions and select trajectories of interest.",
+              "FeedsInto": [
+                8,
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Pixel Map",
+              "ID": 12,
+              "PaperDescription": "Presents the distribution of flow coverage from different sampling strategies, enabling users to assess visual perception and coverage retention.",
+              "Inputs": [
+                "Sampling strategy evaluation data"
+              ],
+              "Outputs": [
+                "Pixel map showing flow coverage distribution"
+              ],
+              "ReferenceCitation": "Section 4.3.3 Comparison View: A pixel map is designed to present the distribution of flow coverage of different sampling strategies as shown in Fig.1 (e).",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 13,
+              "PaperDescription": "Displays the retention of edge betweenness across different sampling schemes, helping users evaluate the importance preservation of sampled OD flows.",
+              "Inputs": [
+                "Edge betweenness metrics from sampling process"
+              ],
+              "Outputs": [
+                "Bar chart showing edge betweenness distribution for different sampling methods"
+              ],
+              "ReferenceCitation": "Section 4.3.3 Comparison View: A group histogram is applied to present the retaining of edge betweenness through different sampling schemes as shown in Fig.1 (f).",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Point Selection",
+              "ID": 14,
+              "PaperDescription": "Allows users to select individual OD flows in the scatter plot to inspect their spatial distribution and interactions in the map view.",
+              "Inputs": [
+                "User interaction (single point selection) in scatter plot"
+              ],
+              "Outputs": [
+                "Highlighted OD flow in map view"
+              ],
+              "ReferenceCitation": "Section 4.3.2 Representation View: The single point selection allows users to quickly focus on an independent OD flow, and establish a visual connection between the points in word embedding view and lines in map view.",
+              "FeedsInto": [
+                7,
+                17
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 15,
+              "PaperDescription": "Allows users to select a region in the scatter plot to highlight clusters of semantically similar OD flows in the map view.",
+              "Inputs": [
+                "User interaction (region selection) in scatter plot"
+              ],
+              "Outputs": [
+                "Highlighted OD flows in map view"
+              ],
+              "ReferenceCitation": "Section 4.3.2 Representation View: The local region selection is provided to focus on the a cluster of points in word embedding view, allowing users to explore the geographical distribution of OD flows with close semantic relationship.",
+              "FeedsInto": [
+                7,
+                17,
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Community Selection",
+              "ID": 16,
+              "PaperDescription": "Enables users to select entire communities of OD flows detected by community detection, highlighting them in both scatter plot and map view.",
+              "Inputs": [
+                "User interaction (community selection)"
+              ],
+              "Outputs": [
+                "Highlighted community OD flows in map view"
+              ],
+              "ReferenceCitation": "Section 4.3.2 Representation View: Community detection is able to classify the OD flows into different communities. Community selection focuses on community features in the geographical network.",
+              "FeedsInto": [
+                7,
+                9,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

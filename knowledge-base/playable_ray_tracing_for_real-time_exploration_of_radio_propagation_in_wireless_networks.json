@@ -1,0 +1,192 @@
+{
+  "PaperTitle": "Playable Ray Tracing for Real-time Exploration of Radio Propagation in Wireless Networks",
+  "Year": 2022,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Geometries",
+              "ID": 1,
+              "PaperDescription": "Loads a geospatial 3D model consisting of buildings, foliage, and ground represented as Wavefront .OBJ files for the ray tracing computation.",
+              "Inputs": [
+                "LiDAR point cloud",
+                "Wavefront .OBJ files"
+              ],
+              "Outputs": [
+                "3D mesh objects with vertices, triangles, and surface normals"
+              ],
+              "ReferenceCitation": "The geospatial model consists of three types of entities—buildings, foliage, and ground (the terrain). These entities are represented as 3D objects in the format of Wavefront .OBJ files. (Section 2 Model and Problem Definition)",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Antenna Configuration",
+              "ID": 2,
+              "PaperDescription": "Loads cellular antenna parameters such as power, bandwidth, frequency, antenna pattern, azimuth, and tilt for use in the ray tracing simulation.",
+              "Inputs": [
+                "Antenna parameters (power, bandwidth, frequency, pattern, azimuth, tilt)"
+              ],
+              "Outputs": [
+                "Antenna representation with configured transmission properties"
+              ],
+              "ReferenceCitation": "Each cellular antenna is represented as a sphere with parameters that define the transmission, including power, bandwidth, frequency, antenna pattern, azimuth, and tilt. (Section 2 Model and Problem Definition)",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Ray Tracing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Forward Ray Tracing",
+              "ID": 3,
+              "PaperDescription": "Simulates the propagation of electromagnetic rays by emitting 15 million rays uniformly in all directions, applying antenna radiation patterns, and modeling reflections, diffractions, and transmissions through obstacles.",
+              "Inputs": [
+                "3D geospatial model",
+                "Antenna configuration"
+              ],
+              "Outputs": [
+                "Ray hit points and trajectories",
+                "Computed signal strength per bin"
+              ],
+              "ReferenceCitation": "First, 15 million rays are emitted uniformly in all directions. (Section 3 Ray Tracing)",
+              "FeedsInto": [
+                4,
+                5,
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Inverse Ray Tracing",
+              "ID": 4,
+              "PaperDescription": "Performs inverse ray tracing to identify which antennas and transmission paths contribute to the signal strength and interference at a specific location (bin).",
+              "Inputs": [
+                "Ray hit points and trajectories",
+                "Selected bin for analysis"
+              ],
+              "Outputs": [
+                "List of antennas and ray paths influencing the selected bin"
+              ],
+              "ReferenceCitation": "In inverse ray tracing, given a bin, the goal is finding the rays that affected it. (Section 3 Ray Tracing)",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Coverage and Interference Computation",
+              "ID": 5,
+              "PaperDescription": "Calculates the coverage and interference levels for each ground bin (4m x 4m) by combining the received signal strengths from different antennas, applying free space path loss, and evaluating signal-to-interference ratios.",
+              "Inputs": [
+                "Ray hit points and trajectories",
+                "Inverse ray tracing results"
+              ],
+              "Outputs": [
+                "Coverage map",
+                "Interference map"
+              ],
+              "ReferenceCitation": "The main goal of the system is to compute coverage and interference per each bin. (Section 2 Model and Problem Definition)",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 6,
+              "PaperDescription": "Displays the 3D model of the environment with overlays of antennas, rays, and heat maps representing coverage and interference levels on a Kepler.gl-powered client interface.",
+              "Inputs": [
+                "Coverage map",
+                "Interference map",
+                "Ray trajectories",
+                "Antenna locations and parameters"
+              ],
+              "Outputs": [
+                "Interactive 3D geospatial visualization of radio propagation"
+              ],
+              "ReferenceCitation": "The visualization is by a Kepler.gl geospatial analysis tool. We implemented our own purpose-built libraries that support the presentation of objects like antennas and rays on top of Kepler.gl. (Section 4 System and Demo)",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Overlay (Ray Animation)",
+              "ID": 7,
+              "PaperDescription": "Plays the simulated propagation of electromagnetic rays as a video-like animation by displaying rays with time-stamped points and their progression through the environment.",
+              "Inputs": [
+                "Ray trajectories with time stamps"
+              ],
+              "Outputs": [
+                "Animated visualization of ray propagation"
+              ],
+              "ReferenceCitation": "Playable ray tracing. The tool can play the expansion of the radiation, to show where reflections and other effects of obstacles occur. (Section 3 Ray Tracing)",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Parameter Selection",
+              "ID": 8,
+              "PaperDescription": "Allows users to modify antenna parameters (e.g., power, azimuth, tilt) and explore the effect of these changes on coverage and interference in real-time through the visualization interface.",
+              "Inputs": [
+                "User interaction with antenna configuration"
+              ],
+              "Outputs": [
+                "Updated antenna configuration",
+                "Triggered forward ray tracing recomputation"
+              ],
+              "ReferenceCitation": "The visualization layer presents this to the user and supports interactions with users, to modify parameters and test the effect of changes on the result. (Section 4 System and Demo)",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Bin Selection",
+              "ID": 9,
+              "PaperDescription": "Enables users to select specific bins (locations) on the map to perform inverse ray tracing and identify the contributing antennas and transmission paths affecting that location.",
+              "Inputs": [
+                "User selection of map bin"
+              ],
+              "Outputs": [
+                "Selected bin for inverse ray tracing",
+                "Contributing antennas and paths"
+              ],
+              "ReferenceCitation": "Inverse ray tracing allows network planners to interactively test different plans, antenna locations and parameters, and for each setting, examine the effect of antenna parameters on coverage and interference. (Section 3 Ray Tracing)",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

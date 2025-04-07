@@ -1,0 +1,240 @@
+{
+  "PaperTitle": "A visual analytics design for studying rhythm patterns from human daily movement data",
+  "Year": 2017,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Public Transportation",
+              "ID": 1,
+              "PaperDescription": "Loads one-week passenger movement data from Singapore's public transportation system, including subway and bus rides, with attributes such as card ID, journey ID, tap-in/out times, and stops.",
+              "Inputs": [
+                "Raw public transportation ride records (card ID, journey ID, tap-in/out times, tap-in/out stops)"
+              ],
+              "Outputs": [
+                "Structured itineraries of passenger movements, including journeys and stays"
+              ],
+              "ReferenceCitation": "Section 3.2: 'The data is a one-week passenger movement data over the public transportation in Singapore, including both subway and bus rides.'",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "MIT Reality Mining",
+              "ID": 2,
+              "PaperDescription": "Loads location data from MIT Reality Mining dataset, including cell tower sequences with timestamped records, organized into itineraries.",
+              "Inputs": [
+                "Raw MIT Reality Mining records (cell tower sequence numbers, timestamps)"
+              ],
+              "Outputs": [
+                "Structured itineraries with journeys and stays derived from location changes"
+              ],
+              "ReferenceCitation": "Section 3.2: 'The MIT Reality Mining Data: The project was conducted on 94 subjects at MIT Media Laboratory... We select the locations and times of individual subject, and organize them into itineraries.'",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Indexer",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatiotemporal Indexing",
+              "ID": 3,
+              "PaperDescription": "Builds a hashing-based spatial and temporal index for efficient filtering of itineraries within user-defined time periods and areas of interest.",
+              "Inputs": [
+                "Structured itineraries of passenger movements"
+              ],
+              "Outputs": [
+                "Indexed data structure for time and spatial queries",
+                "Filtered journey origin/destination data"
+              ],
+              "ReferenceCitation": "Section 4.1: 'To support interactive spatial and temporal queries against user-defined time period △t and area of interest AOI, we use a hashing-based indexing method rather than scanning through every itinerary in the massive movement data.'",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Movement Rhythm Identification",
+              "ID": 4,
+              "PaperDescription": "Identifies movement rhythms from itineraries by mapping journeys and stays to region labels and abstracting the sequence into rhythm motifs (e.g., A → B → A).",
+              "Inputs": [
+                "Indexed data structure for time and spatial queries"
+              ],
+              "Outputs": [
+                "Movement rhythm sequences for each itinerary"
+              ],
+              "ReferenceCitation": "Section 4.3: 'After we do the labeling for all stops, ... we can model an itinerary as... In the end, we can construct a hierarchical tree structure that organizes all itineraries.'",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Tree Construction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Rhythm Tree Construction",
+              "ID": 5,
+              "PaperDescription": "Organizes identified movement rhythms into a hierarchical tree structure using a new tree construction algorithm based on the association rule concept from the Apriori algorithm.",
+              "Inputs": [
+                "Movement rhythm sequences for each itinerary"
+              ],
+              "Outputs": [
+                "Hierarchical tree structure of movement rhythms"
+              ],
+              "ReferenceCitation": "Section 4.4: 'We employ the association rule concept from the Apriori algorithm (Agrawal and Srikant, 1994), and devise a rhythm tree construction algorithm that works as follows.'",
+              "FeedsInto": [
+                6,
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 6,
+              "PaperDescription": "Displays the percentage distribution of the 12 most frequent movement rhythms using bar charts and rhythm glyphs.",
+              "Inputs": [
+                "Hierarchical tree structure of movement rhythms"
+              ],
+              "Outputs": [
+                "Bar chart showing rhythm statistics"
+              ],
+              "ReferenceCitation": "Section 5.2: 'The view lists these 12 rhythms ... For each rhythm, the view presents a unique glyph ... illustrating the movement pattern.'",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Tree Diagram",
+              "ID": 7,
+              "PaperDescription": "Presents movement rhythms over time in a tree-based flow diagram showing sequences, durations, and volumes in the Rhythm Sequence View.",
+              "Inputs": [
+                "Hierarchical tree structure of movement rhythms"
+              ],
+              "Outputs": [
+                "Flow map showing temporal sequences and durations"
+              ],
+              "ReferenceCitation": "Section 5.4: 'The tree is represented as a flow map ... where the nodes representing stays ... and links representing journeys ...'",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 8,
+              "PaperDescription": "Displays journey origins and destinations in the Rhythm Density View overlaid on a 2D city map.",
+              "Inputs": [
+                "Base map geometry with road and subway network layers"
+              ],
+              "Outputs": [
+                "Base map visualization for spatial exploration"
+              ],
+              "ReferenceCitation": "Section 5.3: 'The view is basically a density map overlaid on top of a base map with road network shown as connected lines.'",
+              "FeedsInto": [
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 9,
+              "PaperDescription": "Overlays kernel density estimation (KDE) maps indicating journey origin and destination densities on the 2D base map.",
+              "Inputs": [
+                "Filtered journey origin/destination data from Spatial and Temporal Indexing",
+                "Base map visualization from Map 2D"
+              ],
+              "Outputs": [
+                "Density map overlay visualizing origin/destination distributions"
+              ],
+              "ReferenceCitation": "Section 5.3: 'The density map ... generated with kernel density estimation (KDE).'",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 10,
+              "PaperDescription": "Allows analysts to filter itineraries by selecting regions of interest directly on the Rhythm Density View using a lasso tool or administrative region selection.",
+              "Inputs": [
+                "User-selected geographic areas"
+              ],
+              "Outputs": [
+                "Filtered itineraries within selected regions"
+              ],
+              "ReferenceCitation": "Section 5.6: 'Analysts can filter itineraries starting from one or multiple regions ... using a lasso tool ...'",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Temporal Filter",
+              "ID": 11,
+              "PaperDescription": "Allows analysts to specify time intervals for filtering itineraries using an interactive time slider in the Rhythm Sequence View.",
+              "Inputs": [
+                "User-specified time intervals"
+              ],
+              "Outputs": [
+                "Filtered itineraries within selected time periods"
+              ],
+              "ReferenceCitation": "Section 5.6: 'Analysts can also specify a time period for exploration by adjusting the interactive time slider ...'",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Rhythm Selection",
+              "ID": 12,
+              "PaperDescription": "Enables analysts to select specific movement rhythms by clicking on rhythm glyphs in the Rhythm Statistic View or by connecting filtered regions sequentially in the Rhythm Density View.",
+              "Inputs": [
+                "User selection of rhythm glyphs or region connections"
+              ],
+              "Outputs": [
+                "Subset of itineraries matching the selected rhythm"
+              ],
+              "ReferenceCitation": "Section 5.6: 'A specific movement rhythm can be selected by clicking on the corresponding rhythm glyph ... or by connecting the filtered regions sequentially in the Rhythm Density View.'",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

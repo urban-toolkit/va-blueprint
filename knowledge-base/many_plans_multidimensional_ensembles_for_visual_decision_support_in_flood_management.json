@@ -1,0 +1,268 @@
+{
+  "PaperTitle": "Many Plans: Multidimensional Ensembles for Visual Decision Support in Flood Management",
+  "Year": 2014,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Geometries",
+              "ID": 1,
+              "PaperDescription": "Loads urban 3D models of Cologne, including buildings, infrastructure objects, and terrains required for flood simulations and logistics planning.",
+              "Inputs": [
+                "3D building models",
+                "City terrain models"
+              ],
+              "Outputs": [
+                "3D spatial models for simulation, prioritization, and visualization"
+              ],
+              "ReferenceCitation": "Section 3: The user starts with picking the domain of interest and marking the important areas. In our case, the domain corresponds to an urban area of Cologne (Figure 2).",
+              "FeedsInto": [
+                2,
+                3,
+                4,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Prioritization",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Interactive Prioritization",
+              "ID": 2,
+              "PaperDescription": "Allows users to assign priority values (between 0 and 1) to areas of interest by sketching lines on the urban map. These priorities influence the scenario ranking and protection evaluations.",
+              "Inputs": [
+                "User sketches",
+                "Priority values"
+              ],
+              "Outputs": [
+                "Prioritized areas with assigned importance values"
+              ],
+              "ReferenceCitation": "Section 3: The areas of special importance are identified using an interactive prioritization mechanism. The domain is marked out with sketched lines, and priority values between 0 and 1 are assigned to the resulting areas.",
+              "FeedsInto": [
+                3,
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Simulation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Continuous World Lines",
+              "ID": 3,
+              "PaperDescription": "Manages multidimensional, time-dependent flood simulation ensembles, allowing selection, navigation, and visualization of ensemble members across multiple parameters such as water level, overtopping duration, and start time.",
+              "Inputs": [
+                "Flood simulation parameters (e.g., water level, start time, duration)"
+              ],
+              "Outputs": [
+                "Multidimensional ensemble visualization and selection interface"
+              ],
+              "ReferenceCitation": "Section 4.1: We present a novel approach to creating, visualizing, and navigating multidimensional, time-dependent ensembles: Continuous World Lines (CWL).",
+              "FeedsInto": [
+                8,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Combinatorial Ensembles",
+              "ID": 4,
+              "PaperDescription": "Generates ensembles for combinations of barrier positions and barrier types based on user-defined sketches. It automates the creation of all possible combinations of barriers to protect prioritized infrastructure.",
+              "Inputs": [
+                "User-sketched barrier positions",
+                "Barrier type options (sandbags, AquaBarrier, AquaRiwa)"
+              ],
+              "Outputs": [
+                "Scenarios with all possible barrier location and type combinations"
+              ],
+              "ReferenceCitation": "Section 4.2: We propose a combinatorial ensembles approach to speed up this workflow. The user defines the search space by sketching into the scene rendering all barrier locations that might be useful to protect the important infrastructure.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Logistics Computation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Logistics Planning",
+              "ID": 6,
+              "PaperDescription": "Calculates optimal transportation and construction plans for delivering materials and constructing barriers, solving a capacitated vehicle routing problem with constraints such as truck capacity, depot locations, and resource availability.",
+              "Inputs": [
+                "Barrier construction plans",
+                "Depot locations",
+                "Truck availability and material stock"
+              ],
+              "Outputs": [
+                "Optimized delivery routes and construction schedules"
+              ],
+              "ReferenceCitation": "Section 5.3: Our logistics problem can be formulated as finding the 'optimal' sequence of events to satisfy the demands of all logistics destinations.",
+              "FeedsInto": [
+                8,
+                9,
+                13,
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 8,
+              "PaperDescription": "Displays a 3D model of Cologne including barrier placements, truck movements, construction progress, and flood impacts. Includes overlays for barrier statuses and delivery routes.",
+              "Inputs": [
+                "3D Geometries",
+                "Barrier placements",
+                "Logistics plans"
+              ],
+              "Outputs": [
+                "Interactive 3D visualization of flood response plans and logistics"
+              ],
+              "ReferenceCitation": "Section 5.4 and Figure 8a: For any selected time step, the system calculates the corresponding positions of the trucks and renders them schematically into the 3D-model of the city.",
+              "FeedsInto": [
+                11,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Truck Routes)",
+              "ID": 13,
+              "PaperDescription": "Overlays truck delivery routes in the 3D scene, including route trajectories, delivery destinations, and status indicators for ongoing deliveries.",
+              "Inputs": [
+                "Truck logistics plans",
+                "Depot locations"
+              ],
+              "Outputs": [
+                "Truck routes and delivery path visualizations"
+              ],
+              "ReferenceCitation": "Section 5.4 and Figure 8a: Colored lines indicate the current route for each truck. Overlapping routes are stacked. Progress bars in labels show the status.",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Barrier Status)",
+              "ID": 14,
+              "PaperDescription": "Overlays information about the construction progress and status of barriers, including completed barriers, barriers under construction, and barriers that have failed due to high water levels.",
+              "Inputs": [
+                "Barrier construction data",
+                "Simulation water levels"
+              ],
+              "Outputs": [
+                "Barrier status visualization (completed, under construction, failed)"
+              ],
+              "ReferenceCitation": "Section 5.4 and Figure 8c: Other labels indicate the barrier types at logistics destinations and the construction progress.",
+              "FeedsInto": [
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Ranking View",
+              "ID": 9,
+              "PaperDescription": "Displays a ranked list of flood protection plans based on weighted criteria such as protection level, costs, and construction time. Uses horizontal stacked bar charts for quick comparison.",
+              "Inputs": [
+                "Plan metrics (protection, costs, construction time)"
+              ],
+              "Outputs": [
+                "Ranked visualization of plans for decision support"
+              ],
+              "ReferenceCitation": "Section 6.1 and Figure 10: The quality of a plan is computed as a weighted sum of the values characterizing protection, costs, and construction time.",
+              "FeedsInto": [
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Embedded Visualization in CWL",
+              "ID": 10,
+              "PaperDescription": "Displays protection levels, construction times, and costs directly on ensemble dimension sliders within the CWL interface, supporting quick comparison of ensemble members.",
+              "Inputs": [
+                "Ensemble member metrics (protection, costs, construction time)"
+              ],
+              "Outputs": [
+                "Color-coded indicators on ensemble dimension sliders"
+              ],
+              "ReferenceCitation": "Section 6.1 and Figure 11: The CWL interface is capable of visualizing the values for protection, costs, and construction time on top of ensemble dimensions.",
+              "FeedsInto": [
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Plan Selection",
+              "ID": 11,
+              "PaperDescription": "Allows the user to select one or multiple flood response plans from the ranked list for further inspection in linked views such as 3D visualization and CWL navigation.",
+              "Inputs": [
+                "User selection in Ranking View"
+              ],
+              "Outputs": [
+                "Selected plan for detailed analysis in 3D scene and CWL"
+              ],
+              "ReferenceCitation": "Section 6.1: The view enables selection of plans to analyze their properties in linked views.",
+              "FeedsInto": [
+                3,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Ensemble Sliders and Time Cursor",
+              "ID": 12,
+              "PaperDescription": "Enables the user to navigate temporal and ensemble dimensions using interactive sliders and a time cursor, updating the 3D visualization and plan metrics accordingly.",
+              "Inputs": [
+                "User slider adjustments",
+                "Time cursor dragging"
+              ],
+              "Outputs": [
+                "Selected ensemble member and time step for visualization"
+              ],
+              "ReferenceCitation": "Section 4.4 and Figure 5: An interactive time cursor provides a clear indication of the selected time step that is shown in all linked views.",
+              "FeedsInto": [
+                3,
+                8,
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

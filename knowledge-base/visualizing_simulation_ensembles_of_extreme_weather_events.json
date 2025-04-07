@@ -1,0 +1,234 @@
+{
+  "PaperTitle": "Visualizing simulation ensembles of extreme weather events",
+  "Year": 2022,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Weather Simulation Ensemble",
+              "ID": 1,
+              "PaperDescription": "Loads ensemble weather simulation data, each member varying by physical process parametrization, extracted from NetCDF files and stored as CSV files for lightweight manipulation.",
+              "Inputs": [
+                "NetCDF files containing weather simulation data"
+              ],
+              "Outputs": [
+                "In-memory data structure with ensemble members and output variables"
+              ],
+              "ReferenceCitation": "Section 6 Data management: Numerical weather models generate and store simulation outputs in NetCDF files. Different outputs are stored in a single file, but only a few of them might be relevant for analysis. For this reason, in this work, the outputs of interest were extracted from NetCDF files and stored as CSV files, which are reduced, light, and easily manipulated.",
+              "FeedsInto": [
+                2,
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Aggregation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatiotemporal Ensemble Aggregation",
+              "ID": 2,
+              "PaperDescription": "Performs on-the-fly aggregation of ensemble members' output variables by spatial region and/or temporal step, enabling statistical summaries like averages and percentiles, as well as scenario probabilities.",
+              "Inputs": [
+                "Ensemble members' spatiotemporal data",
+                "User-defined spatial/temporal constraints"
+              ],
+              "Outputs": [
+                "Aggregated statistics (e.g., mean, percentiles, probabilities) over the ensemble data"
+              ],
+              "ReferenceCitation": "Section 6 Data management: The X-Weather system's visual interface requires on-the-fly computation of user-defined scenario probabilities and summary statistics (e.g., average and percentiles of the ensemble members).",
+              "FeedsInto": [
+                3,
+                4,
+                5,
+                6,
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Preprocessing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Caching (Statistical Summaries)",
+              "ID": 12,
+              "PaperDescription": "Caches statistical summaries and probabilities of ensemble outputs to accelerate query response times when the entire grid is considered.",
+              "Inputs": [
+                "Precomputed statistical summaries",
+                "Full grid ensemble data"
+              ],
+              "Outputs": [
+                "Cached data structures for rapid retrieval of summary statistics and probabilities"
+              ],
+              "ReferenceCitation": "Section 6 Data management: To accelerate the response times when the entire grid is considered, we cache the statistical summaries and probabilities of the output variables.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Heat Matrix",
+              "ID": 3,
+              "PaperDescription": "Displays summary statistics or scenario probabilities over time for each ensemble member, allowing weather experts to detect critical time periods and member group patterns.",
+              "Inputs": [
+                "Aggregated ensemble data over time",
+                "User-selected output variable"
+              ],
+              "Outputs": [
+                "Heat matrix visualization (ensemble members vs. time steps)"
+              ],
+              "ReferenceCitation": "Section 7.1 Temporal overview: This component is composed of heat matrices each one representing a subset of simulations. Each column of a matrix corresponds to a simulation, and each cell of a column an instant in time.",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 4,
+              "PaperDescription": "Displays the temporal evolution of ensemble member groups by plotting mean and twice the standard deviation over time, supporting the detection of extreme event windows.",
+              "Inputs": [
+                "Aggregated ensemble statistics over time",
+                "User-selected parametrization groups"
+              ],
+              "Outputs": [
+                "Line chart visualization (mean and standard deviation over time)"
+              ],
+              "ReferenceCitation": "Section 7.3 Distribution view: In the first widget (Fig. 5(top)), the ensemble data is aggregated in the spatial dimension, and grouped by simulations. Each group is represented by different line color and represents an active statistical measurement of the data over time.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Histogram",
+              "ID": 5,
+              "PaperDescription": "Displays the probability mass functions of two groups of ensemble members for a selected time step and adjacent steps, enabling a focused temporal comparison of extreme weather event likelihoods.",
+              "Inputs": [
+                "Aggregated data from ensemble groups",
+                "User-selected time step"
+              ],
+              "Outputs": [
+                "Histogram visualization for current, previous, and next time steps"
+              ],
+              "ReferenceCitation": "Section 7.3 Distribution view: The histogram at the center of the widget represents the instant of time selected in the Temporal Overview; the histograms on the left and right correspond to the time step immediately before and after the time instant of interest, respectively.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 6,
+              "PaperDescription": "Displays the spatial distribution of atmospheric variables at a selected time step for two groups of ensemble members, including difference maps to highlight variations.",
+              "Inputs": [
+                "Aggregated spatial data for ensemble groups",
+                "User-selected atmospheric variable and time step"
+              ],
+              "Outputs": [
+                "2D spatial map visualizations with statistical summaries or probabilities"
+              ],
+              "ReferenceCitation": "Section 7.2 Spatial view: This component displays a set of heat maps showing the spatial distribution of an atmospheric variable at a particular time instant, enabling the weather forecaster to perform analyses of the ensemble data in the spatial dimension.",
+              "FeedsInto": [
+                8
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 9,
+              "PaperDescription": "Lens tool allows the user to explore two output variables and/or aggregation methods simultaneously—one shown in the entire domain and the other inside the lens, supporting conditional probability analysis.",
+              "Inputs": [
+                "Aggregated data from ensemble members",
+                "User lens placement and selected variables"
+              ],
+              "Outputs": [
+                "Conditional probability or variable comparison overlay inside lens region"
+              ],
+              "ReferenceCitation": "Section 7.2 Spatial view: This view also provides a lens functionality: the user moves the lens, and the area within it shows a variable while the outside area shows another one. This is highlighted in Fig. 4.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 7,
+              "PaperDescription": "Enables the user to select one or more time steps in the Temporal Overview to constrain spatial and distribution visualizations to the selected period.",
+              "Inputs": [
+                "User click on Temporal Overview row labels"
+              ],
+              "Outputs": [
+                "Time step constraints applied to Spatial and Distribution Views"
+              ],
+              "ReferenceCitation": "Section 7.1 Temporal overview: The Temporal Overview enables the user to add temporal constraints by selecting specific time steps of interest, which will update both the Spatial View as well as the Distribution View (see Fig. 3).",
+              "FeedsInto": [
+                2
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 8,
+              "PaperDescription": "Allows the user to define a region of interest on the Spatial View, filtering data aggregation and updates in Temporal Overview and Distribution Views accordingly.",
+              "Inputs": [
+                "User brush on Spatial View map"
+              ],
+              "Outputs": [
+                "Spatial constraints applied to Temporal Overview and Distribution Views"
+              ],
+              "ReferenceCitation": "Section 7.2 Spatial view: Again, it is possible to explore scenario probabilities (R2), comparison of ensemble member groups in the spatial dimension (R3), and spatiotemporal patterns (R1), since a spatial constraint updates the other views of the interface.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Configuration",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Configuration Panel",
+              "ID": 10,
+              "PaperDescription": "Menu interface for configuring system parameters including the active output variable, aggregation function, and the selection of parametrization groupings.",
+              "Inputs": [
+                "User selections (output variable, aggregation method, parametrization group)"
+              ],
+              "Outputs": [
+                "Updated visualizations across Temporal, Spatial, and Distribution Views"
+              ],
+              "ReferenceCitation": "Section 7 Visual exploration interface: The interface also contains a menu that allows the user to change the system parameters. When the system starts, those parameters have been previously selected by default, and the user can change them to perform the analysis.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

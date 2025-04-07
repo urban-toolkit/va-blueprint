@@ -1,0 +1,258 @@
+{
+  "PaperTitle": "Vis-A-Ware: Integrating Spatial and Non-Spatial Visualization for Visibility-Aware Urban Planning",
+  "Year": 2017,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Geometries",
+              "ID": 1,
+              "PaperDescription": "Loads a 3D city model and a digital elevation model of the terrain for visibility analysis.",
+              "Inputs": [
+                "3D city model",
+                "Digital elevation model"
+              ],
+              "Outputs": [
+                "3D scene geometry for visibility analysis"
+              ],
+              "ReferenceCitation": "Section 5.1: The cityscape, where the visibility analysis is performed, is represented through a 3D city model and a digital elevation model of the terrain.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Data Modeling",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Evaluation Matrix",
+              "ID": 2,
+              "PaperDescription": "Organizes candidates, viewpoints, and VIMs into an n x m matrix, allowing lookup, transposition, and interaction in different major/minor modes.",
+              "Inputs": [
+                "Candidates",
+                "Viewpoints",
+                "VIM metrics"
+              ],
+              "Outputs": [
+                "Evaluation data matrix"
+              ],
+              "ReferenceCitation": "Section 5.1: The entire evaluation data can be organized in an n x m matrix, where n and m are the numbers of candidates and viewpoints, respectively (see Fig. 3a).",
+              "FeedsInto": [
+                3,
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Quantification",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Visual Impact Metrics",
+              "ID": 3,
+              "PaperDescription": "Calculates four Visual Impact Metrics (VIMs): landmark occlusion, candidate visibility, openness occlusion, and sky occlusion, based on false color renderings from various viewpoints.",
+              "Inputs": [
+                "False color renderings",
+                "Rendered images with candidates"
+              ],
+              "Outputs": [
+                "Raw VIM values for each candidate-viewpoint pair"
+              ],
+              "ReferenceCitation": "Section 5.2: We render the view from the respective viewpoint in false colors ... we get the area each component covers in the rendering from the current viewpoint.",
+              "FeedsInto": [
+                4
+              ]
+            },
+            {
+              "GranularBlockName": "Normalization and Binning",
+              "ID": 4,
+              "PaperDescription": "Normalizes and bins the raw VIM values into percentage classes (low, medium, high, very high) for intuitive interpretation and comparison.",
+              "Inputs": [
+                "Raw VIM values"
+              ],
+              "Outputs": [
+                "Normalized and binned VIM data"
+              ],
+              "ReferenceCitation": "Section 5.3: After normalization, the VIM values are scaled to percentages and are binned into four classes: [0-25], [25-50], [50-75], and [75-100], which we denote as low, medium, high, and very high, respectively.",
+              "FeedsInto": [
+                5,
+                6,
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 5,
+              "PaperDescription": "Displays the 3D geovirtual environment with candidate buildings, landmarks, and viewpoints, enabling spatial context exploration and candidate assessment.",
+              "Inputs": [
+                "3D city model",
+                "Candidate geometries",
+                "Viewpoint locations",
+                "Normalized VIM data"
+              ],
+              "Outputs": [
+                "Interactive 3D scene visualization"
+              ],
+              "ReferenceCitation": "Section 7.2: The 3D spatial view depicts a 3D geovirtual environment, consisting of a city model, landmarks, candidate buildings, and circular glyphs representing the positions of the viewpoints.",
+              "FeedsInto": [
+                10,
+                11,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Glyph (Viewpoints)",
+              "ID": 6,
+              "PaperDescription": "Displays circular glyphs at viewpoint locations showing the number of high-ranking candidates and their VIM distributions; size encodes coverage.",
+              "Inputs": [
+                "Normalized VIM data",
+                "Viewpoint positions"
+              ],
+              "Outputs": [
+                "Viewpoint glyphs with VIM highlights"
+              ],
+              "ReferenceCitation": "Section 7.2: We display an aggregated view of the candidate distribution in each viewpoint as a circular glyph.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Transposable Ranking View (TRV)",
+              "ID": 7,
+              "PaperDescription": "Tabular view showing candidates or viewpoints as rows and VIMs as columns; supports ranking, filtering, focus/context highlighting, and transpose between candidate-major and viewpoint-major modes.",
+              "Inputs": [
+                "Normalized and binned VIM data"
+              ],
+              "Outputs": [
+                "Tabular view of ranked candidates and viewpoints with VIM distributions"
+              ],
+              "ReferenceCitation": "Section 7.1: The TRV is a tabular view, where the rows either represent candidates or viewpoints... while the individual VIMs determine the columns of this table.",
+              "FeedsInto": [
+                9,
+                10,
+                11,
+                12
+              ]
+            },
+            {
+              "GranularBlockName": "Filmstrip",
+              "ID": 8,
+              "PaperDescription": "Displays side-by-side candidate renderings from selected viewpoints to support qualitative evaluation and comparison.",
+              "Inputs": [
+                "Rendered images of candidates from viewpoints"
+              ],
+              "Outputs": [
+                "Side-by-side qualitative comparison images"
+              ],
+              "ReferenceCitation": "Section 7.3: We chose a filmstrip metaphor... to display the images which are associated with each evaluation in a side-by-side layout as depicted in Fig. 1c.",
+              "FeedsInto": [
+                11,
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Selection",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Focus, Filter, and Transpose",
+              "ID": 9,
+              "PaperDescription": "Allows users to focus on specific candidates or viewpoints, filter out less relevant entities, and transpose between candidate-major and viewpoint-major modes in the TRV.",
+              "Inputs": [
+                "User selections on TRV"
+              ],
+              "Outputs": [
+                "Updated TRV with filtered candidates/viewpoints and focus-context distinction"
+              ],
+              "ReferenceCitation": "Section 7.1.2: The workflow supported by the TRV is a sequence of focus, filter, and transpose interactions which allow users to investigate evaluations with respect to candidates and viewpoints.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Viewpoint Navigation",
+              "ID": 10,
+              "PaperDescription": "Allows users to navigate to a selected viewpoint in the 3D spatial view to assess spatial relations and candidate impacts.",
+              "Inputs": [
+                "User interaction (click on TRV arrow icon)"
+              ],
+              "Outputs": [
+                "Updated camera view in 3D scene"
+              ],
+              "ReferenceCitation": "Section 7.1.5: The TRV in viewpoint-major mode features an arrow-icon, which if clicked changes the perspective of the 3D spatial view to match the perspective of the selected viewpoint.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Linked Highlighting",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Peek-Brush Highlighting",
+              "ID": 11,
+              "PaperDescription": "Hovering on a candidate or viewpoint in TRV, filmstrip, or 3D view highlights the corresponding entity across all views for coordinated exploration.",
+              "Inputs": [
+                "Hover events from TRV, 3D spatial view, or filmstrip"
+              ],
+              "Outputs": [
+                "Highlighted candidates or viewpoints across coordinated views"
+              ],
+              "ReferenceCitation": "Section 7.1.1: Peek-brush interaction... shows the occurrence of the respective candidate in all other VIM distributions by showing the candidate’s letter in the stacked bar chart.",
+              "FeedsInto": []
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Coordinated Multiple Views",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Integrated Interaction",
+              "ID": 12,
+              "PaperDescription": "Selecting elements in TRV triggers updates in the 3D spatial view (viewpoint navigation and candidate highlight) and in the filmstrip for qualitative inspection.",
+              "Inputs": [
+                "Selection events in TRV"
+              ],
+              "Outputs": [
+                "Synchronized view updates in 3D spatial view and filmstrip"
+              ],
+              "ReferenceCitation": "Section 7.1.5: The ranking, the filtering, and the peek-selection are coordinated with the 3D spatial view and the filmstrip.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

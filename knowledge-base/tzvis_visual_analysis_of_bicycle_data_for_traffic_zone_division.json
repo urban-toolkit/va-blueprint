@@ -1,0 +1,285 @@
+{
+  "PaperTitle": "TZVis: visual analysis of bicycle data for traffic zone division",
+  "Year": 2019,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Shared Bicycle",
+              "ID": 1,
+              "PaperDescription": "Loads shared bicycle spatiotemporal OD data records, including departure and arrival locations, and times, from the raw dataset.",
+              "Inputs": [
+                "Raw shared bicycle dataset"
+              ],
+              "Outputs": [
+                "Preprocessed spatiotemporal OD dataset (DepartTime, DepartLoc, ArriveLoc, ArriveTime)"
+              ],
+              "ReferenceCitation": "Section 4.1 Shared bicycle data: In this work, we employed the shared bicycle dataset which contains more than 10 million records. In one raw shared bicycle data records, the most vital parameters are [DepartTime, DepartLoc, ArriveLoc, DBTime].",
+              "FeedsInto": [
+                3,
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Street Network",
+              "ID": 2,
+              "PaperDescription": "Loads road network data focusing on major roads and intersections to be used as constraints in traffic zone division.",
+              "Inputs": [
+                "Road network dataset (major roads and crossings)"
+              ],
+              "Outputs": [
+                "Processed road network dataset (major road points, intersections)"
+              ],
+              "ReferenceCitation": "Section 4.2 Road network data: In our work, we only collect the major roads and the crossings where a major road cross another major road.",
+              "FeedsInto": [
+                3,
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Traffic Hotspots",
+              "ID": 3,
+              "PaperDescription": "Detects traffic hot spots by applying K-means clustering on the OD data to determine meta-centers as key regions for zone division.",
+              "Inputs": [
+                "Preprocessed OD dataset",
+                "Processed road network dataset"
+              ],
+              "Outputs": [
+                "Meta-centers for traffic zones"
+              ],
+              "ReferenceCitation": "Section 5.2.1 Extract traffic hot spots: In our research, a K-means clustering approach is employed on the spatiotemporal OD data that is preprocessed from the shared bicycle dataset. After clustering, we assume that the hot spots are the centers of the clusters.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Zone Generation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Traffic Zone Division",
+              "ID": 4,
+              "PaperDescription": "Generates traffic zones by analyzing traffic accessibility under road network constraints and assigns grid points to meta-centers based on constrained distances.",
+              "Inputs": [
+                "Meta-centers for traffic zones",
+                "Processed road network dataset"
+              ],
+              "Outputs": [
+                "Initial traffic zones with assigned grid points"
+              ],
+              "ReferenceCitation": "Section 5.2.2 Analyze the traffic accessibility under constraints of the road network: During division, we divide the area into multiple small grids with a side length of 50 meters and further analyze the traffic accessibility among the meta-centers and grid points.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Boundary Fusion",
+              "ID": 5,
+              "PaperDescription": "Refines boundaries of traffic zones by calculating concave hulls and eliminating gaps or intersections between adjacent zones.",
+              "Inputs": [
+                "Initial traffic zones with assigned grid points"
+              ],
+              "Outputs": [
+                "Refined traffic zones with adjusted boundaries"
+              ],
+              "ReferenceCitation": "Section 5.3 Boundary fuse: After calculating the concave shell and regarding it as the boundary of the meta-center, we find out that boundaries of two adjacent traffic cells may be different. There are still small intersections and blank areas on adjacent boundaries because we employ the concave shell algorithm on the grid points to generate the boundaries.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Regional and Scheme Indicators Calculation",
+              "ID": 6,
+              "PaperDescription": "Calculates four regional indicators (attraction, influence, openness, stability) for each traffic zone and five scheme indicators for division schemes (average attraction, influence, openness, stability, usability).",
+              "Inputs": [
+                "Refined traffic zones with adjusted boundaries",
+                "Preprocessed OD dataset"
+              ],
+              "Outputs": [
+                "Regional indicators and scheme indicators"
+              ],
+              "ReferenceCitation": "Section 4.3 Regional indicator and Section 4.3.4 Stability: We propose four regional indicators that extracted from raw traffic flow data. We also propose five scheme indicators to evaluate the division schemes.",
+              "FeedsInto": [
+                7,
+                8,
+                9,
+                10,
+                11,
+                12
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 7,
+              "PaperDescription": "Displays the traffic zone division results and spatiotemporal OD data (OD points or hot spots) on a map for spatial analysis.",
+              "Inputs": [
+                "Refined traffic zones with adjusted boundaries",
+                "OD event points",
+                "Regional indicators"
+              ],
+              "Outputs": [
+                "Interactive 2D map with zone boundaries and OD points"
+              ],
+              "ReferenceCitation": "Section 6.3.1 Traffic zone visualization - Map overview: TZVis provides a map view to display the results of traffic zone division and the spatiotemporal OD data extracted from traffic flow data.",
+              "FeedsInto": [
+                13
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Matrix",
+              "ID": 8,
+              "PaperDescription": "Visualizes the traffic flow volume between traffic zones in a matrix view where rows and columns represent zones and cell color encodes flow magnitude.",
+              "Inputs": [
+                "Traffic flow matrix between zones",
+                "Regional indicators"
+              ],
+              "Outputs": [
+                "Matrix view of inter-zone traffic flows"
+              ],
+              "ReferenceCitation": "Section 6.3.1 Matrix view: TZVis provides a matrix view to show the traveling flow volume among traffic zones. Each grid in the matrix represents the traveling flow between two traffic zones.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Parallel Coordinates Plot",
+              "ID": 9,
+              "PaperDescription": "Displays the detailed shared bicycle records in parallel coordinates for analyzing temporal and spatial patterns of traffic flows.",
+              "Inputs": [
+                "Filtered OD trip records (departure region, arrival region, travel time, speed)"
+              ],
+              "Outputs": [
+                "Parallel coordinates plot of traffic records"
+              ],
+              "ReferenceCitation": "Section 6.3.1 Parallel coordinates plot: TZVis provides a parallel coordinates plot to show the shared bicycle records in detail. Users can analyze the time and speed features about traffic flow of the traffic zones.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Bar Chart",
+              "ID": 10,
+              "PaperDescription": "Visualizes and compares multiple traffic zone division schemes using bar charts for five scheme indicators to assist decision-making.",
+              "Inputs": [
+                "Scheme indicators for all division schemes"
+              ],
+              "Outputs": [
+                "LineUp view of scheme indicators for multiple division schemes"
+              ],
+              "ReferenceCitation": "Section 6.3.1 LineUp view: TZVis provides a LineUp view to show the features of all the division schemes. Users can analyze the difference of division schemes with LineUp view.",
+              "FeedsInto": [
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Radar Chart",
+              "ID": 11,
+              "PaperDescription": "Displays regional indicators of a selected traffic zone in a radar chart for intuitive understanding of its characteristics.",
+              "Inputs": [
+                "Regional indicators"
+              ],
+              "Outputs": [
+                "Radar chart visualizing regional indicators (attraction, influence, openness, stability)"
+              ],
+              "ReferenceCitation": "Section 6.3.1 Radar chart: TZVis provides a radar chart to show the regional indicators of each traffic zone.",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 12,
+              "PaperDescription": "Uses t-SNE dimensionality reduction to display the similarity between traffic zones in a 2D scatter plot, colored by a selected attribute.",
+              "Inputs": [
+                "Regional indicators (attraction, influence, openness, stability)",
+                "Similarity measures between zones"
+              ],
+              "Outputs": [
+                "t-SNE scatter plot showing similarity among traffic zones"
+              ],
+              "ReferenceCitation": "Section 6.3.1 The t-SNE plot: We use t-SNE to find the similarity and hidden patterns between zones based on seven attributes such as [Vin, Vout, Vself, Rattr, Rinf, Ropen, Rsta].",
+              "FeedsInto": [
+                13
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Traffic Zone Selection",
+              "ID": 13,
+              "PaperDescription": "Allows users to interactively select traffic zones in the t-SNE plot, matrix view, or map view to highlight corresponding data across views.",
+              "Inputs": [
+                "User selection of zones in visualization views"
+              ],
+              "Outputs": [
+                "Highlighted data in related views (Map, Parallel Coordinates, Radar, t-SNE, Matrix)"
+              ],
+              "ReferenceCitation": "Section 6.3.2 User interactions: TZVis highlights the related information of the POI to help users explore and analyze traffic zone.",
+              "FeedsInto": [
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Scheme Generation and Selection",
+              "ID": 14,
+              "PaperDescription": "Allows users to customize parameters and generate multiple traffic zone division schemes for comparative analysis.",
+              "Inputs": [
+                "User-defined parameters for division scheme generation"
+              ],
+              "Outputs": [
+                "Generated division schemes for analysis"
+              ],
+              "ReferenceCitation": "Section 6.3.2 Customize data of interest: TZVis allows users to customize the data of interest and generate traffic zone scheme based on the customized data.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,220 @@
+{
+  "PaperTitle": "Co-Visualization of Air Temperature and Urban Data for Visual Exploration",
+  "Year": 2020,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Geometries",
+              "ID": 1,
+              "PaperDescription": "Loads 3D urban model data, including buildings, roads, and their associated attributes like height, for visualization in a 3D scene.",
+              "Inputs": [
+                "GeoJSON files containing vertex coordinates of buildings and roads in Lambert-93 spatial reference system"
+              ],
+              "Outputs": [
+                "3D geometries of buildings and roads for rendering in a 3D scene"
+              ],
+              "ReferenceCitation": "Section 4 IMPLEMENTATION: Buildings and roads data are stored in GeoJSON files, providing for each feature their vertex coordinates in Lambert-93 (and the building's height).",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Temperature",
+              "ID": 2,
+              "PaperDescription": "Loads simulated air temperature data from atmospheric models stored in NetCDF files, including 3D grid coordinates and altitudes.",
+              "Inputs": [
+                "NetCDF files providing geographic coordinates, altitude, and temperature values for each 3D grid cell"
+              ],
+              "Outputs": [
+                "3D grid dataset of simulated air temperature values"
+              ],
+              "ReferenceCitation": "Section 4 IMPLEMENTATION: Temperature data are stored in NetCDF files, providing for each 3D cell its center's geographic coordinates and altitude.",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 3,
+              "PaperDescription": "Displays an interactive 3D city scene showing buildings, roads, and temperature data using different geometric proxies.",
+              "Inputs": [
+                "3D geometries of buildings and roads",
+                "Temperature data represented as geometric proxies"
+              ],
+              "Outputs": [
+                "Rendered 3D visualization of urban morphology and temperature data"
+              ],
+              "ReferenceCitation": "Section 3.3 Co-visualizing temperature and urban data: Temperature data can be co-visualized with the 3D urban model, which offers spatial contextualization.",
+              "FeedsInto": [
+                8,
+                9,
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Horizontal Planes)",
+              "ID": 4,
+              "PaperDescription": "Displays stacks of horizontal planes representing the horizontal distribution of temperature data at different height levels.",
+              "Inputs": [
+                "Temperature data at different altitudes"
+              ],
+              "Outputs": [
+                "Horizontal planes rendered in 3D scene showing temperature layers"
+              ],
+              "ReferenceCitation": "Section 3.1.1 Horizontal planes: In order to analyze and compare horizontal distributions at different height levels above the ground, temperature data are represented by stacks of horizontal planes.",
+              "FeedsInto": [
+                3,
+                8,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (3D Point Cloud)",
+              "ID": 5,
+              "PaperDescription": "Displays temperature data as 3D point clouds to reveal both horizontal and vertical temperature distributions while reducing occlusions.",
+              "Inputs": [
+                "Temperature data from 3D grid"
+              ],
+              "Outputs": [
+                "3D point clouds rendered in the 3D scene for temperature visualization"
+              ],
+              "ReferenceCitation": "Section 3.1.2 3D point clouds: Temperature data are represented by a point cloud filling the volume corresponding to the 3D cell.",
+              "FeedsInto": [
+                3,
+                8,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Road-based Vertical Planes)",
+              "ID": 6,
+              "PaperDescription": "Displays vertical planes along road networks showing temperature distribution along the vertical axis, supporting the analysis of vertical temperature gradients.",
+              "Inputs": [
+                "Temperature data values along road locations"
+              ],
+              "Outputs": [
+                "Vertical planes rendered along road networks showing temperature distributions"
+              ],
+              "ReferenceCitation": "Section 3.1.3 Road-based vertical planes: Temperature data are represented by vertical planes, of equivalent height of the 3D cells. The planes are located in the middle of urban roads.",
+              "FeedsInto": [
+                3,
+                8,
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Histogram",
+              "ID": 7,
+              "PaperDescription": "Interactive histogram showing the distribution of temperature values, allowing users to edit the temperature range and adjust the color scale in the 3D visualization.",
+              "Inputs": [
+                "Temperature data distributions"
+              ],
+              "Outputs": [
+                "Histogram with user-defined color scale linked to the 3D visualization"
+              ],
+              "ReferenceCitation": "Section 3.2 Visual analysis of temperature spatial distribution: We design an interactive histogram showing the visualized temperature values distribution, in which a discrete color scale can be associated with a value range.",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                8
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Attribute Selection",
+              "ID": 8,
+              "PaperDescription": "Allows users to filter temperature data based on value ranges, making specific data characteristics visually salient in the 3D scene.",
+              "Inputs": [
+                "User-defined temperature value ranges"
+              ],
+              "Outputs": [
+                "Filtered temperature data for visualization in 3D scene"
+              ],
+              "ReferenceCitation": "Section 3.2 Visual analysis of temperature spatial distribution: Data can be filtered according to their values, making visually salient some characteristics of the data.",
+              "FeedsInto": [
+                4,
+                5,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Animation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Animated Filtering",
+              "ID": 9,
+              "PaperDescription": "Enables animated filtering of temperature data by value or spatial position to identify potential spatial directions and gradients.",
+              "Inputs": [
+                "User-defined filters on temperature values or spatial locations"
+              ],
+              "Outputs": [
+                "Animated visualization highlighting spatial gradients and patterns"
+              ],
+              "ReferenceCitation": "Section 3.2 Visual analysis of temperature spatial distribution: The filtering of the data values can be animated, displaying different value intervals in time, in order to identify potential spatial directions.",
+              "FeedsInto": [
+                4,
+                5,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "3D Navigation",
+              "ID": 10,
+              "PaperDescription": "Allows users to freely navigate within the 3D urban model to explore temperature distributions at various scales and camera positions.",
+              "Inputs": [
+                "User navigation commands (pan, zoom, rotate)"
+              ],
+              "Outputs": [
+                "Updated 3D camera viewpoints in the visualization"
+              ],
+              "ReferenceCitation": "Section 3.3 Co-visualizing temperature and urban data: At any moment, the user could modify the camera view point and the required scale of visualization.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

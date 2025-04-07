@@ -1,0 +1,297 @@
+{
+  "PaperTitle": "Urban Pulse: Capturing the Rhythm of Cities",
+  "Year": 2017,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatiotemporal Images Dataset",
+              "ID": 1,
+              "PaperDescription": "Loads Flickr data including image metadata (timestamps and geolocations) to capture the dynamic events of the city",
+              "Inputs": [
+                "Raw Flickr data (images with spatiotemporal metadata)"
+              ],
+              "Outputs": [
+                "Structured spatiotemporal dataset for density function computation"
+              ],
+              "ReferenceCitation": "All the data sets used in this paper are composed of a set of data points over space and time. (Introduction / Section 3)",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "2D Features",
+              "ID": 2,
+              "PaperDescription": "Loads a planar mesh representing the city's spatial domain",
+              "Inputs": [
+                "Raw geographic data (e.g., city boundaries)"
+              ],
+              "Outputs": [
+                "Triangulated 2D mesh representing the city's spatial features"
+              ],
+              "ReferenceCitation": "Mesh representation of a city. Given a city, the mesh corresponding to it represents the bounding box... (Mesh Representation section)",
+              "FeedsInto": [
+                9,
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Prominent Density Feature Identification",
+              "ID": 3,
+              "PaperDescription": "Aggregates high-persistence topological features to identify prominent locations based on high density focusing on the computed density rather than using the author's pulse terminology",
+              "Inputs": [
+                "High-persistence topological features"
+              ],
+              "Outputs": [
+                "Identified prominent density features (i.e. locations with high density)"
+              ],
+              "ReferenceCitation": "a prominent location is a high persistent maximum of a function... (Section 4.1)",
+              "FeedsInto": [
+                4,
+                5,
+                6,
+                9
+              ]
+            },
+            {
+              "GranularBlockName": "Significant Density Profile",
+              "ID": 4,
+              "PaperDescription": "Derives a binary (0/1) sequence indicating, for each time step, whether a significant (high-persistence) maximum is present at the location",
+              "Inputs": [
+                "Density functions at the identified locations"
+              ],
+              "Outputs": [
+                "Binary sequence (significant density profile) per location"
+              ],
+              "ReferenceCitation": "Significant Beats Bs: This is a 0/1 sequence indicating the absence/presence of a high persistent maximum... (Section 4.2 adapted)",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Maxima Density Profile",
+              "ID": 5,
+              "PaperDescription": "Computes a binary sequence that records, for each time step, whether any local maximum is present at the location, regardless of persistence",
+              "Inputs": [
+                "Density functions at the identified locations"
+              ],
+              "Outputs": [
+                "Binary sequence (maxima density profile) per location"
+              ],
+              "ReferenceCitation": "Maxima Beats Bm: This is a 0/1 sequence indicating the absence/presence of a maximum at the location... (Section 4.2 adapted)",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Density Function Profile",
+              "ID": 6,
+              "PaperDescription": "Generates a continuous time series capturing the variation of the density function value at the location, representing the magnitude of density over time",
+              "Inputs": [
+                "Density functions at the identified locations"
+              ],
+              "Outputs": [
+                "Continuous time series (density function profile) per location"
+              ],
+              "ReferenceCitation": "Function Beats Bf: This is a time series showing the variation of the scalar function at that location... (Section 4.2 adapted)",
+              "FeedsInto": [
+                7,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Ranking",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "High-dimensional Density Feature Vector",
+              "ID": 7,
+              "PaperDescription": "Constructs a high-dimensional feature vector from the three density profiles (significant, maxima, and function) and computes an L2-norm rank to quantify overall density intensity",
+              "Inputs": [
+                "Combined density profiles across all resolutions"
+              ],
+              "Outputs": [
+                "Numeric rank score derived from the L2 norm of the density feature vector"
+              ],
+              "ReferenceCitation": "For a given pulse P, its rank is computed as the L2 norm of its corresponding feature vector... (Section 4.3 adapted as density feature vector)",
+              "FeedsInto": [
+                8,
+                10,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Similarity Calculation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Euclidean Distance of Density Feature Vectors",
+              "ID": 8,
+              "PaperDescription": "Calculates similarity between locations by computing the Euclidean distance between their high-dimensional density feature vectors",
+              "Inputs": [
+                "High-dimensional density feature vectors"
+              ],
+              "Outputs": [
+                "Similarity measure (L2 norm distance) between density features"
+              ],
+              "ReferenceCitation": "Pulse Similarity is defined as the L2 norm of the similarity vector computed from the differences between beats... (Section 4.3 adapted to density feature vectors)",
+              "FeedsInto": [
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 9,
+              "PaperDescription": "Renders a 2D map that displays the spatial regions corresponding to the identified density feature locations, optionally overlaying a heatmap of the computed density values",
+              "Inputs": [
+                "Density feature location data",
+                "2D mesh geometry"
+              ],
+              "Outputs": [
+                "2D map visualization"
+              ],
+              "ReferenceCitation": "Map widget. The map view component consists of one or more map widgets... (Section 6 adapted as Map 2D)",
+              "FeedsInto": [
+                14,
+                15
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 10,
+              "PaperDescription": "Renders a heatmap overlay on the 2D map to visually represent the computed density values across different spatial locations",
+              "Inputs": [
+                "Computed density values",
+                "2D spatial features (mesh)"
+              ],
+              "Outputs": [
+                "2D heatmap overlay integrated with the map view"
+              ],
+              "ReferenceCitation": "optional heat map overlay of the density function. (Section 6 adapted)",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Scatter Plot",
+              "ID": 11,
+              "PaperDescription": "Visualizes density ranking data using a scatter plot, enabling comparison of density features across different temporal resolutions",
+              "Inputs": [
+                "Density rank scores"
+              ],
+              "Outputs": [
+                "Scatter plot showing density feature rankings"
+              ],
+              "ReferenceCitation": "Linked scatter plots. The default mode of the Pulse Monitor consists of three linked scatter plots... (Section 6 adapted as Scatter Plot)",
+              "FeedsInto": [
+                13
+              ]
+            },
+            {
+              "GranularBlockName": "Line Chart",
+              "ID": 12,
+              "PaperDescription": "Displays the density function profile as a line chart plotting time steps against density values to illustrate temporal variations at a location",
+              "Inputs": [
+                "Density function profile (continuous time series)"
+              ],
+              "Outputs": [
+                "Line chart visualizing temporal variation of density magnitudes"
+              ],
+              "ReferenceCitation": "The pulse beat viewer visualizes function beats as a line plot... (Section 6.1 adapted as Line Chart)",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Plot Brush",
+              "ID": 13,
+              "PaperDescription": "Enables users to filter density feature locations by brushing over the scatter plot, linking the selection to updates across all visualizations",
+              "Inputs": [
+                "User brush input on the scatter plot",
+                "Density rank data"
+              ],
+              "Outputs": [
+                "Filtered density feature locations highlighted in both scatter plot and map view"
+              ],
+              "ReferenceCitation": "Pulse filtering and exploration. Users can select pulses of interest by brushing one of the scatter plots... (Section 6.2 adapted as Scatter Plot Brush)",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 14,
+              "PaperDescription": "Allows users to directly select a geographic area on the map to filter and display density feature locations within that area",
+              "Inputs": [
+                "User-drawn geographic area",
+                "Density feature location"
+              ],
+              "Outputs": [
+                "Density features within the selected area are highlighted/filtered"
+              ],
+              "ReferenceCitation": "The map view component provides spatial context for pulses... (Section 6 inferred for Area Selection)",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Pulse Selection",
+              "ID": 15,
+              "PaperDescription": "Queries for similar pulses based on similarity measures and user input returns a ranked list of similar pulses for visualization",
+              "Inputs": [
+                "Similarity measures",
+                "A user-selected query pulse"
+              ],
+              "Outputs": [
+                "Ranked list of similar pulses to update visualizations (e.g., scatter plot)"
+              ],
+              "ReferenceCitation": "...similarity and vice versa. For example, consider the pulse corresponding to Alcatraz Island in San Francisco (SF) shown in Fig. 5... Section 4.3",
+              "FeedsInto": [
+                7
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

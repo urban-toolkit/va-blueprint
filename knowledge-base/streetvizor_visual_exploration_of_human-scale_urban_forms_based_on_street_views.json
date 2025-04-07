@@ -1,0 +1,290 @@
+{
+  "PaperTitle": "StreetVizor: Visual Exploration of Human-Scale Urban Forms Based on Street Views",
+  "Year": 2018,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Features",
+              "ID": 1,
+              "PaperDescription": "Downloads city areas and extracts road networks from OpenStreetMap data.",
+              "Inputs": [
+                "City OSM data"
+              ],
+              "Outputs": [
+                "City road network"
+              ],
+              "ReferenceCitation": "Section 5.1: We first download the area of a city from OSM [29] and extract the road network from the OSM data.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Street View Images",
+              "ID": 2,
+              "PaperDescription": "Collects Google Street View front and back images at sampled locations along the road network.",
+              "Inputs": [
+                "Sampling locations along road network"
+              ],
+              "Outputs": [
+                "Street view images (front and back)"
+              ],
+              "ReferenceCitation": "Section 5.1: Finally, we download front and back images at each sampling position by passing lat, long & h with the default field of view and pitch values into GSV API.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Feature Extraction",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Street View Features",
+              "ID": 3,
+              "PaperDescription": "Classifies street view image pixels into 12 classes using SegNet and extracts five features: greenery, sky, building, road, and vehicle.",
+              "Inputs": [
+                "Street view images"
+              ],
+              "Outputs": [
+                "Normalized feature metrics (greenery, sky, building, road, vehicle, others)"
+              ],
+              "ReferenceCitation": "Section 5.2: We first classify the image pixels into 12 classes... Among the 12 classes, we count the number of pixels for the identified five features, i.e., greenery, sky, building, road, and vehicle, and summarize the remaining pixels as others.",
+              "FeedsInto": [
+                4,
+                5,
+                6
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Querying",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Spatial Query",
+              "ID": 4,
+              "PaperDescription": "Organizes human-scale urban forms in a four-level octree structure to support efficient spatial queries within AOIs.",
+              "Inputs": [
+                "Normalized feature metrics"
+              ],
+              "Outputs": [
+                "Queried urban forms within AOI"
+              ],
+              "ReferenceCitation": "Section 5.3: We achieve the efficient spatial query operation by organizing all {UFhs} in a city in a four-level octree structure, in which the topmost level is the boundary of each city.",
+              "FeedsInto": [
+                7
+              ]
+            },
+            {
+              "GranularBlockName": "Street Query",
+              "ID": 5,
+              "PaperDescription": "Uses a lookup table with street names to support querying of street-level human-scale urban forms.",
+              "Inputs": [
+                "Normalized feature metrics"
+              ],
+              "Outputs": [
+                "Queried urban forms at street scale"
+              ],
+              "ReferenceCitation": "Section 5.3: We create a lookup table with street names as keys, and store corresponding UFhs ids in each street slot.",
+              "FeedsInto": [
+                8,
+                12
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Clustering",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Mean Shift Clustering",
+              "ID": 6,
+              "PaperDescription": "Clusters human-scale urban forms based on feature metrics and geographic positions using mean shift clustering.",
+              "Inputs": [
+                "Urban forms with position and feature metrics"
+              ],
+              "Outputs": [
+                "Clusters of urban forms"
+              ],
+              "ReferenceCitation": "Section 6.3.2: The clustering process groups geographically close street views with similar feature attributes together... we apply mean-shift clustering algorithm on X using a flat kernel.",
+              "FeedsInto": [
+                9,
+                10,
+                11
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 7,
+              "PaperDescription": "Displays side-by-side point density map views comparing spatial distributions of human-scale urban forms in two AOIs.",
+              "Inputs": [
+                "Spatial query results or clustered urban forms"
+              ],
+              "Outputs": [
+                "Side-by-side map views with density points representing street views"
+              ],
+              "ReferenceCitation": "Section 6.3.1: We develop side-by-side map views (Figure. 1(b)) to compare the spatial distributions of human-scale urban forms in two AOIs.",
+              "FeedsInto": [
+                13,
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Street Map View",
+              "ID": 8,
+              "PaperDescription": "Displays detailed street map views along two streets, including street view images and feature compositions as treemaps.",
+              "Inputs": [
+                "Street query results"
+              ],
+              "Outputs": [
+                "Street map views with street view images and treemap popups showing feature compositions"
+              ],
+              "ReferenceCitation": "Section 6.4.1: Street Map View presents more details of human-scale urban forms by displaying the corresponding street view images along the two sides of a street.",
+              "FeedsInto": [
+                13,
+                14
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Scatterplot Matrix",
+              "ID": 9,
+              "PaperDescription": "Shows pair-wise correlations between features across clusters of urban forms in two AOIs.",
+              "Inputs": [
+                "Clusters of urban forms"
+              ],
+              "Outputs": [
+                "Scatter plot matrix comparing feature correlations"
+              ],
+              "ReferenceCitation": "Section 6.3.2: We then plot the pair-wise correlations using a scatterplot matrix (Fig. 5(a)).",
+              "FeedsInto": [
+                13,
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Histogram",
+              "ID": 10,
+              "PaperDescription": "Displays histograms showing distributions of feature values in two AOIs, arranged as small multiples.",
+              "Inputs": [
+                "Clusters of urban forms"
+              ],
+              "Outputs": [
+                "Histogram bar charts for feature distributions"
+              ],
+              "ReferenceCitation": "Section 6.3.2: Histograms for each feature are plotted as bar charts in an up and down manner for AOIs on the left and right, respectively.",
+              "FeedsInto": [
+                13,
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Deviation Plot",
+              "ID": 11,
+              "PaperDescription": "Presents feature diversity within clusters of urban forms using deviation plots, showing averages, standard deviations, and range.",
+              "Inputs": [
+                "Clusters of urban forms"
+              ],
+              "Outputs": [
+                "Deviation plots for each feature"
+              ],
+              "ReferenceCitation": "Section 6.3.2: We use standard deviation to indicate the measured feature diversity measured for each cluster, and design diversity views that are arranged as six side-by-side small multiples for each feature as shown in Figure 5(c).",
+              "FeedsInto": [
+                13,
+                14
+              ]
+            },
+            {
+              "GranularBlockName": "Parallel Coordinates Plot",
+              "ID": 12,
+              "PaperDescription": "Enhances parallel coordinates with street layouts and integrates them with a ThemeRiver plot to compare multivariate feature variations along two streets.",
+              "Inputs": [
+                "Street query results with feature metrics"
+              ],
+              "Outputs": [
+                "Parallel coordinates with integrated street layouts and ThemeRiver visualization"
+              ],
+              "ReferenceCitation": "Section 6.4.2: Inspired by [32], we ultimately develop a design of a parallel coordinates enhanced with street layouts (Fig. 7(d)).",
+              "FeedsInto": [
+                13,
+                14
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Navigation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Multi-Scale Navigation",
+              "ID": 13,
+              "PaperDescription": "Allows users to navigate between city-, region-, and street-scales using a hierarchical control panel.",
+              "Inputs": [
+                "User selection of city, region, or street"
+              ],
+              "Outputs": [
+                "Updated AOI Explorer or Street Explorer views"
+              ],
+              "ReferenceCitation": "Section 6.5: We develop city-, region- and street-panels. The city-panel lists all four cities, i.e., Hong Kong, Singapore, Greater London, and New York City.",
+              "FeedsInto": [
+                4,
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Feature Filtering",
+              "ID": 14,
+              "PaperDescription": "Supports filtering human-scale urban forms against specific feature values using feature sliders.",
+              "Inputs": [
+                "User-defined feature value ranges"
+              ],
+              "Outputs": [
+                "Filtered query results or ranked AOIs/streets"
+              ],
+              "ReferenceCitation": "Section 6.5: Our system also supports filtering human-scale urban forms against a specific feature by specifying the value range with feature sliders.",
+              "FeedsInto": [
+                4,
+                5,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

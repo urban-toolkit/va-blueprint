@@ -1,0 +1,207 @@
+{
+  "PaperTitle": "Adaptively Exploring Population Mobility Patterns in Flow Visualization",
+  "Year": 2017,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Cell Detail List",
+              "ID": 1,
+              "PaperDescription": "Loads cell related information, including the cell ID, its geolocation, direction, and city ID, to define the coverage area of each base station.",
+              "Inputs": [
+                "CDL records containing <cell_id, cell_latitude, cell_longitude, direction, city_id>"
+              ],
+              "Outputs": [
+                "Spatial partitions of the city based on Voronoi cells generated from base stations"
+              ],
+              "ReferenceCitation": "Section III.A: A CDL record lists the cell related information, formally <cell_id, cell_latitude, cell_longitude, direction, city_id>.",
+              "FeedsInto": [
+                3,
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Call Detail Record",
+              "ID": 2,
+              "PaperDescription": "Loads mobile phone usage data, recording events such as calls, and cell entering or leaving, used to identify movement patterns.",
+              "Inputs": [
+                "CDR records containing <phone_id, station_id, time, state>"
+              ],
+              "Outputs": [
+                "Raw population movement data including trajectories and time-stamped events"
+              ],
+              "ReferenceCitation": "Section III.A: A CDR comprises phone ID, station ID, record time, and state, i.e. <phone_id, station_id, time, state>.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Indexing",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "MobiHash Index",
+              "ID": 3,
+              "PaperDescription": "Indexes movement data using a hierarchical structure of Voronoi cells, time slots, and hash buckets, enabling efficient querying of population trips.",
+              "Inputs": [
+                "Processed CDR data",
+                "Voronoi spatial partitions from CDL data"
+              ],
+              "Outputs": [
+                "Indexed population trip data supporting spatial and temporal queries"
+              ],
+              "ReferenceCitation": "Section IV.C: After a 4-step procedure, MobiHash can be presented as a hierarchical container (see Fig. 5).",
+              "FeedsInto": [
+                4,
+                8
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Interpolation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "k-Means Radiation Model",
+              "ID": 4,
+              "PaperDescription": "Interpolates sparse trip data into vector fields by clustering movement directions with k-Means and synthesizing smooth flow fields for visualization.",
+              "Inputs": [
+                "Movement intensities between stations",
+                "Voronoi cell structure"
+              ],
+              "Outputs": [
+                "Synthetic vector fields representing population flow directions and intensities"
+              ],
+              "ReferenceCitation": "Section V.A: We use the k-Means algorithm to cluster similar directions to form major vectors. A major vector radiates from the station's center to its neighbor zones.",
+              "FeedsInto": [
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Map 2D",
+              "ID": 5,
+              "PaperDescription": "Displays the spatial layout of the city with Voronoi cells based on mobile base station locations, providing the base map for overlays of population movement and density visualizations.",
+              "Inputs": [
+                "Voronoi cell divisions from CDL data",
+                "City spatial layout"
+              ],
+              "Outputs": [
+                "Rendered 2D map providing spatial context for overlays"
+              ],
+              "ReferenceCitation": "Section III.B: We call the Voronoi tessellation an adaptive division of the city in space domain. Fig. 1 displays a flow visualization... whose outline well matches a flyover on map.",
+              "FeedsInto": []
+            },
+            {
+              "GranularBlockName": "Overlay (Flow)",
+              "ID": 6,
+              "PaperDescription": "Displays population movement as flow lines on a 2D map, visualizing direction and intensity of movement with streamlines and arrows.",
+              "Inputs": [
+                "Synthetic vector fields from the k-Means Radiation Model"
+              ],
+              "Outputs": [
+                "Flow overlays visualized on the Map 2D"
+              ],
+              "ReferenceCitation": "Section VI.A.1: We employ a streamline method to show population mobility patterns on map because of a straightforward direction cue and low computational cost.",
+              "FeedsInto": [
+                5
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 7,
+              "PaperDescription": "Overlays a heatmap on the Map 2D background to represent the density of population in different regions at a given time interval.",
+              "Inputs": [
+                "Population density data aggregated from CDR records"
+              ],
+              "Outputs": [
+                "Heatmap overlay representing population density on the Map 2D"
+              ],
+              "ReferenceCitation": "Section VI.A.1: Behind the flow, a heatmap displays the density of population on map in a time interval.",
+              "FeedsInto": [
+                5
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Stacked Area Chart",
+              "ID": 8,
+              "PaperDescription": "Visualizes temporal trends of population movement speeds across different time intervals using a stacked area chart with color coding.",
+              "Inputs": [
+                "Aggregated population movement data over time, categorized by speed ranges"
+              ],
+              "Outputs": [
+                "Temporal stack graph showing the number of people in different speed ranges over time"
+              ],
+              "ReferenceCitation": "Section VI.A.2: The temporal view is not only displaying how population flows vary over time, but also comparing population flows at different speeds.",
+              "FeedsInto": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Filter",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Temporal Selection",
+              "ID": 9,
+              "PaperDescription": "Allows users to select multiple time intervals efficiently by brushing dates on a calendar and adjusting time spans with sliders.",
+              "Inputs": [
+                "User selections on calendar and time slider"
+              ],
+              "Outputs": [
+                "Time range filters applied to query and visualization components"
+              ],
+              "ReferenceCitation": "Section VI.B: Time copy widget (see Fig. 3(a)) is designed to reduce the number of operations. The widget comprises two components: a calendar and a time slider.",
+              "FeedsInto": [
+                3
+              ]
+            },
+            {
+              "GranularBlockName": "Area Selection",
+              "ID": 10,
+              "PaperDescription": "Enables users to interactively select geographic regions (Voronoi cells) on the map for focused query and visualization of population flows.",
+              "Inputs": [
+                "User-drawn region on map"
+              ],
+              "Outputs": [
+                "Spatial filters applied to query and visualization components"
+              ],
+              "ReferenceCitation": "Section VI.C: A region brushing tool is provided to select appropriate cells on map.",
+              "FeedsInto": [
+                3
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

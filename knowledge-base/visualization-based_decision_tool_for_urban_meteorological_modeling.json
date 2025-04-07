@@ -1,0 +1,245 @@
+{
+  "PaperTitle": "Visualization-Based Decision Tool for Urban Meteorological Modeling",
+  "Year": 2013,
+  "HighBlocks": [
+    {
+      "HighBlockName": "Data Loading",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Loader",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Features",
+              "ID": 1,
+              "PaperDescription": "Loads land-use/land-cover (LULC), population, and terrain-elevation data to create an initial city model for further simulation.",
+              "Inputs": [
+                "LULC data",
+                "Population data",
+                "Terrain elevation data"
+              ],
+              "Outputs": [
+                "Spatially varying data layers for urban simulation"
+              ],
+              "ReferenceCitation": "Section 3: The initial city model is created using LULC data, population or jobs data (eg, census information), and terrain-elevation data.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Data Processing",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Simulation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Urban Behavioral and Geometric Simulation",
+              "ID": 2,
+              "PaperDescription": "Combines urban behavioral simulation with procedural geometric modeling to generate plausible 3D city models, balancing population, job count, road length, and building volume.",
+              "Inputs": [
+                "LULC data",
+                "Population data",
+                "Terrain elevation data"
+              ],
+              "Outputs": [
+                "3D city model with behavioral and geometric consistency"
+              ],
+              "ReferenceCitation": "Section 4.1.2: A plausible set of interdependencies between the variables is determined from urban simulation models and literature.",
+              "FeedsInto": [
+                3,
+                6
+              ]
+            },
+            {
+              "GranularBlockName": "Urban-Weather Simulation (RAMS + TEB)",
+              "ID": 4,
+              "PaperDescription": "Simulates regional meteorological behavior incorporating the urban morphology parameters using RAMS coupled with the Town Energy Budget (TEB) model.",
+              "Inputs": [
+                "Urban morphology parameters",
+                "LULC data",
+                "Population data",
+                "Terrain elevation data"
+              ],
+              "Outputs": [
+                "Simulated weather patterns (temperature, precipitation, humidity)"
+              ],
+              "ReferenceCitation": "Section 5: The overall atmospheric simulation system we use is the RAMS version 4.3 (Cotton et al, 2003). RAMS is a well-tested multiscale environmental modeling system.",
+              "FeedsInto": [
+                5,
+                7,
+                8,
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Estimation",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Urban Morphology Parameter Computation",
+              "ID": 3,
+              "PaperDescription": "Computes urban morphology parameters (building height, canyon aspect ratio, roughness length) from the 3D city model for meteorological simulation.",
+              "Inputs": [
+                "3D city model"
+              ],
+              "Outputs": [
+                "Urban morphology parameters"
+              ],
+              "ReferenceCitation": "Section 4.2: The meteorological simulation takes as input a set of urban morphology values describing key geometric attributes of the city.",
+              "FeedsInto": [
+                4
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Visualization",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Geospatial",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "2D Map",
+              "ID": 5,
+              "PaperDescription": "Displays a 2D map of the urban area for spatial context, supporting overlays of simulated temperature, precipitation, and humidity changes for comparison between urban scenarios.",
+              "Inputs": [
+                "Base map of urban area",
+                "Urban scenario boundaries",
+                "Simulation grid cells"
+              ],
+              "Outputs": [
+                "Interactive 2D map visualization"
+              ],
+              "ReferenceCitation": "Figure 1 and Section 7: In this example, the proposed change increases city temperature and decreases city rainfall. Visualization of greening scenarios is provided on map-style views (Figure 5).",
+              "FeedsInto": [
+                10,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "3D Scene",
+              "ID": 6,
+              "PaperDescription": "Displays the 3D city model to enable assessment of urban configurations and their impacts on weather patterns.",
+              "Inputs": [
+                "3D city model"
+              ],
+              "Outputs": [
+                "Rendered 3D city model"
+              ],
+              "ReferenceCitation": "Figure 1 and Section 3: Using land-use/land-cover data complemented by population and terrain data, our tool automatically produces a plausible 3D city model.",
+              "FeedsInto": [
+                10
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Heatmap)",
+              "ID": 7,
+              "PaperDescription": "Overlays simulated temperature, precipitation, and humidity data on the 3D city model or maps to visualize weather changes due to urban configurations.",
+              "Inputs": [
+                "Simulated weather patterns"
+              ],
+              "Outputs": [
+                "Overlay visualization of weather patterns"
+              ],
+              "ReferenceCitation": "Figure 1: The ability to edit the city model quickly and automatically produce a plausible city and urban morphology parameters offers a substantial step forward.",
+              "FeedsInto": [
+                5,
+                10,
+                11
+              ]
+            },
+            {
+              "GranularBlockName": "Overlay (Choropleth)",
+              "ID": 8,
+              "PaperDescription": "Displays spatial distribution maps (choropleth style) of temperature, precipitation, and humidity changes as a result of the urban design and weather simulation.",
+              "Inputs": [
+                "Simulated weather data",
+                "City regions or grid cells"
+              ],
+              "Outputs": [
+                "Choropleth maps showing spatial distribution of temperature, precipitation, and humidity"
+              ],
+              "ReferenceCitation": "Figure 1 and 6: The system visualizes changes in temperature, precipitation, and humidity across the city.",
+              "FeedsInto": [
+                5,
+                10,
+                11
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Infovis",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Comparison View",
+              "ID": 9,
+              "PaperDescription": "Visualizes differences between scenarios in temperature, humidity, and precipitation with quantitative comparisons for decision-making.",
+              "Inputs": [
+                "Simulated weather patterns from different scenarios"
+              ],
+              "Outputs": [
+                "Difference visualizations highlighting change magnitudes"
+              ],
+              "ReferenceCitation": "Section 8 and Figure 6: Visualization of tentative urban policies comparing circular greening and distributed greening.",
+              "FeedsInto": [
+                10
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "HighBlockName": "Interaction",
+      "IntermediateBlocks": [
+        {
+          "IntermediateBlockName": "Edit",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "High-Level Urban Scenario Editing",
+              "ID": 10,
+              "PaperDescription": "Allows users to interactively modify urban features such as greening, population distribution, and terrain using paint-brush-style tools to explore different urban scenarios and their weather impacts.",
+              "Inputs": [
+                "User interaction (paint-brush tool, input parameters)"
+              ],
+              "Outputs": [
+                "Modified LULC, population, and terrain data"
+              ],
+              "ReferenceCitation": "Section 3: Our editing interface uses a paint-brush-style tool to alter the aforementioned input values.",
+              "FeedsInto": [
+                2
+              ]
+            }
+          ]
+        },
+        {
+          "IntermediateBlockName": "Comparison",
+          "GranularBlocks": [
+            {
+              "GranularBlockName": "Scenario Selection",
+              "ID": 11,
+              "PaperDescription": "Enables users to select two or more urban scenarios for side-by-side comparison of simulated weather outcomes.",
+              "Inputs": [
+                "User-selected simulation scenarios"
+              ],
+              "Outputs": [
+                "Paired or multi-scenario comparison views"
+              ],
+              "ReferenceCitation": "Section 8: The tool enables comparison between different greening scenarios to assess impact on temperature and humidity.",
+              "FeedsInto": [
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
