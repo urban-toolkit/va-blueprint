@@ -43,7 +43,8 @@ Each VA system in the knowledge base is represented as a hierarchical JSON struc
 
 ## Repository Contents 
 
-*   `/knowledge-base`: Contains the 101 individual VA system blueprints as JSON files. Each file represents one system analyzed in the study. 
+*   `/knowledge-base`: Contains the 101 individual VA system blueprints as JSON files. Each file represents one system analyzed in the study.
+*   `/reprodicibility`: Contains the instructions and necessary files to extrac a VA Blueprint. 
 *   `LICENSE`: VA-Blueprint is MIT Licensed. Free for both commercial and research use. 
 
 ## Using the Knowledge Base 
