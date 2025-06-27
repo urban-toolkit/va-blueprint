@@ -1,0 +1,104 @@
+{
+  "title": "System Building Blocks Schema (Hierarchy: High -> Intermediate -> Granular)",
+  "type": "object",
+  "properties": {
+    "PaperTitle": {
+      "type": "string",
+      "description": "Paper title."
+    },
+    "HighBlocks": {
+      "type": "array",
+      "description": "An array of high-level building blocks (e.g., 'Data Loading', 'Visualization', 'Interaction')",
+      "items": {
+        "type": "object",
+        "properties": {
+          "HighBlockName": {
+            "type": "string",
+            "description": "Label or name for the high-level building block (e.g., 'Data Loading', 'Visualization')"
+          },
+          "IntermediateBlocks": {
+            "type": "array",
+            "description": "An array of intermediate building blocks contained within this high-level block (e.g., 'Loader', 'Infovis', 'Filter')",
+            "items": {
+              "type": "object",
+              "properties": {
+                "IntermediateBlockName": {
+                  "type": "string",
+                  "description": "Name of the intermediate-level building block (e.g., 'Loader', 'Clustering', 'Filter')"
+                },
+                "GranularBlocks": {
+                  "type": "array",
+                  "description": "An array of the most granular building blocks that cannot be subdivided further (e.g., 'Travel Routes', 'Bar Chart'). For the granular blocks in the visualization part you must extract the exact visualization, not the name given in the paper (e.g., Map 2D, 3D Scene, Bar Chart, Line Chart).",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "GranularBlockName": {
+                        "type": "string",
+                        "description": "Name/label for this final-level building block (e.g. 'Travel Routes', 'Bar Chart')"
+                      },
+                      "ID": {
+                        "type": "integer",
+                        "description": "Unique identifier from the original data or assigned by the extractor"
+                      },
+                      "PaperDescription": {
+                        "type": "string",
+                        "description": "Brief concept/description from the paper (1-2 sentences) explaining this granular building block. The explanation must come from the paper and not a be any sort of assumption"
+                      },
+                      "Inputs": {
+                        "type": "array",
+                        "description": "A list of strings representing each input consumed by this block",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "Outputs": {
+                        "type": "array",
+                        "description": "A list of strings representing each output produced by this block",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "ReferenceCitation": {
+                        "type": "string",
+                        "description": "One or two sentences in the paper (must be exactly equal to what is in the paper, not a single letter different) that proves that the block exist. It also must include the section/figure that the used sentences came from."
+                      },
+                      "FeedsInto": {
+                        "type": "array",
+                        "description": "List of IDs (or references) to other granular blocks that this block's output flows into",
+                        "items": {
+                          "type": "integer",
+                          "description": "An ID referencing another granular block"
+                        }
+                      }
+                    },
+                    "required": [
+                      "GranularBlockName",
+                      "ID",
+                      "PaperDescription",
+                      "Inputs",
+                      "Outputs",
+                      "ReferenceCitation",
+                      "FeedsInto"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "IntermediateBlockName",
+                "GranularBlocks"
+              ]
+            }
+          }
+        },
+        "required": [
+          "HighBlockName",
+          "IntermediateBlocks"
+        ]
+      }
+    }
+  },
+  "required": [
+    "SystemName",
+    "HighBlocks"
+  ]
+}
