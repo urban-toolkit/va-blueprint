@@ -21,7 +21,7 @@ To perform an extraction, follow these steps precisely:
 2.  Upload the `schema.json` file.
 3.  Upload the `few_shot_samples.json` file.
 4.  Upload the target research paper PDF you wish to analyze.
-5.  Copy the entire prompt below and paste it into the chat.
+5.  Copy the entire prompt below and paste it into the chat (COPY AS CODE).
 
 ---
 
